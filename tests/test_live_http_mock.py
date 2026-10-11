@@ -65,6 +65,10 @@ def summary():
 @pytest.fixture(autouse=True)
 def isolated(tmp_path, monkeypatch):
     monkeypatch.setattr(llm, "AUDIT_DIR", tmp_path)
+    monkeypatch.setattr(llm, "_load_dotenv_if_present", lambda: None)
+    for var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY", "KD_PROVIDER", "KD_MODEL",
+                "KD_GEMINI_MODEL", "KD_SERVER_FALLBACK"):
+        monkeypatch.delenv(var, raising=False)
     Handler.captured.clear()
     Handler.status = 200
 

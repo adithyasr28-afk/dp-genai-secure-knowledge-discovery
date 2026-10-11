@@ -59,8 +59,12 @@ def summary(aim3):
 
 @pytest.fixture(autouse=True)
 def isolated_audit(tmp_path, monkeypatch):
+    """Hermetic: no real .env, no real keys, no provider override -> no real API calls."""
     monkeypatch.setattr(llm, "AUDIT_DIR", tmp_path / "audit")
     monkeypatch.setattr(llm, "_load_dotenv_if_present", lambda: None)
+    for var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY", "KD_PROVIDER", "KD_MODEL",
+                "KD_GEMINI_MODEL", "KD_SERVER_FALLBACK"):
+        monkeypatch.delenv(var, raising=False)
 
 
 # --- catalog -----------------------------------------------------------------

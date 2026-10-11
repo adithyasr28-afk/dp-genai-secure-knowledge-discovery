@@ -14,7 +14,7 @@ import json
 import streamlit as st
 
 from knowledge_discovery.catalog import list_dp_synthetic_datasets, load_synthetic_dataset
-from knowledge_discovery.llm_client import DEFAULT_MODEL, generate_insights, live_mode_available
+from knowledge_discovery.llm_client import generate_insights, live_mode_available, model_for, resolve_provider
 from knowledge_discovery.prompts import SYSTEM_PROMPT, build_user_message
 from knowledge_discovery.summarizer import build_aggregate_summary
 
@@ -42,7 +42,8 @@ def render():
             "— bin edges and category vocabulary — is treated as public; see README).\n"
             "- The summary statistics are **not** a separate DP release, and the LLM adds **no** privacy "
             "guarantee. Cells with fewer than the minimum count are suppressed as defence in depth.\n"
-            "- In live mode the summary is sent to Anthropic's API; your API key is never included in the prompt."
+            "- In live mode the summary is sent to the chosen provider's API (Anthropic or Google); your API key "
+            "is never included in the prompt."
         )
 
     labels = [d.label for d in datasets]
@@ -60,15 +61,22 @@ def render():
         st.caption(f"This run_id has {info.n_log_records} completed log records; the latest one "
                    "(which produced the CSV on disk) is used.")
 
-    col_a, col_b = st.columns(2)
+    col_a, col_b, col_c = st.columns(3)
     min_cell = col_a.number_input("Minimum cell count (smaller groups suppressed)", 5, 200, 20, 5)
-    live_ok = live_mode_available()
-    modes = ["Live (Claude API)", "Demo (rule-based, no LLM)"]
-    mode_label = col_b.radio("Mode", modes, index=0 if live_ok else 1, horizontal=True)
+    provider_labels = {"Auto (configured key)": None, "Claude (Anthropic)": "anthropic", "Gemini (Google)": "gemini"}
+    provider_label = col_b.selectbox("LLM provider", list(provider_labels))
+    provider = resolve_provider(provider_labels[provider_label])
+    live_ok = live_mode_available(provider)
+    modes = ["Live (LLM API)", "Demo (rule-based, no LLM)"]
+    mode_label = col_c.radio("Mode", modes, index=0 if live_ok else 1, horizontal=True)
     mode = "live" if mode_label.startswith("Live") else "demo"
+    key_var = "ANTHROPIC_API_KEY" if provider == "anthropic" else "GEMINI_API_KEY"
+    if mode == "live":
+        st.caption(f"Provider: **{provider}** · model `{model_for(provider)}` "
+                   f"(override with {'KD_MODEL' if provider == 'anthropic' else 'KD_GEMINI_MODEL'})")
     if mode == "live" and not live_ok:
-        st.error("ANTHROPIC_API_KEY is not configured, so live mode will fail. Copy .env.example to .env and "
-                 "add your key, or switch to Demo mode. A Claude Pro subscription does not include API credits.")
+        st.error(f"{key_var} is not configured, so live mode will fail. Copy .env.example to .env and add the "
+                 "key, choose the other provider, or switch to Demo mode.")
     if mode == "demo":
         st.warning("Demo mode produces a deterministic template explanation. It is **not** LLM output.")
 
@@ -79,20 +87,21 @@ def render():
     summary = build_aggregate_summary(df, info, target_column="income", min_cell_count=int(min_cell))
 
     with st.expander("Exact payload that will be sent to the LLM", expanded=False):
-        st.caption(f"Model: {DEFAULT_MODEL} (override with KD_MODEL). System prompt followed by user message.")
+        st.caption("Identical for both providers: system prompt followed by the user message.")
         st.code(SYSTEM_PROMPT, language="markdown")
         st.code(build_user_message(summary, question), language="json")
         st.download_button("Download summary JSON", json.dumps(summary, indent=2, default=str),
                            file_name=f"{info.run_id}_summary.json", mime="application/json")
 
     if st.button("Generate explanation", type="primary"):
-        with st.spinner("Generating..." if mode == "demo" else "Calling Claude..."):
-            result = generate_insights(summary, mode=mode, analyst_question=question)
+        with st.spinner("Generating..." if mode == "demo" else f"Calling {provider}..."):
+            result = generate_insights(summary, mode=mode, analyst_question=question, provider=provider)
         if not result.ok:
             st.error(result.error)
         else:
-            header = (f"**LLM response** — model `{result.model}`, stop_reason `{result.stop_reason}`, "
-                      f"{result.elapsed_seconds}s" if result.mode == "live"
+            header = (f"**LLM response** — {result.provider}, model `{result.model}`, stop_reason "
+                      f"`{result.stop_reason}`, {result.elapsed_seconds}s. Treat every claim as a hypothesis; "
+                      "synthetic data can contain artefacts (see report Section XIV)." if result.mode == "live"
                       else "**Demo output (not an LLM response)**")
             st.markdown(header)
             st.markdown(result.text)

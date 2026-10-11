@@ -52,6 +52,8 @@ xgboost>=2.0
 # --- Added for the LLM knowledge-discovery extension and the report tooling ---
 # Anthropic Python SDK (live mode of knowledge_discovery/). Not needed for Demo mode.
 anthropic>=0.40
+# Google Gen AI SDK (live mode with the Gemini provider). Not needed for Demo mode.
+google-genai>=1.0
 # Loads ANTHROPIC_API_KEY from a local, git-ignored .env file.
 python-dotenv>=1.0
 # Figures for analysis/verify_results.py (600 DPI PNG + SVG).
