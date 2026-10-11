@@ -514,7 +514,18 @@ elif page == "Model Comparison":
         st.stop()
 
     completed = all_results[all_results["status"] == "completed"].copy()
-    st.write(f"**{len(completed)} completed runs** out of {len(all_results)} logged.")
+    # A run_id can be logged more than once (an explicit re-run from this page
+    # always executes). Keep only the latest completed record per run_id -- the
+    # one whose synthetic CSV is on disk -- so repeated runs are not double-counted.
+    n_completed_records = len(completed)
+    if len(completed):
+        completed = completed.sort_values("timestamp").drop_duplicates("run_id", keep="last")
+    n_dupes = n_completed_records - len(completed)
+    st.write(f"**{len(completed)} unique completed runs** ({n_completed_records} completed records, "
+             f"{len(all_results)} logged in total).")
+    if n_dupes:
+        st.caption(f"{n_dupes} duplicate record(s) of a re-run configuration were excluded; the latest "
+                   "record per run_id is used.")
 
     if len(completed) == 0:
         st.warning(

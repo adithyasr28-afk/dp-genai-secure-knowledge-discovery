@@ -145,6 +145,8 @@ def test_missing_api_key_gives_clear_error(summary, monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     r = llm.generate_insights(summary, mode="live")
     assert not r.ok and "ANTHROPIC_API_KEY" in r.error
+    audit = json.loads(Path(r.audit_path).read_text(encoding="utf-8"))
+    assert audit["user_message_sent_to_api"] is False and audit["is_llm_output"] is False
     assert llm.generate_insights(summary, mode="auto").mode == "demo"
 
 

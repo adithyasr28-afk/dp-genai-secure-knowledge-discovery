@@ -5,7 +5,7 @@ adult_example_AIM_eps0.5_seed42,AIM,fidelity.mean_tvd,0.043472222222222225,0.043
 adult_example_AIM_eps0.5_seed42,AIM,fidelity.mean_jsd,0.008548233110671958,0.008548233110671958,0.0,True
 adult_example_AIM_eps0.5_seed42,AIM,fidelity.numerical_corr_frobenius_diff,0.487066040722186,0.4870660407221858,2.220446049250313e-16,True
 adult_example_AIM_eps0.5_seed42,AIM,fidelity.cramers_v_mean_abs_diff,0.1277179951409172,0.1277179951409172,0.0,True
-adult_example_AIM_eps0.5_seed42,AIM,fidelity.three_way_mean_l1_error,0.22416666666666654,0.22416666666666651,2.7755575615628914e-17,True
+adult_example_AIM_eps0.5_seed42,AIM,fidelity.three_way_mean_l1_error,0.22416666666666654,0.22416666666666654,0.0,True
 adult_example_AIM_eps0.5_seed42,AIM,tstr_f1.logistic_regression,0.35443037974683544,0.35443037974683544,0.0,True
 adult_example_AIM_eps0.5_seed42,AIM,tstr_f1.random_forest,0.3968253968253968,0.3968253968253968,0.0,True
 adult_example_AIM_eps0.5_seed42,AIM,tstr_f1.xgboost,0.3574144486692015,0.3574144486692015,0.0,True
@@ -23,7 +23,7 @@ adult_example_AIM_eps1.0_seed42,AIM,fidelity.mean_tvd,0.026342592592592598,0.026
 adult_example_AIM_eps1.0_seed42,AIM,fidelity.mean_jsd,0.004162101566372453,0.004162101566372453,0.0,True
 adult_example_AIM_eps1.0_seed42,AIM,fidelity.numerical_corr_frobenius_diff,0.4951322915234245,0.49513229152342453,5.551115123125783e-17,True
 adult_example_AIM_eps1.0_seed42,AIM,fidelity.cramers_v_mean_abs_diff,0.12910302523327888,0.12910302523327888,0.0,True
-adult_example_AIM_eps1.0_seed42,AIM,fidelity.three_way_mean_l1_error,0.24230555555555544,0.24230555555555544,0.0,True
+adult_example_AIM_eps1.0_seed42,AIM,fidelity.three_way_mean_l1_error,0.24230555555555544,0.2423055555555555,5.551115123125783e-17,True
 adult_example_AIM_eps1.0_seed42,AIM,tstr_f1.logistic_regression,0.4489795918367347,0.4489795918367347,0.0,True
 adult_example_AIM_eps1.0_seed42,AIM,tstr_f1.random_forest,0.4713804713804714,0.4713804713804714,0.0,True
 adult_example_AIM_eps1.0_seed42,AIM,tstr_f1.xgboost,0.459214501510574,0.459214501510574,0.0,True
@@ -41,7 +41,7 @@ adult_example_AIM_eps10.0_seed42,AIM,fidelity.mean_tvd,0.009398148148148164,0.00
 adult_example_AIM_eps10.0_seed42,AIM,fidelity.mean_jsd,0.00039177504149171634,0.00039177504149171634,0.0,True
 adult_example_AIM_eps10.0_seed42,AIM,fidelity.numerical_corr_frobenius_diff,0.3336942966316541,0.3336942966316542,5.551115123125783e-17,True
 adult_example_AIM_eps10.0_seed42,AIM,fidelity.cramers_v_mean_abs_diff,0.07036333459322229,0.07036333459322229,0.0,True
-adult_example_AIM_eps10.0_seed42,AIM,fidelity.three_way_mean_l1_error,0.14544444444444457,0.14544444444444454,2.7755575615628914e-17,True
+adult_example_AIM_eps10.0_seed42,AIM,fidelity.three_way_mean_l1_error,0.14544444444444457,0.14544444444444457,0.0,True
 adult_example_AIM_eps10.0_seed42,AIM,tstr_f1.logistic_regression,0.5384615384615384,0.5384615384615384,0.0,True
 adult_example_AIM_eps10.0_seed42,AIM,tstr_f1.random_forest,0.5551020408163265,0.5551020408163265,0.0,True
 adult_example_AIM_eps10.0_seed42,AIM,tstr_f1.xgboost,0.49586776859504134,0.49586776859504134,0.0,True
@@ -59,7 +59,7 @@ adult_example_AIM_eps3.0_seed42,AIM,fidelity.mean_tvd,0.010694444444444439,0.010
 adult_example_AIM_eps3.0_seed42,AIM,fidelity.mean_jsd,0.0006534260785491744,0.0006534260785491744,0.0,True
 adult_example_AIM_eps3.0_seed42,AIM,fidelity.numerical_corr_frobenius_diff,0.3904864189362219,0.3904864189362218,5.551115123125783e-17,True
 adult_example_AIM_eps3.0_seed42,AIM,fidelity.cramers_v_mean_abs_diff,0.07873934830842322,0.07873934830842322,0.0,True
-adult_example_AIM_eps3.0_seed42,AIM,fidelity.three_way_mean_l1_error,0.18944444444444442,0.1894444444444444,2.7755575615628914e-17,True
+adult_example_AIM_eps3.0_seed42,AIM,fidelity.three_way_mean_l1_error,0.18944444444444442,0.18944444444444444,2.7755575615628914e-17,True
 adult_example_AIM_eps3.0_seed42,AIM,tstr_f1.logistic_regression,0.48502994011976047,0.48502994011976047,0.0,True
 adult_example_AIM_eps3.0_seed42,AIM,tstr_f1.random_forest,0.5460750853242321,0.5460750853242321,0.0,True
 adult_example_AIM_eps3.0_seed42,AIM,tstr_f1.xgboost,0.525,0.525,0.0,True
@@ -131,7 +131,7 @@ adult_example_CTGAN_seed44,CTGAN,fidelity.mean_tvd,0.0950462962962963,0.09504629
 adult_example_CTGAN_seed44,CTGAN,fidelity.mean_jsd,0.013335112109128936,0.013335112109128936,0.0,True
 adult_example_CTGAN_seed44,CTGAN,fidelity.numerical_corr_frobenius_diff,0.3653566538675676,0.3653566538675676,0.0,True
 adult_example_CTGAN_seed44,CTGAN,fidelity.cramers_v_mean_abs_diff,0.0874383462744131,0.0874383462744131,0.0,True
-adult_example_CTGAN_seed44,CTGAN,fidelity.three_way_mean_l1_error,0.2631666666666665,0.2631666666666665,0.0,True
+adult_example_CTGAN_seed44,CTGAN,fidelity.three_way_mean_l1_error,0.2631666666666665,0.26316666666666644,5.551115123125783e-17,True
 adult_example_CTGAN_seed44,CTGAN,tstr_f1.logistic_regression,0.5040650406504065,0.5040650406504065,0.0,True
 adult_example_CTGAN_seed44,CTGAN,tstr_f1.random_forest,0.40160642570281124,0.40160642570281124,0.0,True
 adult_example_CTGAN_seed44,CTGAN,tstr_f1.xgboost,0.4031620553359684,0.4031620553359684,0.0,True
@@ -167,7 +167,7 @@ adult_example_MST_eps0.5_seed43,MST,fidelity.mean_tvd,0.048611111111111126,0.048
 adult_example_MST_eps0.5_seed43,MST,fidelity.mean_jsd,0.01022625669819824,0.01022625669819824,0.0,True
 adult_example_MST_eps0.5_seed43,MST,fidelity.numerical_corr_frobenius_diff,0.740409239683397,0.7404092396833969,1.1102230246251565e-16,True
 adult_example_MST_eps0.5_seed43,MST,fidelity.cramers_v_mean_abs_diff,0.16713111787348942,0.16713111787348942,0.0,True
-adult_example_MST_eps0.5_seed43,MST,fidelity.three_way_mean_l1_error,0.3486666666666664,0.34866666666666646,5.551115123125783e-17,True
+adult_example_MST_eps0.5_seed43,MST,fidelity.three_way_mean_l1_error,0.3486666666666664,0.3486666666666665,1.1102230246251565e-16,True
 adult_example_MST_eps0.5_seed43,MST,tstr_f1.logistic_regression,0.2426470588235294,0.2426470588235294,0.0,True
 adult_example_MST_eps0.5_seed43,MST,tstr_f1.random_forest,0.12435233160621761,0.12435233160621761,0.0,True
 adult_example_MST_eps0.5_seed43,MST,tstr_f1.xgboost,0.18090452261306533,0.18090452261306533,0.0,True
@@ -203,7 +203,7 @@ adult_example_MST_eps1.0_seed42,MST,fidelity.mean_tvd,0.021851851851851845,0.021
 adult_example_MST_eps1.0_seed42,MST,fidelity.mean_jsd,0.0036898053430480127,0.0036898053430480127,0.0,True
 adult_example_MST_eps1.0_seed42,MST,fidelity.numerical_corr_frobenius_diff,0.7179159780630874,0.7179159780630874,0.0,True
 adult_example_MST_eps1.0_seed42,MST,fidelity.cramers_v_mean_abs_diff,0.1118638579090988,0.1118638579090988,0.0,True
-adult_example_MST_eps1.0_seed42,MST,fidelity.three_way_mean_l1_error,0.2766249999999998,0.27662499999999973,5.551115123125783e-17,True
+adult_example_MST_eps1.0_seed42,MST,fidelity.three_way_mean_l1_error,0.2766249999999998,0.2766249999999998,0.0,True
 adult_example_MST_eps1.0_seed42,MST,tstr_f1.logistic_regression,0.42,0.42,0.0,True
 adult_example_MST_eps1.0_seed42,MST,tstr_f1.random_forest,0.4318181818181818,0.4318181818181818,0.0,True
 adult_example_MST_eps1.0_seed42,MST,tstr_f1.xgboost,0.43010752688172044,0.43010752688172044,0.0,True
@@ -257,7 +257,7 @@ adult_example_MST_eps10.0_seed42,MST,fidelity.mean_tvd,0.0030555555555555514,0.0
 adult_example_MST_eps10.0_seed42,MST,fidelity.mean_jsd,0.00011653676019604114,0.00011653676019604114,0.0,True
 adult_example_MST_eps10.0_seed42,MST,fidelity.numerical_corr_frobenius_diff,0.483761767245078,0.483761767245078,0.0,True
 adult_example_MST_eps10.0_seed42,MST,fidelity.cramers_v_mean_abs_diff,0.14092035481080328,0.14092035481080328,0.0,True
-adult_example_MST_eps10.0_seed42,MST,fidelity.three_way_mean_l1_error,0.24251388888888878,0.24251388888888878,0.0,True
+adult_example_MST_eps10.0_seed42,MST,fidelity.three_way_mean_l1_error,0.24251388888888878,0.2425138888888888,2.7755575615628914e-17,True
 adult_example_MST_eps10.0_seed42,MST,tstr_f1.logistic_regression,0.4684014869888476,0.4684014869888476,0.0,True
 adult_example_MST_eps10.0_seed42,MST,tstr_f1.random_forest,0.41975308641975306,0.41975308641975306,0.0,True
 adult_example_MST_eps10.0_seed42,MST,tstr_f1.xgboost,0.4626865671641791,0.4626865671641791,0.0,True
@@ -275,7 +275,7 @@ adult_example_MST_eps10.0_seed43,MST,fidelity.mean_tvd,0.0037962962962962907,0.0
 adult_example_MST_eps10.0_seed43,MST,fidelity.mean_jsd,7.821899069771577e-05,7.821899069771577e-05,0.0,True
 adult_example_MST_eps10.0_seed43,MST,fidelity.numerical_corr_frobenius_diff,0.6516490011732171,0.6516490011732173,2.220446049250313e-16,True
 adult_example_MST_eps10.0_seed43,MST,fidelity.cramers_v_mean_abs_diff,0.13675020792540682,0.13675020792540682,0.0,True
-adult_example_MST_eps10.0_seed43,MST,fidelity.three_way_mean_l1_error,0.22918055555555544,0.22918055555555553,8.326672684688674e-17,True
+adult_example_MST_eps10.0_seed43,MST,fidelity.three_way_mean_l1_error,0.22918055555555544,0.22918055555555542,2.7755575615628914e-17,True
 adult_example_MST_eps10.0_seed43,MST,tstr_f1.logistic_regression,0.45692883895131087,0.45692883895131087,0.0,True
 adult_example_MST_eps10.0_seed43,MST,tstr_f1.random_forest,0.4409448818897638,0.4409448818897638,0.0,True
 adult_example_MST_eps10.0_seed43,MST,tstr_f1.xgboost,0.43410852713178294,0.43410852713178294,0.0,True
@@ -293,7 +293,7 @@ adult_example_MST_eps10.0_seed44,MST,fidelity.mean_tvd,0.0032870370370370414,0.0
 adult_example_MST_eps10.0_seed44,MST,fidelity.mean_jsd,9.973043618495024e-05,9.973043618495024e-05,0.0,True
 adult_example_MST_eps10.0_seed44,MST,fidelity.numerical_corr_frobenius_diff,0.3973391309076358,0.3973391309076358,0.0,True
 adult_example_MST_eps10.0_seed44,MST,fidelity.cramers_v_mean_abs_diff,0.14127637824299932,0.14127637824299932,0.0,True
-adult_example_MST_eps10.0_seed44,MST,fidelity.three_way_mean_l1_error,0.2427916666666666,0.2427916666666666,0.0,True
+adult_example_MST_eps10.0_seed44,MST,fidelity.three_way_mean_l1_error,0.2427916666666666,0.24279166666666654,5.551115123125783e-17,True
 adult_example_MST_eps10.0_seed44,MST,tstr_f1.logistic_regression,0.46886446886446886,0.46886446886446886,0.0,True
 adult_example_MST_eps10.0_seed44,MST,tstr_f1.random_forest,0.4230769230769231,0.4230769230769231,0.0,True
 adult_example_MST_eps10.0_seed44,MST,tstr_f1.xgboost,0.44274809160305345,0.44274809160305345,0.0,True
@@ -311,7 +311,7 @@ adult_example_MST_eps3.0_seed42,MST,fidelity.mean_tvd,0.008240740740740738,0.008
 adult_example_MST_eps3.0_seed42,MST,fidelity.mean_jsd,0.00033367522422497194,0.00033367522422497194,0.0,True
 adult_example_MST_eps3.0_seed42,MST,fidelity.numerical_corr_frobenius_diff,0.5575244093921236,0.5575244093921236,0.0,True
 adult_example_MST_eps3.0_seed42,MST,fidelity.cramers_v_mean_abs_diff,0.13665892897042003,0.13665892897042003,0.0,True
-adult_example_MST_eps3.0_seed42,MST,fidelity.three_way_mean_l1_error,0.27261111111111097,0.27261111111111097,0.0,True
+adult_example_MST_eps3.0_seed42,MST,fidelity.three_way_mean_l1_error,0.27261111111111097,0.2726111111111109,5.551115123125783e-17,True
 adult_example_MST_eps3.0_seed42,MST,tstr_f1.logistic_regression,0.35587188612099646,0.35587188612099646,0.0,True
 adult_example_MST_eps3.0_seed42,MST,tstr_f1.random_forest,0.39826839826839827,0.39826839826839827,0.0,True
 adult_example_MST_eps3.0_seed42,MST,tstr_f1.xgboost,0.42323651452282157,0.42323651452282157,0.0,True
@@ -347,7 +347,7 @@ adult_example_MST_eps3.0_seed44,MST,fidelity.mean_tvd,0.008472222222222225,0.008
 adult_example_MST_eps3.0_seed44,MST,fidelity.mean_jsd,0.0006479938011648288,0.0006479938011648288,0.0,True
 adult_example_MST_eps3.0_seed44,MST,fidelity.numerical_corr_frobenius_diff,0.5968320470564583,0.5968320470564582,1.1102230246251565e-16,True
 adult_example_MST_eps3.0_seed44,MST,fidelity.cramers_v_mean_abs_diff,0.14787626541189716,0.14787626541189716,0.0,True
-adult_example_MST_eps3.0_seed44,MST,fidelity.three_way_mean_l1_error,0.2533888888888888,0.2533888888888888,0.0,True
+adult_example_MST_eps3.0_seed44,MST,fidelity.three_way_mean_l1_error,0.2533888888888888,0.2533888888888887,5.551115123125783e-17,True
 adult_example_MST_eps3.0_seed44,MST,tstr_f1.logistic_regression,0.39215686274509803,0.39215686274509803,0.0,True
 adult_example_MST_eps3.0_seed44,MST,tstr_f1.random_forest,0.33766233766233766,0.33766233766233766,0.0,True
 adult_example_MST_eps3.0_seed44,MST,tstr_f1.xgboost,0.4100418410041841,0.4100418410041841,0.0,True
@@ -365,7 +365,7 @@ adult_example_MST_eps5.0_seed42,MST,fidelity.mean_tvd,0.004861111111111104,0.004
 adult_example_MST_eps5.0_seed42,MST,fidelity.mean_jsd,0.00013649351656451367,0.00013649351656451367,0.0,True
 adult_example_MST_eps5.0_seed42,MST,fidelity.numerical_corr_frobenius_diff,0.4472690317169102,0.4472690317169102,0.0,True
 adult_example_MST_eps5.0_seed42,MST,fidelity.cramers_v_mean_abs_diff,0.13094136403551418,0.13094136403551418,0.0,True
-adult_example_MST_eps5.0_seed42,MST,fidelity.three_way_mean_l1_error,0.2433333333333333,0.24333333333333323,5.551115123125783e-17,True
+adult_example_MST_eps5.0_seed42,MST,fidelity.three_way_mean_l1_error,0.2433333333333333,0.2433333333333333,0.0,True
 adult_example_MST_eps5.0_seed42,MST,tstr_f1.logistic_regression,0.4377358490566038,0.4377358490566038,0.0,True
 adult_example_MST_eps5.0_seed42,MST,tstr_f1.random_forest,0.4065040650406504,0.4065040650406504,0.0,True
 adult_example_MST_eps5.0_seed42,MST,tstr_f1.xgboost,0.43846153846153846,0.43846153846153846,0.0,True
@@ -383,7 +383,7 @@ adult_example_MST_eps5.0_seed43,MST,fidelity.mean_tvd,0.004814814814814817,0.004
 adult_example_MST_eps5.0_seed43,MST,fidelity.mean_jsd,0.0001648958252900426,0.0001648958252900426,0.0,True
 adult_example_MST_eps5.0_seed43,MST,fidelity.numerical_corr_frobenius_diff,0.3956309007217717,0.39563090072177165,5.551115123125783e-17,True
 adult_example_MST_eps5.0_seed43,MST,fidelity.cramers_v_mean_abs_diff,0.13651567256179534,0.13651567256179534,0.0,True
-adult_example_MST_eps5.0_seed43,MST,fidelity.three_way_mean_l1_error,0.23388888888888876,0.23388888888888879,2.7755575615628914e-17,True
+adult_example_MST_eps5.0_seed43,MST,fidelity.three_way_mean_l1_error,0.23388888888888876,0.23388888888888876,0.0,True
 adult_example_MST_eps5.0_seed43,MST,tstr_f1.logistic_regression,0.5,0.5,0.0,True
 adult_example_MST_eps5.0_seed43,MST,tstr_f1.random_forest,0.3843137254901961,0.3843137254901961,0.0,True
 adult_example_MST_eps5.0_seed43,MST,tstr_f1.xgboost,0.45692883895131087,0.45692883895131087,0.0,True
@@ -401,7 +401,7 @@ adult_example_MST_eps5.0_seed44,MST,fidelity.mean_tvd,0.006435185185185192,0.006
 adult_example_MST_eps5.0_seed44,MST,fidelity.mean_jsd,0.00019869823282500027,0.00019869823282500027,0.0,True
 adult_example_MST_eps5.0_seed44,MST,fidelity.numerical_corr_frobenius_diff,0.44934819460156883,0.4493481946015689,5.551115123125783e-17,True
 adult_example_MST_eps5.0_seed44,MST,fidelity.cramers_v_mean_abs_diff,0.13023321832295254,0.13023321832295254,0.0,True
-adult_example_MST_eps5.0_seed44,MST,fidelity.three_way_mean_l1_error,0.2344722222222221,0.2344722222222221,0.0,True
+adult_example_MST_eps5.0_seed44,MST,fidelity.three_way_mean_l1_error,0.2344722222222221,0.23447222222222208,2.7755575615628914e-17,True
 adult_example_MST_eps5.0_seed44,MST,tstr_f1.logistic_regression,0.49146757679180886,0.49146757679180886,0.0,True
 adult_example_MST_eps5.0_seed44,MST,tstr_f1.random_forest,0.35398230088495575,0.35398230088495575,0.0,True
 adult_example_MST_eps5.0_seed44,MST,tstr_f1.xgboost,0.4230769230769231,0.4230769230769231,0.0,True
@@ -491,7 +491,7 @@ adult_example_PrivBayes_eps1.0_seed43,PrivBayes,fidelity.mean_tvd,0.064768518518
 adult_example_PrivBayes_eps1.0_seed43,PrivBayes,fidelity.mean_jsd,0.01736804321276754,0.01736804321276754,0.0,True
 adult_example_PrivBayes_eps1.0_seed43,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.38168180824314535,0.3816818082431454,5.551115123125783e-17,True
 adult_example_PrivBayes_eps1.0_seed43,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.13851078703335276,0.13851078703335276,0.0,True
-adult_example_PrivBayes_eps1.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.2586388888888886,0.2586388888888887,1.1102230246251565e-16,True
+adult_example_PrivBayes_eps1.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.2586388888888886,0.2586388888888886,0.0,True
 adult_example_PrivBayes_eps1.0_seed43,PrivBayes,tstr_f1.logistic_regression,0.4823529411764706,0.4823529411764706,0.0,True
 adult_example_PrivBayes_eps1.0_seed43,PrivBayes,tstr_f1.random_forest,0.45161290322580644,0.45161290322580644,0.0,True
 adult_example_PrivBayes_eps1.0_seed43,PrivBayes,tstr_f1.xgboost,0.4495114006514658,0.4495114006514658,0.0,True
@@ -509,7 +509,7 @@ adult_example_PrivBayes_eps1.0_seed44,PrivBayes,fidelity.mean_tvd,0.053564814814
 adult_example_PrivBayes_eps1.0_seed44,PrivBayes,fidelity.mean_jsd,0.010139294210077766,0.010139294210077766,0.0,True
 adult_example_PrivBayes_eps1.0_seed44,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.4052493505410969,0.4052493505410969,0.0,True
 adult_example_PrivBayes_eps1.0_seed44,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.13588201548607348,0.13588201548607348,0.0,True
-adult_example_PrivBayes_eps1.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.21238888888888882,0.21238888888888885,2.7755575615628914e-17,True
+adult_example_PrivBayes_eps1.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.21238888888888882,0.2123888888888888,2.7755575615628914e-17,True
 adult_example_PrivBayes_eps1.0_seed44,PrivBayes,tstr_f1.logistic_regression,0.39069767441860465,0.39069767441860465,0.0,True
 adult_example_PrivBayes_eps1.0_seed44,PrivBayes,tstr_f1.random_forest,0.33195020746887965,0.33195020746887965,0.0,True
 adult_example_PrivBayes_eps1.0_seed44,PrivBayes,tstr_f1.xgboost,0.39097744360902253,0.39097744360902253,0.0,True
@@ -527,7 +527,7 @@ adult_example_PrivBayes_eps10.0_seed42,PrivBayes,fidelity.mean_tvd,0.03824074074
 adult_example_PrivBayes_eps10.0_seed42,PrivBayes,fidelity.mean_jsd,0.003944714377685328,0.003944714377685328,0.0,True
 adult_example_PrivBayes_eps10.0_seed42,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.33182265833222574,0.33182265833222574,0.0,True
 adult_example_PrivBayes_eps10.0_seed42,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.06965081868250861,0.06965081868250861,0.0,True
-adult_example_PrivBayes_eps10.0_seed42,PrivBayes,fidelity.three_way_mean_l1_error,0.15891666666666673,0.15891666666666673,0.0,True
+adult_example_PrivBayes_eps10.0_seed42,PrivBayes,fidelity.three_way_mean_l1_error,0.15891666666666673,0.15891666666666676,2.7755575615628914e-17,True
 adult_example_PrivBayes_eps10.0_seed42,PrivBayes,tstr_f1.logistic_regression,0.3842364532019704,0.3842364532019704,0.0,True
 adult_example_PrivBayes_eps10.0_seed42,PrivBayes,tstr_f1.random_forest,0.42990654205607476,0.42990654205607476,0.0,True
 adult_example_PrivBayes_eps10.0_seed42,PrivBayes,tstr_f1.xgboost,0.44642857142857145,0.44642857142857145,0.0,True
@@ -545,7 +545,7 @@ adult_example_PrivBayes_eps10.0_seed43,PrivBayes,fidelity.mean_tvd,0.02740740740
 adult_example_PrivBayes_eps10.0_seed43,PrivBayes,fidelity.mean_jsd,0.0017463680421435303,0.0017463680421435303,0.0,True
 adult_example_PrivBayes_eps10.0_seed43,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.3323216006303298,0.33232160063032984,5.551115123125783e-17,True
 adult_example_PrivBayes_eps10.0_seed43,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.07150804863228881,0.07150804863228881,0.0,True
-adult_example_PrivBayes_eps10.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.12934722222222236,0.12934722222222236,0.0,True
+adult_example_PrivBayes_eps10.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.12934722222222236,0.1293472222222224,2.7755575615628914e-17,True
 adult_example_PrivBayes_eps10.0_seed43,PrivBayes,tstr_f1.logistic_regression,0.4845814977973568,0.4845814977973568,0.0,True
 adult_example_PrivBayes_eps10.0_seed43,PrivBayes,tstr_f1.random_forest,0.4810126582278481,0.4810126582278481,0.0,True
 adult_example_PrivBayes_eps10.0_seed43,PrivBayes,tstr_f1.xgboost,0.570281124497992,0.570281124497992,0.0,True
@@ -563,7 +563,7 @@ adult_example_PrivBayes_eps10.0_seed44,PrivBayes,fidelity.mean_tvd,0.03541666666
 adult_example_PrivBayes_eps10.0_seed44,PrivBayes,fidelity.mean_jsd,0.003927605689371195,0.003927605689371195,0.0,True
 adult_example_PrivBayes_eps10.0_seed44,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.43881867463385443,0.4388186746338545,5.551115123125783e-17,True
 adult_example_PrivBayes_eps10.0_seed44,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.05419143776818805,0.05419143776818805,0.0,True
-adult_example_PrivBayes_eps10.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.13669444444444456,0.13669444444444456,0.0,True
+adult_example_PrivBayes_eps10.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.13669444444444456,0.1366944444444446,2.7755575615628914e-17,True
 adult_example_PrivBayes_eps10.0_seed44,PrivBayes,tstr_f1.logistic_regression,0.5863453815261044,0.5863453815261044,0.0,True
 adult_example_PrivBayes_eps10.0_seed44,PrivBayes,tstr_f1.random_forest,0.5390625,0.5390625,0.0,True
 adult_example_PrivBayes_eps10.0_seed44,PrivBayes,tstr_f1.xgboost,0.50187265917603,0.50187265917603,0.0,True
@@ -599,7 +599,7 @@ adult_example_PrivBayes_eps3.0_seed43,PrivBayes,fidelity.mean_tvd,0.034351851851
 adult_example_PrivBayes_eps3.0_seed43,PrivBayes,fidelity.mean_jsd,0.004261685934283909,0.004261685934283909,0.0,True
 adult_example_PrivBayes_eps3.0_seed43,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.37913163422798996,0.37913163422798996,0.0,True
 adult_example_PrivBayes_eps3.0_seed43,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.10063631277407017,0.10063631277407017,0.0,True
-adult_example_PrivBayes_eps3.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.18465277777777772,0.18465277777777772,0.0,True
+adult_example_PrivBayes_eps3.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.18465277777777772,0.18465277777777767,5.551115123125783e-17,True
 adult_example_PrivBayes_eps3.0_seed43,PrivBayes,tstr_f1.logistic_regression,0.5703125,0.5703125,0.0,True
 adult_example_PrivBayes_eps3.0_seed43,PrivBayes,tstr_f1.random_forest,0.5405405405405406,0.5405405405405406,0.0,True
 adult_example_PrivBayes_eps3.0_seed43,PrivBayes,tstr_f1.xgboost,0.5136186770428015,0.5136186770428015,0.0,True
@@ -617,7 +617,7 @@ adult_example_PrivBayes_eps3.0_seed44,PrivBayes,fidelity.mean_tvd,0.035972222222
 adult_example_PrivBayes_eps3.0_seed44,PrivBayes,fidelity.mean_jsd,0.004799000013267504,0.004799000013267504,0.0,True
 adult_example_PrivBayes_eps3.0_seed44,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.3670147468993321,0.36701474689933217,5.551115123125783e-17,True
 adult_example_PrivBayes_eps3.0_seed44,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.06909388902057251,0.06909388902057251,0.0,True
-adult_example_PrivBayes_eps3.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.1564444444444444,0.15644444444444439,2.7755575615628914e-17,True
+adult_example_PrivBayes_eps3.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.1564444444444444,0.1564444444444444,0.0,True
 adult_example_PrivBayes_eps3.0_seed44,PrivBayes,tstr_f1.logistic_regression,0.5429864253393665,0.5429864253393665,0.0,True
 adult_example_PrivBayes_eps3.0_seed44,PrivBayes,tstr_f1.random_forest,0.5867768595041323,0.5867768595041323,0.0,True
 adult_example_PrivBayes_eps3.0_seed44,PrivBayes,tstr_f1.xgboost,0.5369649805447471,0.5369649805447471,0.0,True
@@ -635,7 +635,7 @@ adult_example_PrivBayes_eps5.0_seed42,PrivBayes,fidelity.mean_tvd,0.031574074074
 adult_example_PrivBayes_eps5.0_seed42,PrivBayes,fidelity.mean_jsd,0.0027436175480980013,0.0027436175480980013,0.0,True
 adult_example_PrivBayes_eps5.0_seed42,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.32254360259746667,0.32254360259746667,0.0,True
 adult_example_PrivBayes_eps5.0_seed42,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.06627882807504476,0.06627882807504476,0.0,True
-adult_example_PrivBayes_eps5.0_seed42,PrivBayes,fidelity.three_way_mean_l1_error,0.14661111111111105,0.14661111111111105,0.0,True
+adult_example_PrivBayes_eps5.0_seed42,PrivBayes,fidelity.three_way_mean_l1_error,0.14661111111111105,0.14661111111111108,2.7755575615628914e-17,True
 adult_example_PrivBayes_eps5.0_seed42,PrivBayes,tstr_f1.logistic_regression,0.5390625,0.5390625,0.0,True
 adult_example_PrivBayes_eps5.0_seed42,PrivBayes,tstr_f1.random_forest,0.5416666666666666,0.5416666666666666,0.0,True
 adult_example_PrivBayes_eps5.0_seed42,PrivBayes,tstr_f1.xgboost,0.5413533834586466,0.5413533834586466,0.0,True
@@ -653,7 +653,7 @@ adult_example_PrivBayes_eps5.0_seed43,PrivBayes,fidelity.mean_tvd,0.030740740740
 adult_example_PrivBayes_eps5.0_seed43,PrivBayes,fidelity.mean_jsd,0.0029947713830329532,0.0029947713830329532,0.0,True
 adult_example_PrivBayes_eps5.0_seed43,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.39760155907962463,0.39760155907962463,0.0,True
 adult_example_PrivBayes_eps5.0_seed43,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.06302018973077746,0.06302018973077746,0.0,True
-adult_example_PrivBayes_eps5.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.15463888888888885,0.15463888888888885,0.0,True
+adult_example_PrivBayes_eps5.0_seed43,PrivBayes,fidelity.three_way_mean_l1_error,0.15463888888888885,0.1546388888888888,5.551115123125783e-17,True
 adult_example_PrivBayes_eps5.0_seed43,PrivBayes,tstr_f1.logistic_regression,0.5349794238683128,0.5349794238683128,0.0,True
 adult_example_PrivBayes_eps5.0_seed43,PrivBayes,tstr_f1.random_forest,0.5061224489795918,0.5061224489795918,0.0,True
 adult_example_PrivBayes_eps5.0_seed43,PrivBayes,tstr_f1.xgboost,0.5210727969348659,0.5210727969348659,0.0,True
@@ -671,7 +671,7 @@ adult_example_PrivBayes_eps5.0_seed44,PrivBayes,fidelity.mean_tvd,0.039629629629
 adult_example_PrivBayes_eps5.0_seed44,PrivBayes,fidelity.mean_jsd,0.004101097121630908,0.004101097121630908,0.0,True
 adult_example_PrivBayes_eps5.0_seed44,PrivBayes,fidelity.numerical_corr_frobenius_diff,0.28244851005906035,0.2824485100590604,5.551115123125783e-17,True
 adult_example_PrivBayes_eps5.0_seed44,PrivBayes,fidelity.cramers_v_mean_abs_diff,0.09624210731018049,0.09624210731018049,0.0,True
-adult_example_PrivBayes_eps5.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.17122222222222216,0.1712222222222222,2.7755575615628914e-17,True
+adult_example_PrivBayes_eps5.0_seed44,PrivBayes,fidelity.three_way_mean_l1_error,0.17122222222222216,0.17122222222222216,0.0,True
 adult_example_PrivBayes_eps5.0_seed44,PrivBayes,tstr_f1.logistic_regression,0.5,0.5,0.0,True
 adult_example_PrivBayes_eps5.0_seed44,PrivBayes,tstr_f1.random_forest,0.4715447154471545,0.4715447154471545,0.0,True
 adult_example_PrivBayes_eps5.0_seed44,PrivBayes,tstr_f1.xgboost,0.47876447876447875,0.47876447876447875,0.0,True
@@ -689,7 +689,7 @@ adult_example_TVAE_seed42,TVAE,fidelity.mean_tvd,0.11611111111111112,0.116111111
 adult_example_TVAE_seed42,TVAE,fidelity.mean_jsd,0.04426814060467838,0.04426814060467838,0.0,True
 adult_example_TVAE_seed42,TVAE,fidelity.numerical_corr_frobenius_diff,0.46636080474367947,0.46636080474367947,0.0,True
 adult_example_TVAE_seed42,TVAE,fidelity.cramers_v_mean_abs_diff,0.07002985696601115,0.07002985696601115,0.0,True
-adult_example_TVAE_seed42,TVAE,fidelity.three_way_mean_l1_error,0.2768888888888888,0.2768888888888887,1.1102230246251565e-16,True
+adult_example_TVAE_seed42,TVAE,fidelity.three_way_mean_l1_error,0.2768888888888888,0.2768888888888888,0.0,True
 adult_example_TVAE_seed42,TVAE,tstr_f1.logistic_regression,0.5931558935361216,0.5931558935361216,0.0,True
 adult_example_TVAE_seed42,TVAE,tstr_f1.random_forest,0.5396825396825397,0.5396825396825397,0.0,True
 adult_example_TVAE_seed42,TVAE,tstr_f1.xgboost,0.5108225108225108,0.5108225108225108,0.0,True
@@ -707,7 +707,7 @@ adult_example_TVAE_seed43,TVAE,fidelity.mean_tvd,0.1275925925925926,0.1275925925
 adult_example_TVAE_seed43,TVAE,fidelity.mean_jsd,0.04878835673919482,0.04878835673919482,0.0,True
 adult_example_TVAE_seed43,TVAE,fidelity.numerical_corr_frobenius_diff,0.3544369355348156,0.3544369355348156,0.0,True
 adult_example_TVAE_seed43,TVAE,fidelity.cramers_v_mean_abs_diff,0.10249385234819358,0.10249385234819358,0.0,True
-adult_example_TVAE_seed43,TVAE,fidelity.three_way_mean_l1_error,0.3138749999999998,0.3138749999999998,0.0,True
+adult_example_TVAE_seed43,TVAE,fidelity.three_way_mean_l1_error,0.3138749999999998,0.31387499999999974,5.551115123125783e-17,True
 adult_example_TVAE_seed43,TVAE,tstr_f1.logistic_regression,0.6098360655737705,0.6098360655737705,0.0,True
 adult_example_TVAE_seed43,TVAE,tstr_f1.random_forest,0.5964912280701754,0.5964912280701754,0.0,True
 adult_example_TVAE_seed43,TVAE,tstr_f1.xgboost,0.5980066445182725,0.5980066445182725,0.0,True
@@ -725,7 +725,7 @@ adult_example_TVAE_seed44,TVAE,fidelity.mean_tvd,0.10675925925925928,0.106759259
 adult_example_TVAE_seed44,TVAE,fidelity.mean_jsd,0.041516719751142746,0.041516719751142746,0.0,True
 adult_example_TVAE_seed44,TVAE,fidelity.numerical_corr_frobenius_diff,0.2627272810043513,0.2627272810043513,0.0,True
 adult_example_TVAE_seed44,TVAE,fidelity.cramers_v_mean_abs_diff,0.0885908221578426,0.0885908221578426,0.0,True
-adult_example_TVAE_seed44,TVAE,fidelity.three_way_mean_l1_error,0.27415277777777763,0.2741527777777776,5.551115123125783e-17,True
+adult_example_TVAE_seed44,TVAE,fidelity.three_way_mean_l1_error,0.27415277777777763,0.27415277777777763,0.0,True
 adult_example_TVAE_seed44,TVAE,tstr_f1.logistic_regression,0.5909090909090909,0.5909090909090909,0.0,True
 adult_example_TVAE_seed44,TVAE,tstr_f1.random_forest,0.5804195804195804,0.5804195804195804,0.0,True
 adult_example_TVAE_seed44,TVAE,tstr_f1.xgboost,0.5309090909090909,0.5309090909090909,0.0,True

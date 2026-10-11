@@ -270,8 +270,9 @@ def make_figures(runs: pd.DataFrame, agg: pd.DataFrame, trtr: pd.DataFrame):
         ("1 − DP diff", lambda r: 1 - r["dp_difference_sex_mean"]),
     ]
     angles = np.linspace(0, 2 * np.pi, len(axes_def), endpoint=False).tolist()
-    fig = plt.figure(figsize=(3.5, 3.5))
+    fig = plt.figure(figsize=(3.5, 4.1))
     ax = fig.add_subplot(111, polar=True)
+    ax.set_rlabel_position(100)
     for _, r in sel.iterrows():
         vals = [f(r) for _, f in axes_def]
         ax.plot(angles + angles[:1], vals + vals[:1], lw=1, color=colors[r["method"]],
@@ -279,7 +280,7 @@ def make_figures(runs: pd.DataFrame, agg: pd.DataFrame, trtr: pd.DataFrame):
         ax.fill(angles + angles[:1], vals + vals[:1], alpha=0.05, color=colors[r["method"]])
     ax.set_xticks(angles); ax.set_xticklabels([a for a, _ in axes_def], fontsize=6)
     ax.set_ylim(0, 1); ax.tick_params(axis="y", labelsize=6)
-    ax.legend(fontsize=5.5, loc="upper right", bbox_to_anchor=(1.35, 1.12))
+    ax.legend(fontsize=6, loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=2, frameon=False)
     save(fig, "fig_res_13_radar_eps3")
 
 

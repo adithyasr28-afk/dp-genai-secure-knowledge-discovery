@@ -74,6 +74,7 @@ class InsightResult:
     payload_sha256: str = ""
     elapsed_seconds: float = 0.0
     audit_path: Optional[str] = None
+    api_request_attempted: bool = False  # True once a request to the API was actually issued
 
 
 # ---------------------------------------------------------------------------
@@ -103,13 +104,13 @@ def _demo_report(summary: dict) -> str:
                 lo = min(groups.items(), key=lambda kv: kv[1]["positive_rate"])
                 spreads.append((max(rates) - min(rates), col, hi, lo))
         for spread, col, hi, lo in sorted(spreads, reverse=True)[:5]:
-            lines.append(f"- `{col}`: highest rate {hi[1]['positive_rate']} for '{hi[0]}', lowest "
-                         f"{lo[1]['positive_rate']} for '{lo[0]}' (spread {round(spread, 3)}).")
+            lines.append(f"- `{col}`: highest rate {hi[1]['positive_rate']} for `{hi[0]}`, lowest "
+                         f"{lo[1]['positive_rate']} for `{lo[0]}` (spread {round(spread, 3)}).")
     lines += ["", "## Relationships between attributes"]
     for a in summary["strongest_categorical_associations"][:5]:
-        lines.append(f"- {a['columns'][0]} ↔ {a['columns'][1]}: Cramér's V = {a['cramers_v']}")
+        lines.append(f"- `{a['columns'][0]}` ↔ `{a['columns'][1]}`: Cramér's V = {a['cramers_v']}")
     for a in summary["strongest_numerical_correlations"][:3]:
-        lines.append(f"- {a['columns'][0]} ↔ {a['columns'][1]}: Pearson r = {a['pearson_r']}")
+        lines.append(f"- `{a['columns'][0]}` ↔ `{a['columns'][1]}`: Pearson r = {a['pearson_r']}")
     lines += ["", "## Possible insights and hypotheses",
               "The template lists the largest group differences above; a live LLM response would "
               "interpret them. Any such pattern is a hypothesis to validate on governed real data.",
@@ -186,7 +187,7 @@ def generate_insights(
             "is_llm_output": result.mode == "live" and result.ok,
             "system_prompt": SYSTEM_PROMPT,
             "user_message": user_message,
-            "user_message_sent_to_api": result.mode == "live",
+            "user_message_sent_to_api": result.api_request_attempted,
             "result": asdict(result),
         })
     return result
@@ -207,7 +208,8 @@ def _generate_live(client, user_message: str, payload_hash: str) -> InsightResul
         client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
 
     def fail(msg):
-        return InsightResult(mode="live", ok=False, text="", error=msg, payload_sha256=payload_hash)
+        return InsightResult(mode="live", ok=False, text="", error=msg, payload_sha256=payload_hash,
+                             api_request_attempted=True)
 
     try:
         text, stop_reason, model, request_id, usage = _call_claude(client, SYSTEM_PROMPT, user_message)
@@ -228,12 +230,12 @@ def _generate_live(client, user_message: str, payload_hash: str) -> InsightResul
 
     if stop_reason == "refusal":
         return InsightResult(mode="live", ok=False, text="", model=model, stop_reason=stop_reason,
-                             request_id=request_id, usage=usage, payload_sha256=payload_hash,
+                             request_id=request_id, usage=usage, payload_sha256=payload_hash, api_request_attempted=True,
                              error="The model declined this request (stop_reason=refusal).")
     if not text.strip():
         return InsightResult(mode="live", ok=False, text="", model=model, stop_reason=stop_reason,
-                             request_id=request_id, usage=usage, payload_sha256=payload_hash,
+                             request_id=request_id, usage=usage, payload_sha256=payload_hash, api_request_attempted=True,
                              error=f"The model returned no text (stop_reason={stop_reason}).")
     note = "\n\n_Note: output was truncated at max_tokens._" if stop_reason == "max_tokens" else ""
     return InsightResult(mode="live", ok=True, text=text + note, model=model, stop_reason=stop_reason,
-                         request_id=request_id, usage=usage, payload_sha256=payload_hash)
+                         request_id=request_id, usage=usage, payload_sha256=payload_hash, api_request_attempted=True)
