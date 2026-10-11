@@ -30,3 +30,11 @@ results/llm_insights/*.json
 
 # Local tool configuration
 .claude/
+
+# Report build outputs and the course template (the template and the built DOCX
+# contain the faculty member's photo and e-mail; keep them out of a public repo).
+# Regenerate with: python report/build_report.py  (template goes in report/template/)
+report/template/
+report/*.docx
+report/Diagrams/
+report/_body.docx

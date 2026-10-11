@@ -58,3 +58,6 @@ python-dotenv>=1.0
 matplotlib>=3.8
 # Test suite (pytest -m "not slow" for the quick checks).
 pytest>=8.0
+# Report build (report/build_report.py): pandoc binary + DOCX post-processing.
+pypandoc_binary>=1.13
+python-docx>=1.1
