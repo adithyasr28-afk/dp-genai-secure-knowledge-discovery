@@ -1,0 +1,81 @@
+{
+  "n_records": 43,
+  "n_unique_run_ids": 41,
+  "duplicate_run_ids": {
+    "adult_example_AIM_eps3.0_seed42": 2,
+    "adult_example_PrivBayes_eps3.0_seed42": 2
+  },
+  "status_counts": {
+    "completed": 43
+  },
+  "records_per_method": {
+    "AIM": 6,
+    "MST": 15,
+    "PrivBayes": 16,
+    "CTGAN": 3,
+    "TVAE": 3
+  },
+  "unique_runs_per_method": {
+    "AIM": 5,
+    "MST": 15,
+    "PrivBayes": 15,
+    "CTGAN": 3,
+    "TVAE": 3
+  },
+  "all_configs_ok": true,
+  "all_csvs_present_with_matching_rows": true,
+  "extra_csvs_without_log_record": [],
+  "reevaluation_values_compared": 738,
+  "reevaluation_values_matching": 733,
+  "reevaluation_mismatches_by_metric": {
+    "mia.attack_auc": 5
+  },
+  "reevaluation_max_abs_diff_by_metric": {
+    "fidelity.cramers_v_mean_abs_diff": 0.0,
+    "fidelity.mean_jsd": 0.0,
+    "fidelity.mean_ks_statistic": 0.0,
+    "fidelity.mean_tvd": 0.0,
+    "fidelity.mean_wasserstein_normalized": 6.938893903907228e-18,
+    "fidelity.numerical_corr_frobenius_diff": 2.220446049250313e-16,
+    "fidelity.three_way_mean_l1_error": 1.1102230246251565e-16,
+    "mia.attack_auc": 2.7777777777959756e-06,
+    "mia.tpr_at_fpr": 0.0,
+    "rare.max_minority_class_abs_diff": 0.0,
+    "rare.n_rare_categories_checked": 0.0,
+    "rare.n_rare_combinations_checked": 0.0,
+    "rare.pct_rare_categories_disappeared": 0.0,
+    "rare.pct_rare_combinations_disappeared": 0.0,
+    "similarity.pct_near_dup": 0.0,
+    "tstr_f1.logistic_regression": 0.0,
+    "tstr_f1.random_forest": 0.0,
+    "tstr_f1.xgboost": 0.0
+  },
+  "trtr_f1": {
+    "logistic_regression": 0.582995951417004,
+    "random_forest": 0.6201550387596899,
+    "xgboost": 0.6468401486988847
+  },
+  "trtr_fairness_logreg_sex": {
+    "demographic_parity_difference": 0.1690494073913763,
+    "equalized_odds_max_gap": 0.2146050670640835,
+    "f1_performance_gap": 0.1832342112715944,
+    "subgroups": [
+      {
+        "group": "Female",
+        "n": 193,
+        "positive_rate_true": 0.11398963730569948,
+        "positive_rate_predicted": 0.05699481865284974,
+        "f1": 0.42424242424242425,
+        "auroc": 0.9276980329611908
+      },
+      {
+        "group": "Male",
+        "n": 407,
+        "positive_rate_true": 0.29975429975429974,
+        "positive_rate_predicted": 0.22604422604422605,
+        "f1": 0.6074766355140186,
+        "auroc": 0.8525740580960598
+      }
+    ]
+  }
+}

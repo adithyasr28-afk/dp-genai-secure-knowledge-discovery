@@ -48,3 +48,13 @@ xgboost>=2.0
 # restores it (`numpy.product = numpy.prod`) at import time as a documented,
 # narrowly-scoped compatibility shim -- no numpy downgrade is required or
 # recommended, since CTGAN/TVAE were verified against numpy 2.x.
+
+# --- Added for the LLM knowledge-discovery extension and the report tooling ---
+# Anthropic Python SDK (live mode of knowledge_discovery/). Not needed for Demo mode.
+anthropic>=0.40
+# Loads ANTHROPIC_API_KEY from a local, git-ignored .env file.
+python-dotenv>=1.0
+# Figures for analysis/verify_results.py (600 DPI PNG + SVG).
+matplotlib>=3.8
+# Test suite (pytest -m "not slow" for the quick checks).
+pytest>=8.0

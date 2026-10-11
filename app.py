@@ -84,6 +84,18 @@ if use_example:
     st.session_state["raw_df"] = example_df
     st.session_state["dataset_name"] = "adult_example"
 
+# Extension (added): the LLM knowledge-discovery page works from saved DP
+# synthetic datasets only, so it is reachable without loading the original data.
+st.sidebar.divider()
+workspace = st.sidebar.radio(
+    "Workspace", ["Comparative study", "LLM Knowledge Discovery (extension)"], key="workspace"
+)
+if workspace.startswith("LLM"):
+    from knowledge_discovery.streamlit_page import render as render_knowledge_discovery
+
+    render_knowledge_discovery()
+    st.stop()
+
 if st.session_state["raw_df"] is None:
     st.title("Privacy-Preserving Synthetic Tabular Data — Comparative Study")
     st.info(
@@ -571,7 +583,7 @@ elif page == "Model Comparison":
     if len(summary) >= 2:
         st.subheader("Graph 5: All Methods — Fidelity vs Utility")
         st.scatter_chart(summary, x="mean_ks_statistic", y="best_tstr_f1", color="method")
-        st.caption("Bottom-right is best: low fidelity error (KS statistic) and high TSTR F1.")
+        st.caption("Top-left is best: low fidelity error (KS statistic) and high TSTR F1.")
 
         st.subheader("Graph 6: Utility–Privacy Trade-off (Pareto view)")
         st.scatter_chart(summary, x="attack_auc", y="best_tstr_f1", color="method")

@@ -1,0 +1,42 @@
+run_id,method,guarantee_type,config_ok,csv_exists,csv_rows,logged_rows
+adult_example_AIM_eps0.5_seed42,AIM,"(ε, δ)-DP",True,True,2400,2400
+adult_example_AIM_eps1.0_seed42,AIM,"(ε, δ)-DP",True,True,2400,2400
+adult_example_AIM_eps3.0_seed42,AIM,"(ε, δ)-DP",True,True,2400,2400
+adult_example_AIM_eps5.0_seed42,AIM,"(ε, δ)-DP",True,True,2400,2400
+adult_example_AIM_eps10.0_seed42,AIM,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps0.5_seed42,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps0.5_seed43,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps0.5_seed44,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps1.0_seed42,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps1.0_seed43,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps1.0_seed44,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps3.0_seed42,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps3.0_seed43,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps3.0_seed44,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps5.0_seed42,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps5.0_seed43,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps5.0_seed44,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps10.0_seed42,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps10.0_seed43,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_MST_eps10.0_seed44,MST,"(ε, δ)-DP",True,True,2400,2400
+adult_example_PrivBayes_eps0.5_seed42,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps0.5_seed43,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps0.5_seed44,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps1.0_seed42,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps1.0_seed43,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps1.0_seed44,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps3.0_seed42,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps3.0_seed43,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps3.0_seed44,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps5.0_seed42,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps5.0_seed43,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps5.0_seed44,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps10.0_seed42,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps10.0_seed43,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_PrivBayes_eps10.0_seed44,PrivBayes,pure ε-DP,True,True,2400,2400
+adult_example_CTGAN_seed42,CTGAN,non-DP,True,True,2400,2400
+adult_example_CTGAN_seed43,CTGAN,non-DP,True,True,2400,2400
+adult_example_CTGAN_seed44,CTGAN,non-DP,True,True,2400,2400
+adult_example_TVAE_seed42,TVAE,non-DP,True,True,2400,2400
+adult_example_TVAE_seed43,TVAE,non-DP,True,True,2400,2400
+adult_example_TVAE_seed44,TVAE,non-DP,True,True,2400,2400
