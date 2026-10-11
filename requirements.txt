@@ -1,0 +1,50 @@
+# Core
+# NOTE: exact pins (pandas==2.3.3 etc.) were the versions this project was
+# verified against, but numpy in particular only ships wheels for recent
+# Python releases -- if you're on an older Python (3.9/3.10) and pip fails
+# to find a matching numpy version, these minimum-version constraints let
+# pip pick the newest compatible release for YOUR interpreter instead.
+pandas>=2.0
+numpy>=1.26,<3.0
+scipy>=1.11
+# NOTE: scikit-learn is capped below 1.9 because scikit-learn 1.9 removed
+# a private internal symbol (sklearn.tree._tree.DOUBLE) that the PrivBayes
+# dependency `diffprivlib` (via its RandomForestClassifier/
+# DecisionTreeClassifier wrapper) imports directly. This broke PrivBayes
+# with "ImportError: cannot import name 'DOUBLE' from 'sklearn.tree._tree'"
+# on a fresh scikit-learn>=1.9 install -- confirmed in practice on Windows
+# with scikit-learn 1.9.0. Uncapping this is safe again once diffprivlib
+# ships a fix for the newer scikit-learn internals.
+scikit-learn>=1.4,<1.9
+
+# Streamlit app
+streamlit>=1.30
+
+# Non-DP reference generators (Xu et al. 2019 -- sdv-dev, canonical implementation)
+ctgan>=0.10
+
+# Differentially private generators: AIM + MST (McKenna et al., via
+# OpenDP's smartnoise-synth). IMPORTANT: install `mbi` from PyPI only --
+# do NOT install it from git. The upstream `ryan112358/private-pgm`
+# GitHub repo has since been rewritten/renamed to `ryan112358/mbi` with a
+# different internal API; installing it via git can silently overwrite
+# the correct PyPI `mbi` package and break AIM/MST with an ImportError
+# (e.g. "cannot import name 'FactoredInference'" or
+# "cannot import name 'LinearMeasurement'"). Pinning the exact PyPI
+# range smartnoise-synth itself declares avoids this entirely.
+smartnoise-synth>=1.0.0
+mbi>=1.1.0,<2
+
+# Differentially private generator: PrivBayes (Zhang et al. 2017 -- faithful
+# reimplementation; no actively-maintained packaged version exists from a
+# DP-specialist org, disclosed in README.md and models/privbayes_model.py)
+git+https://github.com/daanknoors/synthetic_data_generation.git
+
+# Downstream ML utility evaluation
+xgboost>=2.0
+
+# NOTE on numpy>=2.0 compatibility: the PrivBayes package's `thomas_core`
+# dependency calls the removed `numpy.product` alias. models/privbayes_model.py
+# restores it (`numpy.product = numpy.prod`) at import time as a documented,
+# narrowly-scoped compatibility shim -- no numpy downgrade is required or
+# recommended, since CTGAN/TVAE were verified against numpy 2.x.
