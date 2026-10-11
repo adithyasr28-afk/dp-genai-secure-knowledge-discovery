@@ -27,3 +27,6 @@ Thumbs.db
 *.zip
 results/llm_insights/*.json
 !results/llm_insights/.gitkeep
+
+# Local tool configuration
+.claude/
