@@ -19,10 +19,10 @@ Status: ✅ done · ◐ partly / needs team action · ❌ not done · ⚠ confli
 | Similarity ≤ 10% | ❌ | **Not checked.** Run the authorised checker after the team rewrites the text. |
 | Deliverables: manuscript (.doc) | ✅ | `report/Report_Draft_DP_GenAI_Secure_Knowledge_Discovery.docx`. |
 | Deliverables: diagram folder | ✅ | `report/Diagrams/`. |
-| Deliverables: source code (GitHub link) | ◐ | Repository prepared and committed; **push pending** (see HANDOVER). |
+| Deliverables: source code (GitHub link) | ✅ | https://github.com/adithyasr28-afk/dp-genai-secure-knowledge-discovery (public). |
 | Deliverables: datasets folder | ✅ | `data/` and `results/synthetic_data/` in the repository. |
 | Deliverables: execution videos | ❌ | Team to record (DEMO_GUIDE gives a script). |
-| Data Availability Statement in the required form | ◐ | Present; repository URL to insert after the push. |
+| Data Availability Statement in the required form | ✅ | Uses the first prescribed form, with the repository URL. |
 
 ## 2. Template (`3_Consolidated_Template.docx`)
 

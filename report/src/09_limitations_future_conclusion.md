@@ -129,7 +129,7 @@ Future work should remove the public-domain assumption, strengthen the attacks, 
 
 # Data Availability Statement {-}
 
-The datasets generated and analysed during the current study are available in the project's GitHub repository, **[repository URL to be inserted after publication — CONFIRM]**. These comprise the 41 synthetic datasets, the experiment log, the verified result tables and the analysis code. The source dataset is a 3,000-record sample of the UCI Adult dataset [@becker1996adult], available from the UCI Machine Learning Repository (doi: 10.24432/C5XW20) under a CC BY 4.0 licence; the sample used is included in the repository as `data/example_dataset.csv`.
+The datasets generated and analysed during the current study are available in the project's GitHub repository, https://github.com/adithyasr28-afk/dp-genai-secure-knowledge-discovery. These comprise the 41 synthetic datasets, the experiment log, the verified result tables and the analysis code. The source dataset is a 3,000-record sample of the UCI Adult dataset [@becker1996adult], available from the UCI Machine Learning Repository (doi: 10.24432/C5XW20) under a CC BY 4.0 licence; the sample used is included in the repository as `data/example_dataset.csv`.
 
 # Acknowledgment {-}
 

@@ -17,7 +17,6 @@
 | Item | Why | Who / how |
 |---|---|---|
 | Live Claude API call | No API key (a Claude Pro subscription has no API credits) | Create a key at console.anthropic.com, put it in `.env`, run the LLM page in Live mode, and add one real, labelled response to report Appendix D. |
-| GitHub push | Needs the account owner's authentication and a decision on visibility | See "Publishing" below. |
 | Similarity check (≤ 10%) | Needs the authorised tool | After the team rewrites the text. |
 | Student names, author list, e-mails, contribution allocation, page numbers | Team decisions | Edit the DOCX front matter; Word *References → Update Table* is not used here, so fill page numbers manually. |
 | Two-column body layout | Kept single-column for editing | Layout → Columns → Two after the final edits; add section breaks for wide figures and tables. |
@@ -34,7 +33,9 @@
 4. **Two-column layout:** required for the submitted draft, or only for the final version?
 5. Is a 3,000-row public census sample acceptable as the "sensitive" dataset, or is a second (e.g. healthcare) dataset expected?
 
-## Publishing to GitHub
+## Publishing to GitHub (done 2026-10-11)
+
+Published as a **public** repository: https://github.com/adithyasr28-afk/dp-genai-secure-knowledge-discovery . The steps below are kept for reference, e.g. for re-publishing elsewhere.
 
 The repository is fully committed locally at
 `C:\Users\adith\Desktop\Data Privacy Proj\dp-genai-secure-knowledge-discovery`.
