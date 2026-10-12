@@ -11,7 +11,7 @@ Baseline: commit `052d334` imports the original project unchanged from
 | `app.py` | Added a sidebar **Workspace** switch that renders the LLM extension page before the "load a dataset" gate (≈10 lines). | The extension runs from saved DP results and must not require the original data to be loaded. |
 | `app.py` | Model Comparison keeps the **latest completed record per run_id** and reports how many duplicates were excluded. | **Bug:** the original page counted 43 runs instead of 41 (two configurations were logged twice). |
 | `app.py` | Caption for "Fidelity vs Utility" changed from "Bottom-right is best" to "Top-left is best". | **Bug:** the x-axis is KS (lower is better) and the y-axis is F1 (higher is better), so the old caption pointed at the worst corner. |
-| `requirements.txt` | Added anthropic, python-dotenv, matplotlib, pytest, pypandoc_binary, python-docx. | Extension, figures, tests, report build. |
+| `requirements.txt` | Added anthropic, google-genai, python-dotenv, matplotlib, pytest, pypandoc_binary, python-docx. | Extension, figures, tests, report build. |
 | `README.md` | Rewritten: Windows setup, LLM configuration, verified results, limitations. | Repository deliverable. |
 | `.gitignore` | New: secrets, venv, caches, audit logs, local tool config. | Keep secrets and generated clutter out of git. |
 
@@ -26,18 +26,20 @@ Unchanged: `models/`, `preprocessing/`, `evaluation/`, `experiments/`,
 | `knowledge_discovery/catalog.py` | Lists eligible DP synthetic datasets from the log (latest completed record, DP methods only); guarded loader. |
 | `knowledge_discovery/summarizer.py` | Aggregate-only payload with k = 20 small-cell suppression and a privacy manifest. |
 | `knowledge_discovery/prompts.py` | Versioned system prompt (`kd-prompt-v1`) and user-message template. |
-| `knowledge_discovery/llm_client.py` | Live mode (Claude API via the official SDK, typed error handling, refusal handling) and labelled demo mode; audit records. |
+| `knowledge_discovery/llm_client.py` | Live mode with a provider setting (`KD_PROVIDER`): Google Gemini via the official `google-genai` SDK and Anthropic Claude via the official `anthropic` SDK; typed error handling, retries, refusal / safety-block handling; labelled demo mode; audit records with the provider and served model. |
 | `knowledge_discovery/streamlit_page.py` | Dashboard page: dataset selection, guarantee panel, payload preview, generation, audit notice. |
 | `analysis/verify_results.py` | Log integrity, de-duplication, configuration checks, re-evaluation of all metrics, TRTR and fairness references, aggregated tables, result figures (600 DPI PNG + SVG). |
 | `analysis/knowledge_utility.py` | Offline agreement of payload statistics with the real training split (KU, Spearman ρ, top-1). |
-| `tests/` (3 files, 32 tests) and `pytest.ini` | Extension privacy and error handling; real SDK against a mock server; pipeline smoke tests. |
+| `analysis/llm_case_study.py` | Fact-check of the real Gemini responses against the payload and the real training split; exports the unedited responses to `docs/llm_evidence/`. |
+| `tests/` (4 files, 48 tests) and `pytest.ini` | Extension privacy and error handling; real `anthropic` and `google-genai` SDKs against a mock server; opt-in live test; pipeline smoke tests. |
 | `figures/diagram_builder.py`, `figures/diagrams/` | 15 report diagrams as PNG (600 DPI), SVG and editable `.drawio`. |
 | `figures/fig_res_*.png/.svg` | 13 result figures. |
 | `results/verified/` | Verification outputs used by the report. |
 | `constraints.txt` | Exact package versions recovered from the original venv, plus the new packages. |
 | `run_dashboard.bat` | Windows launcher. |
-| `.env.example` | Placeholder for `ANTHROPIC_API_KEY`. |
-| `docs/screenshots/` | Dashboard evidence captured during testing. |
+| `.env.example` | Placeholders for `GEMINI_API_KEY` and `ANTHROPIC_API_KEY`, provider and model settings. |
+| `docs/screenshots/` | Dashboard evidence captured during testing, including a live Gemini response. |
+| `docs/llm_evidence/` | The two real Gemini responses, unedited, with model, token and latency metadata. |
 | `report/` | Report sources (`src/*.md`), build scripts, references, generated tables, `Diagrams/` folder, DOCX draft. |
 | `docs/GUIDELINE_CHECKLIST.md`, `docs/DEMO_GUIDE.md`, `docs/HANDOVER.md` | Delivery documentation. |
 

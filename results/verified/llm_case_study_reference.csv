@@ -1,0 +1,5 @@
+dataset,overall_rate,female_rate,male_rate,rate_12th,edu_race_v,min_cell_count,cells_suppressed,gender_gap_male_minus_female
+REAL train split,0.239,0.103,0.307,0.036,0.119,,,0.204
+adult_example_AIM_eps3.0_seed42,0.24,0.254,0.233,0.433,0.493,20.0,8.0,-0.021
+adult_example_PrivBayes_eps3.0_seed42,0.246,0.115,0.316,0.674,0.074,20.0,2.0,0.201
+adult_example_MST_eps3.0_seed42,0.242,0.241,0.243,0.414,0.45,20.0,10.0,0.002

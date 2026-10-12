@@ -84,7 +84,7 @@ Accountability rests on the audit trail. In an organisation, a named data owner 
 
 ## Responsible Knowledge Generation
 
-The spurious education–race association in Section XIV illustrates a specific ethical risk. Generated "knowledge" about sensitive groups can be *false*, and an LLM will state it fluently. Presenting such an artefact as insight could reinforce stereotypes or misdirect policy. Mitigations implemented here:
+The spurious education–race association and the reversed gender gap in Section XIV illustrate a specific ethical risk. Generated "knowledge" about sensitive groups can be *false*, and an LLM will state it fluently — the real Gemini response on AIM ε = 3 told the reader that women out-earn men. Presenting such an artefact as insight could reinforce stereotypes or misdirect policy. Mitigations implemented here:
 
 - hypothesis framing in the prompt;
 - quality metrics included in the payload;

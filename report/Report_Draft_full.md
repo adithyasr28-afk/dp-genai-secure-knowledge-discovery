@@ -1,6 +1,6 @@
 # Differential Privacy-Enhanced Generative AI for Secure Knowledge Discovery {-}
 
-**ABSTRACT** Generative models can turn sensitive tabular records into shareable synthetic data, and large language models (LLMs) can turn data into readable insight, but both can leak information about individuals. This study evaluates a pipeline that combines the two under differential privacy. Three differentially private generators (AIM, MST and PrivBayes) and two non-private baselines (CTGAN and TVAE) were compared on a 3,000-record sample of the UCI Adult census data across five privacy budgets, using one shared leakage-safe preprocessing protocol and six evaluation dimensions: statistical fidelity, machine-learning utility, empirical privacy risk, fairness, rare-pattern preservation and runtime. All 41 unique runs were verified by recomputing 738 logged metric values from the saved synthetic data; 733 matched exactly and the remainder differed by less than three in a million. At a budget of three and above, AIM and PrivBayes retained about 81–82% of the real-data F1 score, close to the non-private TVAE (85%), while MST retained 62–69%. A simple nearest-neighbour membership attack could not distinguish any method from random guessing, which shows the attack's weakness rather than the safety of the non-private models. An LLM knowledge-discovery layer was added that sends only suppressed aggregate statistics from private synthetic data to Claude. An offline check showed that these statistics track the real data well for AIM and PrivBayes at higher budgets but poorly for MST, and exposed spurious associations that an LLM would report as insight.
+**ABSTRACT** Generative models can turn sensitive tabular records into shareable synthetic data, and large language models (LLMs) can turn data into readable insight, but both can leak information about individuals. This study evaluates a pipeline that combines the two under differential privacy. Three differentially private generators (AIM, MST and PrivBayes) and two non-private baselines (CTGAN and TVAE) were compared on a 3,000-record sample of the UCI Adult census data across five privacy budgets, using one shared leakage-safe preprocessing protocol and six evaluation dimensions: statistical fidelity, machine-learning utility, empirical privacy risk, fairness, rare-pattern preservation and runtime. All 41 unique runs were verified by recomputing 738 logged metric values from the saved synthetic data; 733 matched exactly and the remainder differed by less than three in a million. At a budget of three and above, AIM and PrivBayes retained about 81–82% of the real-data F1 score, close to the non-private TVAE (85%), while MST retained 62–69%. A simple nearest-neighbour membership attack could not distinguish any method from random guessing, which shows the attack's weakness rather than the safety of the non-private models. An LLM knowledge-discovery layer was added that sends only suppressed aggregate statistics from private synthetic data to Gemini or Claude. An offline check showed that these statistics track the real data well for AIM and PrivBayes at higher budgets but poorly for MST. Two real Gemini responses confirmed the risk: the model faithfully reported a gender gap that AIM had reversed.
 
 **INDEX TERMS** Differential privacy, generative AI, knowledge discovery, large language models, membership inference, privacy–utility trade-off, synthetic data, tabular data.
 
@@ -18,23 +18,23 @@
 > 2. **Layout.** The template's paper body is two-column. The draft body is single-column so it is easier to edit; switch with *Layout → Columns → Two* after editing. Wide figures and tables will need section breaks. **[TEAM]**
 > 3. **Front matter.** Student names, faculty name, e-mails and author order are placeholders. Page numbers in the Index, List of Figures and List of Tables must be filled in after the final layout. **[TEAM]**
 > 4. **Contributions.** The Contributions table lists the automatically counted words per section. Assigning sections to registration numbers is the team's decision. **[TEAM]**
-> 5. **References.** 62 references are cited.
+> 5. **References.** 63 references are cited.
 >    - 19 were checked against online records while drafting.
 >    - 5 are flagged **[VERIFY]** because a DOI or page range could not be confirmed.
 >    - The rest are long-established works reproduced from standard metadata and should be spot-checked.
 >
->    The mix is about 21% journal articles, 56% conference papers and 23% standards, legislation, documentation or preprints. The guideline asks for 80% journal articles from IEEE/ACM/Springer/Elsevier, so the team should swap conference papers for journal versions where they exist, or confirm the requirement with the instructor. **[TEAM]**
+>    The mix is about 21% journal articles, 56% conference papers and 24% standards, legislation, documentation or preprints. The guideline asks for 80% journal articles from IEEE/ACM/Springer/Elsevier, so the team should swap conference papers for journal versions where they exist, or confirm the requirement with the instructor. **[TEAM]**
 > 6. **Similarity.** No similarity checker has been run. The 10% threshold must be confirmed with the authorised tool after the team rewrites the text in its own words. **[TEAM]**
-> 7. **Figure and table counts.** 29 figures (25 in the body, 4 in appendices) and 19 tables, which is above the guideline's 10–15 and 8–12. Candidates to move to an appendix or drop are noted in captions: the heatmap, the Logistic Regression plot, and one of the radar or heatmap pair. **[TEAM]**
+> 7. **Figure and table counts.** 30 figures (25 in the body, 5 in appendices) and 20 tables, which is above the guideline's 10–15 and 8–12. Candidates to move to an appendix or drop are noted in captions: the heatmap, the Logistic Regression plot, and one of the radar or heatmap pair. **[TEAM]**
 > 10. **Word counts.** Counted without tables, these sections are still below the section plan's suggested minimum and could be expanded: Threat Model (about 680 of 1,000), Framework (about 880 of 1,200), Data Preparation (about 640 of 1,000), Explainability (about 700 of 1,000), Business Impact (about 400 of 500), Challenges (about 425 of 600) and Future Directions (about 425 of 600). The per-section counts are in the Contributions table. **[TEAM]**
 > 8. **Equations.** These are native Word equations (editable in the Equation Editor). Numbers are typed at the right of each equation; Word does not renumber them automatically.
-> 9. **Live LLM output.** No API key was available, so **no real LLM response is reported anywhere in this draft**. If the team obtains a key, run the dashboard in live mode and add a real, labelled example to Appendix D. **[TEAM]**
+> 9. **Live LLM output.** Two real responses from Google Gemini (`gemini-3.8-flash`, 11 Oct. 2026) are reported and fact-checked in Section XIV and Appendix D; their full text is in the repository (`docs/llm_evidence/`). No real Claude response was obtained (no Anthropic API key). Every other LLM-style text in this draft is labelled demo output. **[TEAM: rotate the Gemini key before submission.]**
 
 # Executive Summary {-}
 
 **Context.** Organisations hold tabular data — patient records, loan books, census and survey microdata — whose analysis creates value but whose disclosure harms individuals. Generative AI offers two tempting shortcuts. Synthetic data generators can stand in for the real records, and large language models (LLMs) can explain the data in plain language. Neither is private by default. Generators memorise and reproduce training records [1][2]. LLMs leak training data [3][4], and their prompts reach third-party services. Differential privacy (DP) is the only widely accepted framework that bounds what any output can reveal about one individual [5][6].
 
-**What was built.** This case study evaluates a three-layer pipeline. In the first layer, a leakage-safe preparation stage learns every preprocessing parameter from the training split only. In the second, a DP synthesis layer produces synthetic tables with AIM [7], MST [8] or PrivBayes [9]; CTGAN and TVAE [10] serve as non-private baselines. In the third, an evaluation and knowledge-discovery layer measures each synthetic table on six dimensions and passes only aggregate, small-cell-suppressed statistics from DP output to an LLM (Claude) for explanation.
+**What was built.** This case study evaluates a three-layer pipeline. In the first layer, a leakage-safe preparation stage learns every preprocessing parameter from the training split only. In the second, a DP synthesis layer produces synthetic tables with AIM [7], MST [8] or PrivBayes [9]; CTGAN and TVAE [10] serve as non-private baselines. In the third, an evaluation and knowledge-discovery layer measures each synthetic table on six dimensions and passes only aggregate, small-cell-suppressed statistics from DP output to an LLM — Google Gemini or Anthropic Claude, selectable — for explanation.
 
 The comparative study and dashboard existed before this iteration. The LLM layer, the verification tooling, the test suite and two dashboard fixes were added. Training a new LLM, DP-SGD and retrieval-augmented generation are discussed but **not** implemented.
 
@@ -46,11 +46,11 @@ The comparative study and dashboard existed before this iteration. The LLM layer
 - *Fidelity.* AIM had the lowest three-way marginal error at ε = 0.5 (0.224, against 0.30–0.32 for the other DP methods). The non-private generators had the worst one-way numerical fidelity (KS 0.25–0.33, against 0.08–0.15 for the DP methods).
 - *Privacy.* A simple nearest-neighbour membership attack scored an AUC of about 0.50 for **every** method. This exposes the attack's weakness; it does not show that CTGAN or TVAE are safe. TVAE produced the closest records and was the only method that emitted exact copies of training rows.
 - *Rare patterns and fairness.* TVAE erased every rare category, and MST lost 41–48% of rare attribute combinations. Fairness metrics varied widely across single runs.
-- *Knowledge discovery.* Payload statistics agreed with the real data far better for AIM and PrivBayes at ε ≥ 5 (Spearman ρ 0.76–0.88) than for MST (ρ ≤ 0.30). Some DP datasets contained spurious associations: education and race appeared strongly associated (Cramér's V ≈ 0.45–0.49) where the real association was weak (0.12). An LLM would report such artefacts as insight.
+- *Knowledge discovery.* Payload statistics agreed with the real data far better for AIM and PrivBayes at ε ≥ 5 (Spearman ρ 0.76–0.88) than for MST (ρ ≤ 0.30). Some DP datasets contained spurious associations: education and race appeared strongly associated (Cramér's V ≈ 0.45–0.49) where the real association was weak (0.12). Two real Gemini responses showed that an LLM does report such artefacts as insight: on AIM ε = 3 it stated, faithfully to its input, that women out-earn men (25.4% vs 23.3%), whereas the real split shows 10.3% vs 30.7%. On PrivBayes ε = 3 it reported the real gap correctly and flagged an implausible subgroup rate as a DP artefact.
 
 **Implications.** The prior hypothesis — that AIM offers the best DP trade-off — is only partly supported. AIM leads at low budgets but is the slowest DP method and was run with one seed. The formal guarantee also rests on treating the preprocessing domain as public. For organisations, the results support DP synthetic data as a *first-pass* analytical resource, with LLM explanations treated as hypotheses. They do not support it as a drop-in replacement for governed access to real data.
 
-**Main limitations.** Single small dataset; AIM capped at 60 rounds and single-seed; DP generator randomness not seeded; weak membership attack; preprocessing not privatised; no live LLM output verified.
+**Main limitations.** Single small dataset; AIM capped at 60 rounds and single-seed; DP generator randomness not seeded; weak membership attack; preprocessing not privatised; only two live LLM responses, from one provider, evaluated.
 
 
 # I. Introduction {-}
@@ -249,7 +249,7 @@ Table: TABLE I. Comparison of representative literature
 | Li *et al.* 2022 [42] | LLM fine-tuning | DP-SGD | Strong DP fine-tuning of LLMs | Requires model training |
 | Xie *et al.* 2024 [47] | Text | DP via API-only Private Evolution | DP synthetic text without training | Text, not tables |
 | Zeng *et al.* 2024 [19] | RAG | — | Retrieval-store leakage | No DP mechanism |
-| **This study** | Tabular + LLM explanations | (ε, δ) and pure ε via generators; post-processing | Verified 5-method comparison + aggregate-only LLM layer + knowledge-utility check | One small dataset; no live LLM evaluation |
+| **This study** | Tabular + LLM explanations | (ε, δ) and pure ε via generators; post-processing | Verified 5-method comparison + aggregate-only LLM layer + knowledge-utility check | One small dataset; two live LLM responses evaluated |
 
 
 # IV. Requirements Analysis for Secure Knowledge Discovery {-}
@@ -339,14 +339,14 @@ Table: TABLE II. Requirements traceability matrix
 | FR1–FR2 | Profiling; train-only preprocessing | `preprocessing/` | `test_preprocessing_fit_uses_train_only`, `test_dataset_shape` | Met |
 | FR3 | Five generators, common interface | `models/`, `experiments/runner.py` | 5 end-to-end smoke tests passed | Met |
 | FR4–FR5 | Six evaluation dimensions; comparison | `evaluation/`, dashboard | 733/738 metrics re-computed exactly | Met |
-| FR6 | LLM explanation of DP synthetic data | `knowledge_discovery/` | Mock-server tests via real SDK; demo mode in UI | Met (live output **not** verified) |
+| FR6 | LLM explanation of DP synthetic data | `knowledge_discovery/` | Mock-server tests via the real `google-genai` and `anthropic` SDKs; demo mode in UI; two real Gemini calls | Met (live verified for Gemini only) |
 | PR1–PR2 | Exact guarantees; non-DP labelled | `models/*`, `privacy.py` | `config_checks.csv`: 41/41 pass | Met |
 | PR3 | No original data to the LLM | `catalog.py` path guard | `test_original_rows_never_in_prompt`, `test_original_file_not_read…` | Met |
 | PR4 | Small-cell suppression | `summarizer.py` (k = 20) | `test_small_cells_suppressed` | Met |
 | PR5 | No DP claim for aggregates/LLM | UI notes, manifest, README | Manual review | Met |
 | SR1–SR2 | No secrets in repository | `.env.example`, `.gitignore` | Secret scan of tracked files | Met |
 | SR3 | Path guards | `catalog.py` | `test_refuses_original_dataset_and_non_dp` | Met |
-| SR4 | API error handling | `llm_client.py` | HTTP 400/401/429/500 and connection tests | Met |
+| SR4 | API error handling | `llm_client.py` | HTTP 400/401/403/404/429/500, connection and safety-block tests | Met |
 | XR1–XR2 | Payload shown; demo labelled | `streamlit_page.py` | Dashboard inspection; `test_demo_mode_is_labelled…` | Met |
 | XR3, CR2 | Provenance, audit | Log, audit JSON | Audit records inspected | Met |
 | CR3, TR3 | Assumptions disclosed | README, this report | Sections IX, XX | Met |
@@ -479,7 +479,7 @@ Table: TABLE IV. Threat and risk assessment (L = likelihood, I = impact; H/M/L)
 | A3 Provider-side exposure | M | M | Aggregates only, rounding, k ≥ 20 suppression; no keys in prompts | Low–medium; depends on provider terms |
 | A4 Insider / misconfiguration | M | H | `.gitignore`, `.env.example`, secret scan, path guard | Low |
 | A5 Prompt injection via data | L | M | Data wrapped in tags; system prompt says data are not instructions; categories come from a fitted vocabulary | Low; not adversarially tested |
-| A6 Over-trust in explanations | H | M | Quality metrics in payload; "hypothesis" framing; knowledge-utility check | **Medium–high**: spurious associations observed |
+| A6 Over-trust in explanations | H | M | Quality metrics in payload; "hypothesis" framing; knowledge-utility check | **Medium–high**: spurious associations observed, and repeated by a real LLM (Section XIV) |
 | Assumption risk: non-private preprocessing domain | M | M | Disclosed; bins and vocabulary fitted on training data only | Formal ε holds only if the domain is treated as public |
 
 
@@ -529,7 +529,7 @@ The log is *resumable*: a sweep restarted after a crash skips every run identifi
 
 **Dashboard.** The Streamlit application has nine pages: dataset, preprocessing, generation, synthetic data, fidelity, utility, privacy, fairness and rare patterns, and model comparison. Each page reads from session state or from the log. The extension is attached by a single sidebar switch and a lazy import, so the original pages are untouched and keep working when the LLM dependencies are absent.
 
-**Knowledge-discovery package.** Four modules with single responsibilities: `catalog` (eligibility and provenance), `summarizer` (aggregate payload), `prompts` (versioned templates) and `llm_client` (live and demo generation, error handling, audit). They are covered by 23 tests (Appendix B).
+**Knowledge-discovery package.** Four modules with single responsibilities: `catalog` (eligibility and provenance), `summarizer` (aggregate payload), `prompts` (versioned templates) and `llm_client` (provider selection, live and demo generation, error handling, audit). `llm_client` supports two providers behind one interface — Google Gemini through the official `google-genai` SDK and Anthropic Claude through the official `anthropic` SDK — chosen by `KD_PROVIDER` or a drop-down on the page. Both receive the identical system prompt and payload. The package is covered by 39 tests (Appendix B).
 
 ## D. End-to-End Sequence of One Run {-}
 
@@ -723,9 +723,9 @@ Fig. 9 shows the implemented workflow.
    - treat the tagged summary as data, not instructions;
    - never describe individuals or claim extra privacy.
 5. **Generation.**
-   - *Live mode* calls the Anthropic Messages API [57] with `claude-opus-5-5`, medium effort, and the server-side refusal fallback. The key is read from the `ANTHROPIC_API_KEY` environment variable or a git-ignored `.env` file.
+   - *Live mode* calls the selected provider. **Gemini** is called through Google's official `google-genai` SDK [57] (`models.generate_content`, model alias `gemini-flash-latest`, system instruction, 16,000 output tokens, three attempts on 429/5xx). **Claude** is called through the Anthropic Messages API [58] with `claude-opus-5-5`, medium effort, and the server-side refusal fallback. `KD_PROVIDER=auto` uses Claude when its key is present and Gemini otherwise. Keys are read from `GEMINI_API_KEY` / `ANTHROPIC_API_KEY` in the environment or a git-ignored `.env` file, and travel only in the HTTP authentication header.
    - *Demo mode* builds a deterministic template from the same summary. It is labelled in the UI, the output and the audit record as **not** LLM output.
-6. **Transparency and audit.** The UI shows the exact system prompt and user message before generation, and offers the summary for download. Each request writes an audit record with the prompt version, a SHA-256 hash of the payload, the mode, model, stop reason, token usage, and whether a request was actually sent.
+6. **Transparency and audit.** The UI shows the exact system prompt and user message before generation, and offers the summary for download. Each request writes an audit record with the prompt version, a SHA-256 hash of the payload, the mode, the provider, the model version that actually answered, stop reason, token usage, and whether a request was actually sent.
 
 ![Fig. 9. Knowledge-discovery workflow (implemented). The original dataset has no path into the pipeline.](figures/diagrams/fig08_llm_knowledge_discovery_workflow.png){width=6.3in}
 
@@ -755,33 +755,40 @@ Table: TABLE VI. Failure modes of the LLM layer and their handling
 | Failure | Handling |
 |---|---|
 | API key missing | Clear message pointing to `.env.example`; no request is attempted, and the audit records `user_message_sent_to_api = false` |
-| Key rejected (401) or lacking permission (403) | Typed SDK exceptions mapped to actionable messages |
-| Unknown model (404) | Message naming the `KD_MODEL` setting |
-| Rate limit (429), server error (5xx), network failure | SDK retries twice, then shows a retry-later message |
+| Key rejected (400 invalid key, 401) or lacking permission (403) | Typed SDK exceptions mapped to actionable messages |
+| Unknown or retired model (404) | Message naming the `KD_MODEL` / `KD_GEMINI_MODEL` setting and quoting the provider's reason (observed for real when `gemini-2.5-flash` was closed to new users) |
+| Rate limit (429), server error or overload (5xx), network failure | SDK retries (three attempts in total), then shows a retry-later message (a real 503 "high demand" was observed during testing) |
 | Request rejected (400) | Message with the API's own explanation, e.g. if the fallback parameter were unavailable for an account |
-| Safety refusal | `stop_reason = refusal` reported as an error, not as an empty explanation |
+| Safety refusal or Gemini safety / prompt block | `stop_reason = refusal` reported as an error, not as an empty explanation |
 | Truncation at `max_tokens` | Text kept and marked as truncated |
 | Empty response | Reported as an error |
 
 ## E. Verification Status of the LLM Component {-}
 
-No Anthropic API key was available while this work was carried out. A Claude Pro chat subscription does not include API credits. The verification status is therefore stated precisely in four parts.
+The verification status is stated per provider.
 
-**Verified by execution:**
+**Verified with real API calls (Gemini, 11 October 2026):**
 
-- request construction through the real `anthropic` 1.13 SDK against a local mock HTTP server: model, beta flag, fallback parameter, and the key present only in the authentication header;
+- two live requests succeeded — AIM ε = 3 (scripted) and PrivBayes ε = 3 (from the dashboard UI, Fig. 29). The alias `gemini-flash-latest` was served by `gemini-3.8-flash`;
+- each used about 6,300 input, 1,700–1,800 output and 2,600–2,900 internal "thinking" tokens and took about 30 s;
+- both returned the five requested sections, framed insights as hypotheses and stated that the LLM adds no privacy guarantee;
+- the outputs were fact-checked claim by claim against the payload and the real training split (Section XIV, Table XIV); the unedited texts are in `docs/llm_evidence/` and an excerpt is in Appendix D.
+
+**Verified by execution against a local mock server (both providers):**
+
+- request construction through the real `google-genai` 2.29 and `anthropic` 1.13 SDKs: model, system instruction, token limit, (for Claude) beta flag and fallback parameter, and the key present only in the authentication header;
 - the absence of any of the first 300 original rows in the request body;
 - that the original file is never opened;
 - small-cell suppression;
-- clear errors for a missing key and for HTTP 400, 401, 429 and 500, connection failure, refusal and empty responses;
+- clear errors for a missing key and for HTTP 400, 401, 403, 404, 429 and 500, connection failure, refusal, safety blocks, truncation and empty responses;
 - the demo-mode path in the running dashboard.
 
 **Not verified:**
 
-- that the live API accepts the request;
-- the content and quality of real model explanations.
+- a live Claude request (no Anthropic API key was available; a Claude Pro chat subscription does not include API credits);
+- explanation quality beyond the two Gemini responses, and stability across repeated calls — LLM output is not deterministic, so a repeat call may phrase or select claims differently.
 
-**No real LLM output appears in this report.** The demo excerpt in Appendix D is template text.
+Real LLM text appears only in Section XIV and Appendix D, where it is labelled with the provider, model and date. The demo excerpt in Appendix D is template text.
 
 ## F. Knowledge Utility {-}
 
@@ -903,7 +910,7 @@ Table: TABLE VII. Experimental configuration
 
 ## C. Implementation Environment {-}
 
-- **Software:** Python 3.11; pandas 2.3.3, NumPy 2.4.6, scikit-learn 1.8.0, XGBoost 3.2.0, PyTorch 2.14.0, Streamlit 1.64.0, OpenDP 0.14.2, anthropic 1.13.0.
+- **Software:** Python 3.11; pandas 2.3.3, NumPy 2.4.6, scikit-learn 1.8.0, XGBoost 3.2.0, PyTorch 2.14.0, Streamlit 1.64.0, OpenDP 0.14.2, anthropic 1.13.0, google-genai 2.29.0. Live LLM model: `gemini-flash-latest` (served by `gemini-3.8-flash`).
 - **Pinning:** the exact versions are pinned in `constraints.txt`, recovered from the original environment.
 - **Original runs:** the 43 logged runs were executed on 18 September 2026 on the original authors' Windows machine. Its hardware specification was not recorded. **[CONFIRM]**
 - **Verification environment:** a fresh environment with the same package versions on Windows 11, using CPU only, for re-evaluation, testing and the dashboard checks.
@@ -991,7 +998,7 @@ $$\mathrm{score}(x)=-\min_{y\in\tilde D}\lVert\phi(x)-\phi(y)\rVert_2 \qquad\qqu
 
 The attack AUC and the TPR at FPR = 0.1 are reported. An AUC of 0.5 means the attack does no better than chance. The *distance to closest record* (DCR) and the share of synthetic records at or below the 1st percentile of real-to-real nearest-neighbour distances ("near-duplicates") are also reported.
 
-**Fairness.** A Logistic Regression is trained on synthetic data and scored on the real test set, grouped by sex. The metrics are the demographic-parity difference and the equalised-odds gap [58]:
+**Fairness.** A Logistic Regression is trained on synthetic data and scored on the real test set, grouped by sex. The metrics are the demographic-parity difference and the equalised-odds gap [59]:
 
 $$\Delta_{\mathrm{DP}}=\max_g P(\hat y=1\mid A=g)-\min_g P(\hat y=1\mid A=g),\qquad \Delta_{\mathrm{EO}}=\max\big(\Delta_{\mathrm{TPR}},\Delta_{\mathrm{FPR}}\big) \qquad\qquad (15)$$
 
@@ -1033,7 +1040,7 @@ All numbers in this section are read from `results/verified/`. They are means ±
 
 - The experiment log contains **43 records but 41 unique run identifiers**, all with status `completed`.
 - `AIM_eps3.0_seed42` and `PrivBayes_eps3.0_seed42` each appear twice. The second runs started at 20:42 on 18 September 2026 and overwrote the corresponding CSVs.
-- The two records of each pair differ (Table XVIII). For AIM ε = 3, the 3-way TVD was 0.220 versus 0.189 and the fit time 181 s versus 436 s. This is direct evidence of run-to-run variability from the unseeded generators and of runtime sensitivity to machine load.
+- The two records of each pair differ (Table XIX). For AIM ε = 3, the 3-way TVD was 0.220 versus 0.189 and the fit time 181 s versus 436 s. This is direct evidence of run-to-run variability from the unseeded generators and of runtime sensitivity to machine load.
 
 **De-duplication and configuration checks.**
 
@@ -1041,7 +1048,7 @@ All numbers in this section are read from `results/verified/`. They are means ±
 - All 41 configurations pass the checks: ε matches the run identifier; δ = 10⁻⁵ for AIM and MST and δ = 0 for PrivBayes; AIM's round cap is 60; and CTGAN and TVAE carry "no formal guarantee".
 - All 41 CSVs are present and have 2,400 rows each.
 
-**Re-evaluation.** Recomputing the metrics from the CSVs reproduced **733 of 738 logged values exactly** (Appendix B, Table XVII). The five exceptions are MIA AUC values that differ by at most 2.8 × 10⁻⁶. This is consistent with floating-point and nearest-neighbour tie effects.
+**Re-evaluation.** Recomputing the metrics from the CSVs reproduced **733 of 738 logged values exactly** (Appendix B, Table XVIII). The five exceptions are MIA AUC values that differ by at most 2.8 × 10⁻⁶. This is consistent with floating-point and nearest-neighbour tie effects.
 
 **TRTR reference.** The TRTR reference, which was not stored in the log, was recomputed: F1 = 0.583 (LR), 0.620 (RF) and 0.647 (XGBoost); XGBoost AUROC = 0.886.
 
@@ -1055,7 +1062,7 @@ Table IX and Fig. 12 show the TSTR results.
 - **MST trails.** Its retention was 48–69% at every ε, and it barely improved beyond ε = 1. That puts it close to CTGAN's level (62%) rather than to the other DP methods.
 - **PrivBayes collapses at ε = 0.5.** Logistic Regression F1 fell to 0.014 ± 0.023 (2% retention): the model trained on that data almost never predicts the positive class.
 - **CTGAN is the least stable** (XGBoost F1 0.404 ± 0.163).
-- **AIM is not monotonic in ε** (XGBoost F1 0.549 at ε = 5 but 0.496 at ε = 10). With a single seed, such differences are within the run-to-run variation seen in Table XVIII.
+- **AIM is not monotonic in ε** (XGBoost F1 0.549 at ε = 5 but 0.496 at ε = 10). With a single seed, such differences are within the run-to-run variation seen in Table XIX.
 - **TVAE exceeds the real-data ceiling for one model.** Its Logistic Regression F1 (0.598) exceeds the TRTR value (0.583), giving 103% retention. Retention above 100% is possible on a 600-row test set and is reported, not clipped.
 
 Table: TABLE IX. TSTR utility across the ε sweep (mean ± std over seeds; † = single seed)
@@ -1235,7 +1242,7 @@ The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more tha
 
 ## H. Knowledge-Discovery Findings (RQ3) {-}
 
-**The LLM layer works within its privacy design.** All 35 DP datasets load. The original file is never read, the payload contains no row-level data, and demo output is labelled. Live mode is implemented and tested against a mock server, but not against the real API.
+**The LLM layer works within its privacy design.** All 35 DP datasets load. The original file is never read, the payload contains no row-level data, and demo output is labelled. Live mode is tested against a mock server for both providers and was exercised for real with Gemini (below).
 
 **How trustworthy the payload is** (Table XIII, Fig. 18). Knowledge utility rises with ε for AIM (KU 0.88 → 0.95; Spearman ρ 0.32 → 0.88) and PrivBayes (KU 0.86 → 0.92; ρ 0.07 → 0.82). At ε ≥ 5 the payloads rank the subgroup income rates in nearly the same order as the real data. **MST payloads do not**: ρ stays at or below 0.30 at every ε, even though MST's one-way TVD is the best of all methods. A dataset can match its marginals and still give misleading subgroup "insights". This is precisely the case that one-way fidelity metrics miss.
 
@@ -1264,13 +1271,38 @@ Table: TABLE XIII. Knowledge utility of LLM payload statistics versus the real t
 
 ![Fig. 18. Knowledge utility (left) and Spearman rank agreement of subgroup target rates (right) between LLM payload statistics and the real training split.](figures/fig_res_12_knowledge_utility.png){width=6.2in}
 
+**Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* (does it match the payload the model was given?) and for *real-data agreement* (does the statistic hold on the real training split, which the model never saw?). Table XIV lists the checked claims.
+
+Table: TABLE XIV. Fact-check of claims in two real Gemini responses (ε = 3, seed 42). "Real" is the training split, never sent to the LLM. For the suppression claims, the value is the threshold k.
+
+| Claim in the Gemini response | Payload | Real | Matches payload | True in real data |
+|---|---|---|---|---|
+| *AIM:* women's >50K rate 25.4% … | 0.254 | 0.103 | Yes | **No: gap** |
+| *AIM:* … higher than men's, 23.3% | 0.233 | 0.307 | Yes | **reversed** |
+| *AIM:* education ↔ race V = 0.493 | 0.493 | 0.119 | Yes | **No: spurious** |
+| *AIM:* overall >50K rate 24.0% | 0.240 | 0.239 | Yes | Yes |
+| *AIM:* "suppressed below a count of 8" | 20 | — | **No** | — |
+| *PrivBayes:* men's >50K rate 31.6% | 0.316 | 0.307 | Yes | Yes |
+| *PrivBayes:* women's >50K rate 11.5% | 0.115 | 0.103 | Yes | Yes |
+| *PrivBayes:* `12th` grade 67.4% is a DP artefact | 0.674 | 0.036 | Yes | Correctly flagged |
+| *PrivBayes:* overall >50K rate 24.6% | 0.246 | 0.239 | Yes | Yes |
+| *PrivBayes:* suppressed below 20 | 20 | — | Yes | — |
+
+Three findings follow.
+
+1. **Faithfulness was high but not perfect.** 9 of the 10 checked numbers matched the payload exactly. The one error was a misreading: the AIM response confused the *number* of suppressed cells (8) with the suppression *threshold* (20).
+2. **Faithful is not the same as true.** The AIM ε = 3 dataset reverses the real gender gap in high income, which is the distortion behind its fairness outlier in Table XII. Gemini reported "females have a slightly higher >50K rate" as a key pattern, without a warning. It also listed the spurious education–race association among the strong relationships. MST ε = 3 erases the gap altogether (24.3% vs 24.1%), so an MST-based explanation would also be wrong. PrivBayes preserved the gap, and the same prompt produced a correct explanation.
+3. **The model can flag some artefacts, but only from internal evidence.** The PrivBayes response noticed that `12th` grade (67.4%) outranked `Bachelors` (37.3%) and called it an implausible DP artefact — correct, since the real rate is 3.6%. It could not detect the reversed gender gap, because nothing inside the AIM payload contradicts it. The AIM payload's own `12th`-grade rate (43.3%, real 3.6%) went unmentioned.
+
+This is threat A6 observed with a real model: post-processing kept the explanation private, but its truth depended entirely on the generator. Explanations should therefore travel with the knowledge-utility score of their dataset and be checked against governed real data before use. Two responses are a case study, not a benchmark; a systematic evaluation is listed as future work.
+
 ## I. Answering the Research Questions {-}
 
 **RQ1** — AIM provides the best DP fidelity at small ε and competitive utility, so the hypothesis that it is the strongest DP method is **partly supported**. At ε ≥ 3 its single-seed results lie within PrivBayes's seed spread. It is the slowest DP method (up to 626 s per fit, against at most 58 s for MST and 21 s for PrivBayes), and it had the worst fairness outlier. PrivBayes is the most cost-effective at ε ≥ 3 but unusable at ε = 0.5. MST is fast and stable but weakest on utility, higher-order fidelity, rare combinations and knowledge utility. Among the non-DP baselines, TVAE has the best utility but memorisation signals and the worst rare-pattern loss.
 
 **RQ2** — Utility, higher-order fidelity and knowledge utility improve markedly from ε = 0.5 to ε = 3, then flatten. Fairness and rare-pattern behaviour do not improve monotonically.
 
-**RQ3** — An aggregate-only LLM layer can be built without exposing the original records. The trustworthiness of what it reasons over depends strongly on the generator and ε, and needs an explicit check.
+**RQ3** — An aggregate-only LLM layer can be built without exposing the original records, and it works with a real LLM (Gemini). The trustworthiness of what it reasons over depends strongly on the generator and ε, and needs an explicit check: the real model was faithful to its input on 9 of 10 checked claims, yet repeated AIM's reversed gender gap as a finding.
 
 # XV. Comparative Analysis {-}
 
@@ -1358,7 +1390,7 @@ A RAG system over the raw data would be more expressive and far riskier. DP fine
 
 ## A. Approach {-}
 
-This section maps the framework onto the principal regulations and standards. It distinguishes controls that are *implemented in the artefact* from those that an adopting organisation would have to supply. Nothing here is legal advice, and the artefact has not been audited for compliance. Fig. 22 and Table XIV summarise the mapping.
+This section maps the framework onto the principal regulations and standards. It distinguishes controls that are *implemented in the artefact* from those that an adopting organisation would have to supply. Nothing here is legal advice, and the artefact has not been audited for compliance. Fig. 22 and Table XV summarise the mapping.
 
 ![Fig. 22. Compliance and governance mapping: obligations → control objectives → implemented (solid) and organisational (dashed) controls.](figures/diagrams/fig12_compliance_governance_mapping.png){width=6.3in}
 
@@ -1378,11 +1410,11 @@ This section maps the framework onto the principal regulations and standards. It
 - DP synthesis supports minimisation and limits breach impact if synthetic data leak. Training on real data still needs a valid basis.
 - Implementing rules were notified in November 2025 with phased dates, so obligations should be checked against the Rules in force. **[VERIFY with the latest notification before submission]**
 
-**HIPAA** [59]. De-identification uses either *Safe Harbor* (removing 18 identifier types) or *Expert Determination* (a qualified expert finds the risk of re-identification very small). A DP synthetic release would fall under Expert Determination, with ε and the threat model as part of the expert's evidence.
+**HIPAA** [60]. De-identification uses either *Safe Harbor* (removing 18 identifier types) or *Expert Determination* (a qualified expert finds the risk of re-identification very small). A DP synthetic release would fall under Expert Determination, with ε and the threat model as part of the expert's evidence.
 
-**CCPA/CPRA** [60]. Deidentified data are excluded from "personal information" when the business takes reasonable measures, publicly commits not to re-identify, and binds recipients contractually. The latter two are organisational controls.
+**CCPA/CPRA** [61]. Deidentified data are excluded from "personal information" when the business takes reasonable measures, publicly commits not to re-identify, and binds recipients contractually. The latter two are organisational controls.
 
-**EU AI Act** [61]. The LLM layer is a limited-risk use of a general-purpose model: an assistant for analysts, not an automated decision about people. If synthetic data were used to train a high-risk system — for example, credit scoring — the Art. 10 data-governance requirements would apply, including examination of possible biases. The fairness results in Section XIV are directly relevant to that examination.
+**EU AI Act** [62]. The LLM layer is a limited-risk use of a general-purpose model: an assistant for analysts, not an automated decision about people. If synthetic data were used to train a high-risk system — for example, credit scoring — the Art. 10 data-governance requirements would apply, including examination of possible biases. The fairness results in Section XIV are directly relevant to that examination.
 
 ## C. Frameworks and Standards {-}
 
@@ -1405,7 +1437,7 @@ The LLM layer slots in after step 4 as a consumer of approved releases. Its use 
 
 ## E. Mapping Summary {-}
 
-Table: TABLE XIV. Regulatory compliance matrix (✓ implemented in artefact; ◐ partially; ✗ organisational, not implemented)
+Table: TABLE XV. Regulatory compliance matrix (✓ implemented in artefact; ◐ partially; ✗ organisational, not implemented)
 
 | Obligation | Source | Control in this framework | Status |
 |---|---|---|---|
@@ -1425,7 +1457,7 @@ Table: TABLE XIV. Regulatory compliance matrix (✓ implemented in artefact; ◐
 
 ## A. Fairness {-}
 
-Synthetic data do not simply inherit the biases of the real data — they can change them. Here, most DP and non-DP runs *increased* the demographic-parity gap between men and women relative to the real-data model (Section XIV). One run produced a classifier with a complete error-rate disparity, and DP at low ε produced apparent parity only by failing everyone. Ethical use therefore requires subgroup evaluation of any model trained on synthetic data, not only aggregate accuracy [62][58][27].
+Synthetic data do not simply inherit the biases of the real data — they can change them. Here, most DP and non-DP runs *increased* the demographic-parity gap between men and women relative to the real-data model (Section XIV). One run produced a classifier with a complete error-rate disparity, and DP at low ε produced apparent parity only by failing everyone. Ethical use therefore requires subgroup evaluation of any model trained on synthetic data, not only aggregate accuracy [63][59][27].
 
 ## B. Transparency and Accountability {-}
 
@@ -1440,7 +1472,7 @@ Accountability rests on the audit trail. In an organisation, a named data owner 
 
 ## C. Responsible Knowledge Generation {-}
 
-The spurious education–race association in Section XIV illustrates a specific ethical risk. Generated "knowledge" about sensitive groups can be *false*, and an LLM will state it fluently. Presenting such an artefact as insight could reinforce stereotypes or misdirect policy. Mitigations implemented here:
+The spurious education–race association and the reversed gender gap in Section XIV illustrate a specific ethical risk. Generated "knowledge" about sensitive groups can be *false*, and an LLM will state it fluently — the real Gemini response on AIM ε = 3 told the reader that women out-earn men. Presenting such an artefact as insight could reinforce stereotypes or misdirect policy. Mitigations implemented here:
 
 - hypothesis framing in the prompt;
 - quality metrics included in the payload;
@@ -1553,9 +1585,9 @@ Useful key performance indicators are:
 
 ## D. Assessment {-}
 
-The study did not measure costs or returns in an organisation. Table XV therefore separates impacts *supported by this study's evidence* from those that are *plausible but unmeasured*. Any return-on-investment figure would have to come from the adopting organisation's own data.
+The study did not measure costs or returns in an organisation. Table XVI therefore separates impacts *supported by this study's evidence* from those that are *plausible but unmeasured*. Any return-on-investment figure would have to come from the adopting organisation's own data.
 
-Table: TABLE XV. Business impact assessment
+Table: TABLE XVI. Business impact assessment
 
 | Impact area | Expected benefit | Evidence from this study | Status |
 |---|---|---|---|
@@ -1611,9 +1643,9 @@ Table: TABLE XV. Business impact assessment
 
 **LLM layer.**
 
-- No live response was obtained or evaluated, so the explanation quality, hallucination rate and faithfulness to the payload are unknown.
+- Only two live responses from one provider (Gemini) were evaluated, each once. They give a case study of faithfulness (9/10 claims) and of error propagation, not a hallucination rate. No live Claude response was obtained.
 - Prompt-injection robustness was argued, not tested adversarially.
-- In live mode the payload leaves the organisation.
+- In live mode the payload leaves the organisation. On Google's free tier, prompts and responses may be used to improve Google's products, so a deployment would need a paid tier or an enterprise agreement.
 
 **Generality.** One public dataset with a binary target. The findings may not transfer to healthcare, finance or high-dimensional data.
 
@@ -1621,7 +1653,7 @@ Table: TABLE XV. Business impact assessment
 
 # XXI. Future Research Directions {-}
 
-Table XVI and Fig. 25 organise the directions by horizon. The near-term items address this study's own limitations directly.
+Table XVII and Fig. 25 organise the directions by horizon. The near-term items address this study's own limitations directly.
 
 ![Fig. 25. Future research roadmap.](figures/diagrams/fig15_future_research_roadmap.png){width=6.3in}
 
@@ -1642,7 +1674,7 @@ A ledger with such policies would make DP operational in organisations.
 
 **DP deep generators (medium term).** DP-SGD versions of CTGAN and TVAE, or PATE-GAN [31][36], would complete the comparison. That would show whether the non-DP baselines' advantages — CTGAN's rare-combination preservation, TVAE's utility — survive DP training.
 
-**Evaluating LLM explanations (medium term).** With API access, the layer should be evaluated for:
+**Evaluating LLM explanations (medium term).** The two-response case study in Section XIV is a starting point. The layer should be evaluated systematically — all 35 DP datasets, repeated calls, both providers — for:
 
 - *faithfulness* — does every claim match a number in the payload?;
 - *hallucination rate*;
@@ -1657,7 +1689,7 @@ Payload designs could then be compared. Examples are withholding protected-attri
 
 **Quantum-safe privacy (long term).** DP is information-theoretic and unaffected by quantum computing. The surrounding infrastructure — transport and storage encryption for long-lived releases and audit logs — needs migration to post-quantum cryptography.
 
-Table: TABLE XVI. Future research opportunities
+Table: TABLE XVII. Future research opportunities
 
 | Direction | Problem addressed | Concrete next step | Horizon |
 |---|---|---|---|
@@ -1667,7 +1699,7 @@ Table: TABLE XVI. Future research opportunities
 | Second (healthcare) dataset | Generality | Repeat the sweep on a de-identified clinical table | Near |
 | DP deep generators | Missing DP deep baselines | DP-SGD CTGAN/TVAE with an RDP accountant | Medium |
 | Adaptive budgets across releases | Composition | Budget ledger + utility-targeted ε selection | Medium |
-| LLM explanation evaluation | Unknown faithfulness | Claim-level checking against the payload; human study | Medium |
+| LLM explanation evaluation | Faithfulness checked on two responses only | Claim-level checking against the payload; human study | Medium |
 | Fairness-aware synthesis | Increased disparities | Constraints or re-weighting in generation | Medium |
 | Privacy-preserving foundation models | Scale, modality | Tabular Private Evolution; DP fine-tuned tabular LLMs | Long |
 | Agentic AI governance | Autonomous querying | Budget-aware tool policies for LLM agents | Long |
@@ -1684,7 +1716,7 @@ The LLM knowledge-discovery layer shows that an explanation interface can be add
 **Summary of contributions.**
 
 1. A verified five-method comparison across six evaluation dimensions, with every logged number recomputed from saved data.
-2. An aggregate-only LLM knowledge-discovery layer with path guards, suppression, honest demo labelling, audit records and 23 tests.
+2. An aggregate-only LLM knowledge-discovery layer with path guards, suppression, honest demo labelling, two interchangeable providers (Gemini and Claude), audit records, 39 tests and a fact-checked live case study.
 3. A knowledge-utility measure that exposed generator-specific differences in how trustworthy LLM inputs are, and concrete spurious associations.
 4. A transparent account of the assumptions behind the guarantees, including a derived lower bound on AIM's round cap.
 
@@ -1697,7 +1729,7 @@ The LLM knowledge-discovery layer shows that an explanation interface can be add
 
 **Outlook.** Privacy-preserving generative AI is moving from research prototypes towards infrastructure: national statistical offices, health systems and enterprises are piloting DP releases, and LLM interfaces are spreading. The results here suggest that the technology is ready for *exploratory* use at moderate budgets, provided organisations invest in the governance around it — ledgers, transparency reports, review — as much as in the algorithms.
 
-Future work should remove the public-domain assumption, strengthen the attacks, seed and fully configure the generators, and evaluate real LLM explanations. That would move privacy-preserving generative AI from a promising prototype towards an accountable practice.
+Future work should remove the public-domain assumption, strengthen the attacks, seed and fully configure the generators, and evaluate real LLM explanations systematically. That would move privacy-preserving generative AI from a promising prototype towards an accountable practice.
 
 # Data Availability Statement {-}
 
@@ -1822,17 +1854,19 @@ The datasets generated and analysed during the current study are available in th
 
 [56] OpenDP, "SmartNoise synthesizers (smartnoise-synth)," software documentation. [Online]. Available: https://docs.smartnoise.org/ (accessed Oct. 2026).
 
-[57] Anthropic, "Claude API documentation: Messages API," [Online]. Available: https://docs.anthropic.com/ (accessed Oct. 2026).
+[57] Google, "Gemini API documentation: Google Gen AI SDK (google-genai) and generateContent," [Online]. Available: https://ai.google.dev/gemini-api/docs (accessed Oct. 2026).
 
-[58] M. Hardt, E. Price, and N. Srebro, "Equality of opportunity in supervised learning," in *Adv. Neural Inf. Process. Syst. (NeurIPS)*, vol. 29, 2016.
+[58] Anthropic, "Claude API documentation: Messages API," [Online]. Available: https://docs.anthropic.com/ (accessed Oct. 2026).
 
-[59] U.S. Dept. of Health and Human Services, Office for Civil Rights, "Guidance regarding methods for de-identification of protected health information in accordance with the Health Insurance Portability and Accountability Act (HIPAA) Privacy Rule," Nov. 2012 (45 CFR §164.514).
+[59] M. Hardt, E. Price, and N. Srebro, "Equality of opportunity in supervised learning," in *Adv. Neural Inf. Process. Syst. (NeurIPS)*, vol. 29, 2016.
 
-[60] "California Consumer Privacy Act of 2018," Cal. Civ. Code §1798.100 et seq., as amended by the California Privacy Rights Act of 2020.
+[60] U.S. Dept. of Health and Human Services, Office for Civil Rights, "Guidance regarding methods for de-identification of protected health information in accordance with the Health Insurance Portability and Accountability Act (HIPAA) Privacy Rule," Nov. 2012 (45 CFR §164.514).
 
-[61] "Regulation (EU) 2024/1689 of the European Parliament and of the Council of 13 June 2024 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act)," *Off. J. Eur. Union*, OJ L 2024/1689, Jul. 2024.
+[61] "California Consumer Privacy Act of 2018," Cal. Civ. Code §1798.100 et seq., as amended by the California Privacy Rights Act of 2020.
 
-[62] N. Mehrabi, F. Morstatter, N. Saxena, K. Lerman, and A. Galstyan, "A survey on bias and fairness in machine learning," *ACM Comput. Surv.*, vol. 54, no. 6, Art. no. 115, 2021, doi: 10.1145/3457607.
+[62] "Regulation (EU) 2024/1689 of the European Parliament and of the Council of 13 June 2024 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act)," *Off. J. Eur. Union*, OJ L 2024/1689, Jul. 2024.
+
+[63] N. Mehrabi, F. Morstatter, N. Saxena, K. Lerman, and A. Galstyan, "A survey on bias and fairness in machine learning," *ACM Comput. Surv.*, vol. 54, no. 6, Art. no. 115, 2021, doi: 10.1145/3457607.
 
 
 # Appendix A: Reproducibility and Configuration {-}
@@ -1842,10 +1876,11 @@ The datasets generated and analysed during the current study are available in th
 **Commands (from the project root).**
 
 ```
-venv\Scripts\python -m pytest -m "not slow"        # 27 tests (~15 s)
+venv\Scripts\python -m pytest -m "not slow"        # 43 tests: 42 pass, 1 live test skipped (~25 s)
 venv\Scripts\python -m pytest -m slow              # 5 end-to-end generator runs (~3 min)
 venv\Scripts\python -m analysis.verify_results     # de-duplication, checks, re-evaluation, figures
 venv\Scripts\python -m analysis.knowledge_utility  # payload vs real-data agreement
+venv\Scripts\python -m analysis.llm_case_study     # fact-check of the real Gemini responses
 venv\Scripts\python figures\diagram_builder.py     # diagrams: PNG (600 DPI), SVG, .drawio
 venv\Scripts\python report\build_report.py         # this document
 run_dashboard.bat                                  # dashboard at http://localhost:8501
@@ -1863,19 +1898,19 @@ venv\Scripts\python run_sweep.py                   # re-run all 41 configuration
 
 **LLM settings.**
 
-- model `claude-opus-5-5` (`KD_MODEL`);
-- effort `medium` (`KD_EFFORT`);
-- `max_tokens` 16,000;
-- server-side refusal fallback on (`KD_SERVER_FALLBACK=1`);
+- provider `auto` (`KD_PROVIDER`: `auto` | `gemini` | `anthropic`);
+- Gemini: model `gemini-flash-latest` (`KD_GEMINI_MODEL`; served by `gemini-3.8-flash` on 11 Oct. 2026), `google-genai` 2.29.0, timeout 180 s, 3 attempts on 429/5xx, key `GEMINI_API_KEY` or `GOOGLE_API_KEY`;
+- Claude: model `claude-opus-5-5` (`KD_MODEL`), effort `medium` (`KD_EFFORT`), server-side refusal fallback on (`KD_SERVER_FALLBACK=1`), key `ANTHROPIC_API_KEY`;
+- `max_tokens` 16,000 (`KD_MAX_TOKENS`, both providers);
 - minimum cell count k = 20;
 - statistics rounded to 3 decimals;
 - prompt version `kd-prompt-v1`.
 
 # Appendix B: Verification Evidence {-}
 
-Table XVII compares each logged metric with its value recomputed from the saved synthetic data. Table XVIII shows both records of the two duplicated configurations. Table XIX lists the test results.
+Table XVIII compares each logged metric with its value recomputed from the saved synthetic data. Table XIX shows both records of the two duplicated configurations. Table XX lists the test results.
 
-Table: TABLE XVII. Re-evaluation of logged metrics from the saved synthetic CSVs (41 runs; tolerance 10⁻⁶)
+Table: TABLE XVIII. Re-evaluation of logged metrics from the saved synthetic CSVs (41 runs; tolerance 10⁻⁶)
 
 | Metric | Values compared | Exact matches | Max. abs. difference |
 |---|---|---|---|
@@ -1900,7 +1935,7 @@ Table: TABLE XVII. Re-evaluation of logged metrics from the saved synthetic CSVs
 | **Total** | 738 | 733 | — |
 
 
-Table: TABLE XVIII. The two duplicated configurations in the experiment log (both records shown; the later one is used)
+Table: TABLE XIX. The two duplicated configurations in the experiment log (both records shown; the later one is used)
 
 | run_id | Log line | Timestamp | Fit time (s) | 3-way TVD | F1 XGB | MIA AUC |
 |---|---|---|---|---|---|---|
@@ -1910,19 +1945,21 @@ Table: TABLE XVIII. The two duplicated configurations in the experiment log (bot
 | `adult_example_PrivBayes_eps3.0_seed42` | 42 | 2026-09-18 20:42:59 | 3.6 | 0.186 | 0.538 | 0.498 |
 
 
-Table: TABLE XIX. Test results (executed October 2026 in the verification environment)
+Table: TABLE XX. Test results (executed October 2026 in the verification environment)
 
 | Suite / check | Items | Result | Notes |
 |---|---|---|---|
 | `test_knowledge_discovery.py` | 17 | 17 passed | Fake client; no network |
 | `test_live_http_mock.py` | 6 | 6 passed | Real `anthropic` 1.13 SDK vs local mock server |
+| `test_gemini_provider.py` | 16 | 15 passed, 1 skipped | Real `google-genai` 2.29 SDK vs local mock server; provider selection; the opt-in live test is skipped by default |
 | `test_pipeline_smoke.py` (fast) | 4 | 4 passed | Shape, 41 configs, train-only fit, inverse binning |
 | `test_pipeline_smoke.py` (slow) | 5 | 5 passed | AIM, MST, PrivBayes, CTGAN, TVAE end-to-end. AIM first **failed** with a 5-round cap (NaN, see (7)) and passed with 20 rounds |
 | Dashboard, comparative workflow (manual) | 9 pages | Working | PrivBayes run from the UI (4.5 s); log restored afterwards |
 | Dashboard, Model Comparison (manual) | — | **Bug found, fixed** | Counted 43 runs; now 41 unique |
 | Dashboard, LLM page (manual) | demo + missing key | Working | Audit flag bug found and fixed |
 | Secret scan of tracked files | — | Clean | Only fake test keys in `tests/` |
-| Live Claude API call | — | **Not tested** | No API key available |
+| Live Gemini API calls | 2 | **2 succeeded** | AIM and PrivBayes ε = 3; `gemini-3.8-flash`; ≈ 30 s each; fact-checked (Table XIV) |
+| Live Claude API call | — | **Not tested** | No Anthropic API key available |
 
 # Appendix C: Prompt Template {-}
 
@@ -1966,7 +2003,7 @@ Rules: base every claim only on numbers in the summary; say explicitly when the 
 
 # Appendix D: Dashboard Evidence {-}
 
-The screenshots were captured from the running dashboard during testing. Figs. 26–28 show the extension page, a demo-mode output and the corrected Model Comparison page. The browser pane was partly hidden, so some are cropped on the right. **[TEAM: replace with full-resolution screenshots and add the execution videos the guidelines request.]**
+The screenshots were captured from the running dashboard during testing. Figs. 26–29 show the extension page, a demo-mode output, the corrected Model Comparison page and a real Gemini response. The browser pane was partly hidden, so some are cropped on the right. **[TEAM: replace with full-resolution screenshots and add the execution videos the guidelines request.]**
 
 ![Fig. 26. LLM knowledge-discovery page: DP dataset selection, guarantee from the log, duplicate-record notice, demo-mode warning (no API key configured).](docs/screenshots/01_llm_page_dataset_selection.jpg){width=5.5in}
 
@@ -1974,11 +2011,27 @@ The screenshots were captured from the running dashboard during testing. Figs. 2
 
 ![Fig. 28. Model Comparison after the de-duplication fix: 41 unique runs from 43 records.](docs/screenshots/06_model_comparison_deduplicated.jpg){width=5.5in}
 
+![Fig. 29. Live mode with provider Gemini on PrivBayes ε = 3: a **real LLM response** (`gemini-3.8-flash`, 11 Oct. 2026), shown with the provider, model and a hypothesis warning.](docs/screenshots/03_llm_page_live_gemini_privbayes.jpg){width=5.5in}
+
+**Excerpt of a real LLM response.** The lines below are quoted unedited from the Gemini response for AIM ε = 3 (seed 42; payload SHA-256 `4e62da3d…`; 6,277 input and 1,678 output tokens; 30.6 s). This **is** LLM output. The first quotation is the reversed gender gap discussed in Section XIV; the second is the suppression misreading.
+
+> *Key patterns — Sex:* "In this synthetic distribution, females have a slightly higher `>50K` rate (25.4%) than males (23.3%)."
+>
+> *Limitations — Suppression:* "Aggregates suppressed cells below a count of 8 […]"
+>
+> *Limitations — Privacy boundary:* "neither this summary nor the language model confers any additional privacy guarantees beyond the generator's original claim."
+
+From the PrivBayes ε = 3 response (6,427 input and 1,815 output tokens; 29.5 s):
+
+> "`12th` grade education has an implausibly high positive rate of **67.4%** (1.9% share), exceeding `Bachelors` (**37.3%**) […] These anomalies likely reflect DP noise in small slices."
+
+Both full responses are in the repository at `docs/llm_evidence/`.
+
 # Appendix E: Supplementary Results {-}
 
-Fig. 29 repeats Fig. 12 for the Logistic Regression model.
+Fig. 30 repeats Fig. 12 for the Logistic Regression model.
 
-![Fig. 29. Privacy budget versus TSTR F1 (Logistic Regression). Candidate for removal if the figure count must be reduced.](figures/fig_res_02_epsilon_vs_f1_logreg.png){width=4.4in}
+![Fig. 30. Privacy budget versus TSTR F1 (Logistic Regression). Candidate for removal if the figure count must be reduced.](figures/fig_res_02_epsilon_vs_f1_logreg.png){width=4.4in}
 
 The full per-run results (41 rows) are in `results/verified/runs_deduplicated.csv`. The aggregated means and standard deviations behind Tables IX–XII are in `results/verified/aggregated_by_method_epsilon.csv`.
 
@@ -1987,7 +2040,7 @@ The full per-run results (41 rows) are in `results/verified/runs_deduplicated.cs
 The reference list was drafted with care, but not every entry could be checked online. Each entry in `report/references.py` records its status, and the team should spot-check DOIs and page ranges before submission. Entries marked **[VERIFY]** in the reference list are those for which a DOI or page range could not be confirmed. The status categories are:
 
 - **Checked online during drafting (19):** title, authors, venue and identifiers confirmed against the publisher's or an official record.
-- **Standard metadata (38):** long-established works, not re-checked online.
+- **Standard metadata (39):** long-established works, not re-checked online.
 - **Flagged [VERIFY] (5):** a detail could not be confirmed.
 
 Only the cited subset appears in the reference list.

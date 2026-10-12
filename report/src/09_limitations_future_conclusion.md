@@ -39,9 +39,9 @@
 
 **LLM layer.**
 
-- No live response was obtained or evaluated, so the explanation quality, hallucination rate and faithfulness to the payload are unknown.
+- Only two live responses from one provider (Gemini) were evaluated, each once. They give a case study of faithfulness (9/10 claims) and of error propagation, not a hallucination rate. No live Claude response was obtained.
 - Prompt-injection robustness was argued, not tested adversarially.
-- In live mode the payload leaves the organisation.
+- In live mode the payload leaves the organisation. On Google's free tier, prompts and responses may be used to improve Google's products, so a deployment would need a paid tier or an enterprise agreement.
 
 **Generality.** One public dataset with a binary target. The findings may not transfer to healthcare, finance or high-dimensional data.
 
@@ -70,7 +70,7 @@ A ledger with such policies would make DP operational in organisations.
 
 **DP deep generators (medium term).** DP-SGD versions of CTGAN and TVAE, or PATE-GAN [@abadi2016; @jordon2019pategan], would complete the comparison. That would show whether the non-DP baselines' advantages — CTGAN's rare-combination preservation, TVAE's utility — survive DP training.
 
-**Evaluating LLM explanations (medium term).** With API access, the layer should be evaluated for:
+**Evaluating LLM explanations (medium term).** The two-response case study in Section XIV is a starting point. The layer should be evaluated systematically — all 35 DP datasets, repeated calls, both providers — for:
 
 - *faithfulness* — does every claim match a number in the payload?;
 - *hallucination rate*;
@@ -95,7 +95,7 @@ Table: {tab:future} Future research opportunities
 | Second (healthcare) dataset | Generality | Repeat the sweep on a de-identified clinical table | Near |
 | DP deep generators | Missing DP deep baselines | DP-SGD CTGAN/TVAE with an RDP accountant | Medium |
 | Adaptive budgets across releases | Composition | Budget ledger + utility-targeted ε selection | Medium |
-| LLM explanation evaluation | Unknown faithfulness | Claim-level checking against the payload; human study | Medium |
+| LLM explanation evaluation | Faithfulness checked on two responses only | Claim-level checking against the payload; human study | Medium |
 | Fairness-aware synthesis | Increased disparities | Constraints or re-weighting in generation | Medium |
 | Privacy-preserving foundation models | Scale, modality | Tabular Private Evolution; DP fine-tuned tabular LLMs | Long |
 | Agentic AI governance | Autonomous querying | Budget-aware tool policies for LLM agents | Long |
@@ -112,7 +112,7 @@ The LLM knowledge-discovery layer shows that an explanation interface can be add
 **Summary of contributions.**
 
 1. A verified five-method comparison across six evaluation dimensions, with every logged number recomputed from saved data.
-2. An aggregate-only LLM knowledge-discovery layer with path guards, suppression, honest demo labelling, audit records and 23 tests.
+2. An aggregate-only LLM knowledge-discovery layer with path guards, suppression, honest demo labelling, two interchangeable providers (Gemini and Claude), audit records, 39 tests and a fact-checked live case study.
 3. A knowledge-utility measure that exposed generator-specific differences in how trustworthy LLM inputs are, and concrete spurious associations.
 4. A transparent account of the assumptions behind the guarantees, including a derived lower bound on AIM's round cap.
 
@@ -125,7 +125,7 @@ The LLM knowledge-discovery layer shows that an explanation interface can be add
 
 **Outlook.** Privacy-preserving generative AI is moving from research prototypes towards infrastructure: national statistical offices, health systems and enterprises are piloting DP releases, and LLM interfaces are spreading. The results here suggest that the technology is ready for *exploratory* use at moderate budgets, provided organisations invest in the governance around it — ledgers, transparency reports, review — as much as in the algorithms.
 
-Future work should remove the public-domain assumption, strengthen the attacks, seed and fully configure the generators, and evaluate real LLM explanations. That would move privacy-preserving generative AI from a promising prototype towards an accountable practice.
+Future work should remove the public-domain assumption, strengthen the attacks, seed and fully configure the generators, and evaluate real LLM explanations systematically. That would move privacy-preserving generative AI from a promising prototype towards an accountable practice.
 
 # Data Availability Statement {-}
 

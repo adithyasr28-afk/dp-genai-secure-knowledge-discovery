@@ -557,6 +557,20 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
                 ppr.remove(jc)
             ppr.append(ppr.makeelement(qn("w:jc"), {qn("w:val"): "left"}))
 
+    # Fixed column widths (twips, text width 9029) where Word's autofit splits numbers.
+    fixed_widths = {"Claim in the Gemini response": [3800, 1150, 950, 1250, 1879]}
+    for tbl in body.iter(qn("w:tbl")):
+        first_cell = "".join(t.text or "" for t in next(tbl.iter(qn("w:tc"))).iter(qn("w:t"))).strip()
+        widths = fixed_widths.get(first_cell)
+        grid = tbl.find(qn("w:tblGrid"))
+        if not widths or grid is None or len(grid) != len(widths):
+            continue
+        tbl_pr = tbl.find(qn("w:tblPr"))
+        for el in tbl_pr.findall(qn("w:tblLayout")):
+            el.set(qn("w:type"), "fixed")
+        for col, w in zip(grid, widths):
+            col.set(qn("w:w"), str(w))
+
     # Code blocks (prompt listing, commands): left-aligned, never justified.
     for p in out.paragraphs:
         if p.style is not None and p.style.name in ("Source Code", "SourceCode"):

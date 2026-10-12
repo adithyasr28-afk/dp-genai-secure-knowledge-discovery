@@ -124,7 +124,7 @@ The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more tha
 
 ## Knowledge-Discovery Findings (RQ3)
 
-**The LLM layer works within its privacy design.** All 35 DP datasets load. The original file is never read, the payload contains no row-level data, and demo output is labelled. Live mode is implemented and tested against a mock server, but not against the real API.
+**The LLM layer works within its privacy design.** All 35 DP datasets load. The original file is never read, the payload contains no row-level data, and demo output is labelled. Live mode is tested against a mock server for both providers and was exercised for real with Gemini (below).
 
 **How trustworthy the payload is** (Table {tab:ku}, Fig. {fig:ku}). Knowledge utility rises with ε for AIM (KU 0.88 → 0.95; Spearman ρ 0.32 → 0.88) and PrivBayes (KU 0.86 → 0.92; ρ 0.07 → 0.82). At ε ≥ 5 the payloads rank the subgroup income rates in nearly the same order as the real data. **MST payloads do not**: ρ stays at or below 0.30 at every ε, even though MST's one-way TVD is the best of all methods. A dataset can match its marginals and still give misleading subgroup "insights". This is precisely the case that one-way fidelity metrics miss.
 
@@ -134,13 +134,38 @@ The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more tha
 
 ![{fig:ku} Knowledge utility (left) and Spearman rank agreement of subgroup target rates (right) between LLM payload statistics and the real training split.](figures/fig_res_12_knowledge_utility.png){width=6.2in}
 
+**Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* (does it match the payload the model was given?) and for *real-data agreement* (does the statistic hold on the real training split, which the model never saw?). Table {tab:llmcase} lists the checked claims.
+
+Table: {tab:llmcase} Fact-check of claims in two real Gemini responses (ε = 3, seed 42). "Real" is the training split, never sent to the LLM. For the suppression claims, the value is the threshold k.
+
+| Claim in the Gemini response | Payload | Real | Matches payload | True in real data |
+|---|---|---|---|---|
+| *AIM:* women's >50K rate 25.4% … | 0.254 | 0.103 | Yes | **No: gap** |
+| *AIM:* … higher than men's, 23.3% | 0.233 | 0.307 | Yes | **reversed** |
+| *AIM:* education ↔ race V = 0.493 | 0.493 | 0.119 | Yes | **No: spurious** |
+| *AIM:* overall >50K rate 24.0% | 0.240 | 0.239 | Yes | Yes |
+| *AIM:* "suppressed below a count of 8" | 20 | — | **No** | — |
+| *PrivBayes:* men's >50K rate 31.6% | 0.316 | 0.307 | Yes | Yes |
+| *PrivBayes:* women's >50K rate 11.5% | 0.115 | 0.103 | Yes | Yes |
+| *PrivBayes:* `12th` grade 67.4% is a DP artefact | 0.674 | 0.036 | Yes | Correctly flagged |
+| *PrivBayes:* overall >50K rate 24.6% | 0.246 | 0.239 | Yes | Yes |
+| *PrivBayes:* suppressed below 20 | 20 | — | Yes | — |
+
+Three findings follow.
+
+1. **Faithfulness was high but not perfect.** 9 of the 10 checked numbers matched the payload exactly. The one error was a misreading: the AIM response confused the *number* of suppressed cells (8) with the suppression *threshold* (20).
+2. **Faithful is not the same as true.** The AIM ε = 3 dataset reverses the real gender gap in high income, which is the distortion behind its fairness outlier in Table {tab:rarefair}. Gemini reported "females have a slightly higher >50K rate" as a key pattern, without a warning. It also listed the spurious education–race association among the strong relationships. MST ε = 3 erases the gap altogether (24.3% vs 24.1%), so an MST-based explanation would also be wrong. PrivBayes preserved the gap, and the same prompt produced a correct explanation.
+3. **The model can flag some artefacts, but only from internal evidence.** The PrivBayes response noticed that `12th` grade (67.4%) outranked `Bachelors` (37.3%) and called it an implausible DP artefact — correct, since the real rate is 3.6%. It could not detect the reversed gender gap, because nothing inside the AIM payload contradicts it. The AIM payload's own `12th`-grade rate (43.3%, real 3.6%) went unmentioned.
+
+This is threat A6 observed with a real model: post-processing kept the explanation private, but its truth depended entirely on the generator. Explanations should therefore travel with the knowledge-utility score of their dataset and be checked against governed real data before use. Two responses are a case study, not a benchmark; a systematic evaluation is listed as future work.
+
 ## Answering the Research Questions
 
 **RQ1** — AIM provides the best DP fidelity at small ε and competitive utility, so the hypothesis that it is the strongest DP method is **partly supported**. At ε ≥ 3 its single-seed results lie within PrivBayes's seed spread. It is the slowest DP method (up to 626 s per fit, against at most 58 s for MST and 21 s for PrivBayes), and it had the worst fairness outlier. PrivBayes is the most cost-effective at ε ≥ 3 but unusable at ε = 0.5. MST is fast and stable but weakest on utility, higher-order fidelity, rare combinations and knowledge utility. Among the non-DP baselines, TVAE has the best utility but memorisation signals and the worst rare-pattern loss.
 
 **RQ2** — Utility, higher-order fidelity and knowledge utility improve markedly from ε = 0.5 to ε = 3, then flatten. Fairness and rare-pattern behaviour do not improve monotonically.
 
-**RQ3** — An aggregate-only LLM layer can be built without exposing the original records. The trustworthiness of what it reasons over depends strongly on the generator and ε, and needs an explicit check.
+**RQ3** — An aggregate-only LLM layer can be built without exposing the original records, and it works with a real LLM (Gemini). The trustworthiness of what it reasons over depends strongly on the generator and ε, and needs an explicit check: the real model was faithful to its input on 9 of 10 checked claims, yet repeated AIM's reversed gender gap as a finding.
 
 # Comparative Analysis
 

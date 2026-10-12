@@ -184,4 +184,6 @@ REFERENCES = {
                      'https://docs.smartnoise.org/ (accessed Oct. 2026).'),
     "anthropicapi": _r('Anthropic, "Claude API documentation: Messages API," [Online]. Available: '
                        'https://docs.anthropic.com/ (accessed Oct. 2026).'),
+    "geminiapi": _r('Google, "Gemini API documentation: Google Gen AI SDK (google-genai) and generateContent," [Online]. Available: '
+                    'https://ai.google.dev/gemini-api/docs (accessed Oct. 2026).'),
 }

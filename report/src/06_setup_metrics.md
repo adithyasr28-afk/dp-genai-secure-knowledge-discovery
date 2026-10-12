@@ -27,7 +27,7 @@ Table: {tab:config} Experimental configuration
 
 ## Implementation Environment
 
-- **Software:** Python 3.11; pandas 2.3.3, NumPy 2.4.6, scikit-learn 1.8.0, XGBoost 3.2.0, PyTorch 2.14.0, Streamlit 1.64.0, OpenDP 0.14.2, anthropic 1.13.0.
+- **Software:** Python 3.11; pandas 2.3.3, NumPy 2.4.6, scikit-learn 1.8.0, XGBoost 3.2.0, PyTorch 2.14.0, Streamlit 1.64.0, OpenDP 0.14.2, anthropic 1.13.0, google-genai 2.29.0. Live LLM model: `gemini-flash-latest` (served by `gemini-3.8-flash`).
 - **Pinning:** the exact versions are pinned in `constraints.txt`, recovered from the original environment.
 - **Original runs:** the 43 logged runs were executed on 18 September 2026 on the original authors' Windows machine. Its hardware specification was not recorded. **[CONFIRM]**
 - **Verification environment:** a fresh environment with the same package versions on Windows 11, using CPU only, for re-evaluation, testing and the dashboard checks.

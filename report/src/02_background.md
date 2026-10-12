@@ -110,4 +110,4 @@ Table: {tab:lit} Comparison of representative literature
 | Li *et al.* 2022 [@li2022llmdp] | LLM fine-tuning | DP-SGD | Strong DP fine-tuning of LLMs | Requires model training |
 | Xie *et al.* 2024 [@xie2024pe] | Text | DP via API-only Private Evolution | DP synthetic text without training | Text, not tables |
 | Zeng *et al.* 2024 [@zeng2024rag] | RAG | — | Retrieval-store leakage | No DP mechanism |
-| **This study** | Tabular + LLM explanations | (ε, δ) and pure ε via generators; post-processing | Verified 5-method comparison + aggregate-only LLM layer + knowledge-utility check | One small dataset; no live LLM evaluation |
+| **This study** | Tabular + LLM explanations | (ε, δ) and pure ε via generators; post-processing | Verified 5-method comparison + aggregate-only LLM layer + knowledge-utility check | One small dataset; two live LLM responses evaluated |

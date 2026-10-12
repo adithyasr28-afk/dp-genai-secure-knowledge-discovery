@@ -85,14 +85,14 @@ Table: {tab:req} Requirements traceability matrix
 | FR1–FR2 | Profiling; train-only preprocessing | `preprocessing/` | `test_preprocessing_fit_uses_train_only`, `test_dataset_shape` | Met |
 | FR3 | Five generators, common interface | `models/`, `experiments/runner.py` | 5 end-to-end smoke tests passed | Met |
 | FR4–FR5 | Six evaluation dimensions; comparison | `evaluation/`, dashboard | 733/738 metrics re-computed exactly | Met |
-| FR6 | LLM explanation of DP synthetic data | `knowledge_discovery/` | Mock-server tests via real SDK; demo mode in UI | Met (live output **not** verified) |
+| FR6 | LLM explanation of DP synthetic data | `knowledge_discovery/` | Mock-server tests via the real `google-genai` and `anthropic` SDKs; demo mode in UI; two real Gemini calls | Met (live verified for Gemini only) |
 | PR1–PR2 | Exact guarantees; non-DP labelled | `models/*`, `privacy.py` | `config_checks.csv`: 41/41 pass | Met |
 | PR3 | No original data to the LLM | `catalog.py` path guard | `test_original_rows_never_in_prompt`, `test_original_file_not_read…` | Met |
 | PR4 | Small-cell suppression | `summarizer.py` (k = 20) | `test_small_cells_suppressed` | Met |
 | PR5 | No DP claim for aggregates/LLM | UI notes, manifest, README | Manual review | Met |
 | SR1–SR2 | No secrets in repository | `.env.example`, `.gitignore` | Secret scan of tracked files | Met |
 | SR3 | Path guards | `catalog.py` | `test_refuses_original_dataset_and_non_dp` | Met |
-| SR4 | API error handling | `llm_client.py` | HTTP 400/401/429/500 and connection tests | Met |
+| SR4 | API error handling | `llm_client.py` | HTTP 400/401/403/404/429/500, connection and safety-block tests | Met |
 | XR1–XR2 | Payload shown; demo labelled | `streamlit_page.py` | Dashboard inspection; `test_demo_mode_is_labelled…` | Met |
 | XR3, CR2 | Provenance, audit | Log, audit JSON | Audit records inspected | Met |
 | CR3, TR3 | Assumptions disclosed | README, this report | Sections IX, XX | Met |
@@ -225,5 +225,5 @@ Table: {tab:threat} Threat and risk assessment (L = likelihood, I = impact; H/M/
 | A3 Provider-side exposure | M | M | Aggregates only, rounding, k ≥ 20 suppression; no keys in prompts | Low–medium; depends on provider terms |
 | A4 Insider / misconfiguration | M | H | `.gitignore`, `.env.example`, secret scan, path guard | Low |
 | A5 Prompt injection via data | L | M | Data wrapped in tags; system prompt says data are not instructions; categories come from a fitted vocabulary | Low; not adversarially tested |
-| A6 Over-trust in explanations | H | M | Quality metrics in payload; "hypothesis" framing; knowledge-utility check | **Medium–high**: spurious associations observed |
+| A6 Over-trust in explanations | H | M | Quality metrics in payload; "hypothesis" framing; knowledge-utility check | **Medium–high**: spurious associations observed, and repeated by a real LLM (Section XIV) |
 | Assumption risk: non-private preprocessing domain | M | M | Disclosed; bins and vocabulary fitted on training data only | Formal ε holds only if the domain is treated as public |
