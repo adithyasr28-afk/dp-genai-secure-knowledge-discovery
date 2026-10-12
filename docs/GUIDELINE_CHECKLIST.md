@@ -41,7 +41,7 @@ Status: ✅ done · ◐ partly / needs team action · ❌ not done · ⚠ confli
 
 | Section | Status | Figures / tables / equations delivered |
 |---|---|---|
-| Executive Summary & Abstract (450–750) | ⚠ ✅ | Executive Summary 627 words + 240-word Abstract. **Conflict with the template's 150–250 to confirm.** |
+| Executive Summary & Abstract (450–750) | ⚠ ✅ | Executive Summary 689 words + 240-word Abstract. **Conflict with the template's 150–250 to confirm.** |
 | Keywords (20–40) | ✅ | 8 terms. |
 | 1 Introduction | ✅ | — |
 | 2 Problem Statement | ✅ | Fig. 1 risk landscape. |
