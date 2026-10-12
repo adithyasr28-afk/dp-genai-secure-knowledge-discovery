@@ -5,7 +5,7 @@
 **Assumptions behind the guarantee.**
 
 - The preprocessing domain — bin edges, spike values and vocabularies — is fitted on the real data without budget. The stated ε holds only if this domain is treated as public.
-- The evaluation metrics, which use the real data, are included in the LLM payload as quality context.
+- The evaluation metrics, which use the real data, are included in the LLM payload as quality context by default. They are not covered by the DP guarantee; a dashboard switch withholds them.
 - Neither point invalidates the comparison, but both qualify the formal claim.
 
 **Reproducibility.**
@@ -105,7 +105,7 @@ Table: {tab:future} Future research opportunities
 
 This case study asked whether differentially private generative models, combined with an LLM explanation layer, can support secure knowledge discovery from sensitive tabular data. On a verified set of 41 runs, the answer is a qualified yes.
 
-At ε = 3–5, AIM and PrivBayes produced synthetic tables that retained roughly 80–85% of real-data classification performance. Their higher-order fidelity was better than that of the non-private baselines, and they came with a formal guarantee that the non-private models lack. The hypothesis that AIM is the strongest DP method was only partly supported. It led at small budgets but was the slowest DP method, single-seeded and capped, and at moderate budgets it was not clearly better than PrivBayes. MST, despite excellent marginals, was the weakest for subgroup-level knowledge.
+At ε = 3–5, AIM and PrivBayes produced synthetic tables that retained roughly 79–85% of real-data classification performance. Their higher-order fidelity was better than that of the non-private baselines, and they came with a formal guarantee that the non-private models lack. The hypothesis that AIM is the strongest DP method was only partly supported. It led at small budgets but was the slowest DP method, single-seeded and capped, and at moderate budgets it was not clearly better than PrivBayes. MST, despite excellent marginals, was the weakest for subgroup-level knowledge.
 
 The LLM knowledge-discovery layer shows that an explanation interface can be added without any path to the original records. It sends only suppressed aggregates of DP output, labels non-LLM output honestly, and audits every request. The most important lesson, however, is about *trust* rather than leakage. Post-processing protects privacy but not truth. Synthetic data can contain associations that do not exist in the population, and an LLM will describe them convincingly. Knowledge utility — checking payload statistics against real data in a governed setting — should therefore accompany any such deployment, and generated insights should be treated as hypotheses.
 

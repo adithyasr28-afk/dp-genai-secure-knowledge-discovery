@@ -10,10 +10,20 @@ What the summary contains:
   - per-column marginals (numerical quantiles; categorical shares),
   - the target's positive rate overall and broken down by each column,
   - the strongest pairwise associations (Cramer's V / Pearson r),
-  - generator-quality context already measured by the project's own
-    evaluation (fidelity, TSTR F1, MIA AUC), so the LLM can calibrate how
-    much to trust the patterns,
+  - optionally, generator-quality context already measured by the
+    project's own evaluation (fidelity, TSTR F1, MIA AUC), so the LLM can
+    calibrate how much to trust the patterns,
   - a manifest describing what was suppressed or withheld.
+
+Privacy boundary: everything except the quality context is computed from
+the DP synthetic dataset alone, so it is post-processing of the DP release.
+The quality context is different: those seven scalars were computed by the
+evaluation pipeline by COMPARING the synthetic data with the real training
+and test data. They are not covered by the generator's DP guarantee and
+are not a DP release. They are included by default because they let the
+model qualify its claims; pass include_quality_context=False to send a
+payload that is pure post-processing. The manifest records which case
+applies.
 
 Small-cell suppression: every category, group or bin computed from fewer
 than `min_cell_count` synthetic rows is dropped and folded into a
@@ -74,6 +84,7 @@ def build_aggregate_summary(
     min_cell_count: int = DEFAULT_MIN_CELL_COUNT,
     top_k: int = DEFAULT_TOP_K,
     n_associations: int = DEFAULT_N_ASSOCIATIONS,
+    include_quality_context: bool = True,
 ) -> dict:
     """Aggregate-only summary of one DP synthetic dataset (see module docstring)."""
     df = synthetic_df.copy()
@@ -195,18 +206,24 @@ def build_aggregate_summary(
         "target_analysis": target_summary,
         "strongest_categorical_associations": cat_assoc[:n_associations],
         "strongest_numerical_correlations": num_assoc[:n_associations],
-        "generator_quality_context": quality_context,
+        **({"generator_quality_context": quality_context} if include_quality_context else {}),
         "privacy_manifest": {
-            "data_source": "DP synthetic dataset only (results/synthetic_data/). The original dataset is never read.",
+            "data_source": ("Statistics computed from the DP synthetic dataset only (results/synthetic_data/); "
+                            "this layer never reads the original dataset."),
             "individual_records_included": False,
             "min_cell_count": min_cell_count,
             "cells_suppressed_below_min_count": suppressed_cells,
             "statistics_rounded_to_decimals": DECIMALS,
             "aggregates_are_separately_dp": False,
+            "quality_context_included": include_quality_context,
+            "quality_context_uses_real_data": include_quality_context,
             "note": (
-                "These statistics are post-processing of a DP synthetic dataset and spend no extra "
-                "privacy budget, assuming the generator's DP guarantee and its assumptions hold. "
-                "They are not an additional DP release, and the LLM adds no privacy guarantee."
+                "Marginals, group rates and associations are post-processing of a DP synthetic dataset and "
+                "spend no extra privacy budget, assuming the generator's DP guarantee and its assumptions hold. "
+                + ("The generator_quality_context metrics were computed by comparing the synthetic data with the "
+                   "real training/test data; they are NOT covered by the DP guarantee and are not a DP release. "
+                   if include_quality_context else "No metric computed from the real data is included. ")
+                + "No statistic here is a separate DP release, and the LLM adds no privacy guarantee."
             ),
         },
     }

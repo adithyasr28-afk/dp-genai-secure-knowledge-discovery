@@ -71,7 +71,7 @@ The implication in {eq:postproc} holds only if $g$ never consults $D_{\mathrm{tr
 1. The preprocessing domain is fitted on $D_{\mathrm{train}}$ without budget.
 2. The evaluation metrics use the real data.
 
-The metrics are internal diagnostics and are not sent to the LLM as released data. They *are* included in the payload as quality context, and that is a small, disclosed exception.
+The second exception reaches the LLM. By default the payload carries a *quality context* of seven scalars — four fidelity distances, the best TSTR F1 and the MIA AUC — that the evaluation pipeline computed by comparing the synthetic data with the real training and test splits. These numbers are not covered by the generator's guarantee and are not a DP release, so a payload that includes them is not pure post-processing. Their disclosure risk is small (seven rounded summary statistics about the whole split), but it is not zero and it is not bounded by ε. The payload's privacy manifest states this explicitly (`quality_context_uses_real_data`), and the dashboard offers a switch that withholds the quality context, leaving a payload computed from the DP synthetic data alone. Any further access to the original data — for example, an LLM tool that queried real statistics — would need its own privacy analysis and budget.
 
 # Privacy-Aware Data Preparation and Management Layer
 
@@ -129,17 +129,16 @@ Table: {tab:dpmech} Differential privacy mechanisms comparison
 
 | Mechanism | Guarantee & accounting | Noise | Selection step | Strengths | Weaknesses observed / known |
 |---|---|---|---|---|---|
-| AIM [@mckenna2022aim] | (ε, δ) via zCDP, δ = 10⁻⁵ | Gaussian on marginals | Adaptive, exponential mechanism over the workload, T ≤ 60 rounds here | Workload-aware; best low-ε fidelity here | Slowest DP method (52–626 s); rounds capped; single seed |
-| MST [@mckenna2021mst] | (ε, δ) via zCDP, δ = 10⁻⁵ | Gaussian on 1- and 2-way marginals | Maximum spanning tree (one shot) | Fast (25–58 s), stable across seeds | Tree structure misses higher-order structure; lowest utility of the DP methods here |
-| PrivBayes [@zhang2017privbayes] | Pure ε-DP (δ = 0) | Laplace on conditionals | Exponential mechanism over parent sets | Fastest (0.5–21 s); pure DP | Collapses at ε = 0.5; not budget-equivalent to (ε, δ) methods |
+| AIM [@mckenna2022aim] | (ε, δ) via zCDP, δ = 10⁻⁵ | Gaussian on marginals | Adaptive, exponential mechanism over the workload, T ≤ 60 rounds here | Workload-aware; best low-ε fidelity here | Slowest DP method (52–626 s per fit); rounds capped; single seed |
+| MST [@mckenna2021mst] | (ε, δ) via zCDP, δ = 10⁻⁵ | Gaussian on 1- and 2-way marginals | Maximum spanning tree (one shot) | Fast (mean 25–58 s per configuration), stable across seeds | Tree structure misses higher-order structure; lowest utility of the DP methods here |
+| PrivBayes [@zhang2017privbayes] | Pure ε-DP (δ = 0), record count treated as public | Laplace on attribute–parent distributions | Exponential mechanism over parent sets (R score) | Fastest (mean 0.5–21 s); pure DP | Collapses at ε = 0.5; not budget-equivalent to (ε, δ) methods |
 | DP-SGD [@abadi2016] (not implemented) | (ε, δ) via RDP / PRV accounting | Gaussian on clipped gradients | — | Applies to neural generators and LLM fine-tuning | Needs training; typically lower tabular utility at equal ε |
 
 ## How Each Mechanism Spends Its Budget
 
 **MST** [@mckenna2021mst] spends its zCDP budget $\rho$ in three equal parts:
 
-1. It measures all one-way marginals with Gaussian noise ($\sigma=\sqrt{3/(2
-ho)}$).
+1. It measures all one-way marginals with Gaussian noise ($\sigma=\sqrt{3/(2\rho)}$).
 2. It uses the exponential mechanism to select, edge by edge, a maximum spanning tree over the attributes, scored by the estimated mutual information of each pair.
 3. It measures the two-way marginals on the tree's edges.
 
@@ -155,8 +154,10 @@ Its budget split is 90% for measurements and 10% for selections (see {eq:aimbudg
 
 **PrivBayes** [@zhang2017privbayes] splits a pure-DP budget ε between two phases — 30% and 70% in the implementation used:
 
-1. structure learning: an exponential mechanism greedily chooses each attribute's parents, scored by mutual information;
-2. measurement of the resulting conditional distributions with Laplace noise.
+1. structure learning: an exponential mechanism greedily chooses each attribute's parents. The implementation uses its default *R* score, the low-sensitivity surrogate for mutual information proposed by Zhang *et al.*, with sensitivity $3/n + 2/n^2$, and caps parent-set domain sizes by θ-usefulness (θ = 4);
+2. measurement of the joint distribution of each attribute with its parents with truncated Laplace noise (sensitivity $2/n$ for a normalised distribution), followed by normalisation into conditionals.
+
+Both sensitivities assume that neighbouring datasets have the same size $n$ (one record replaced), so the record count is treated as public. AIM and MST are analysed in the add/remove-one-record model.
 
 Sampling then follows the network's topological order. Because Laplace noise on small conditional tables at ε = 0.5 can wipe out the signal entirely, PrivBayes collapses at low budgets in this study.
 
@@ -190,9 +191,9 @@ The LLM layer needs no ledger entry of its own because it only post-processes ap
 
 ## Workflow
 
-Fig. {fig:dpflow} contrasts the implemented select–measure–generate workflow with DP-SGD. In DP-SGD, each per-example gradient $g_i$ is clipped to norm $C$, Gaussian noise is added to the average of a batch $B$, and an accountant tracks the cumulative loss [@abadi2016; @mironov2017]:
+Fig. {fig:dpflow} contrasts the implemented select–measure–generate workflow with DP-SGD. In DP-SGD, each per-example gradient $g_i$ is clipped to norm $C$, Gaussian noise is added to the sum of the clipped gradients of a batch $B$, the result is averaged, and an accountant tracks the cumulative loss [@abadi2016; @mironov2017]:
 
-$$\theta_{t+1}=\theta_t-\eta\Big(\tfrac{1}{|B|}\textstyle\sum_{i\in B}\bar g_i+\mathcal{N}(0,\sigma^2C^2\mathbf{I})\Big),\quad \bar g_i=g_i/\max\!\big(1,\lVert g_i\rVert_2/C\big) $$ {#eq:dpsgd}
+$$\theta_{t+1}=\theta_t-\frac{\eta}{|B|}\Big(\textstyle\sum_{i\in B}\bar g_i+\mathcal{N}(0,\sigma^2C^2\mathbf{I})\Big),\quad \bar g_i=g_i/\max\!\big(1,\lVert g_i\rVert_2/C\big) $$ {#eq:dpsgd}
 
 The update rule {eq:dpsgd} would be needed to make CTGAN or TVAE private, or to fine-tune an LLM on sensitive text [@li2022llmdp; @yu2022dpft]. It is **not** used in this project. CTGAN and TVAE run without it and are treated strictly as non-private baselines.
 

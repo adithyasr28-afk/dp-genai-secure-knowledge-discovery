@@ -42,6 +42,9 @@ def render():
             "— bin edges and category vocabulary — is treated as public; see README).\n"
             "- The summary statistics are **not** a separate DP release, and the LLM adds **no** privacy "
             "guarantee. Cells with fewer than the minimum count are suppressed as defence in depth.\n"
+            "- The optional *quality metrics* (fidelity, TSTR F1, MIA AUC) were computed by comparing the "
+            "synthetic data with the **real** data. They are not covered by the DP guarantee. Untick "
+            "*Include quality metrics* to send a payload computed from the DP synthetic data alone.\n"
             "- In live mode the summary is sent to the chosen provider's API (Anthropic or Google); your API key "
             "is never included in the prompt."
         )
@@ -84,7 +87,12 @@ def render():
                             placeholder="e.g. Which attributes are most associated with high income, and how reliable is that?")
 
     df = load_synthetic_dataset(info)
-    summary = build_aggregate_summary(df, info, target_column="income", min_cell_count=int(min_cell))
+    include_q = st.checkbox(
+        "Include quality metrics (computed against the real data; not covered by DP)", value=True,
+        help="Seven scalar metrics from the evaluation pipeline that help the LLM qualify its claims. "
+             "They were computed by comparing the synthetic data with the real training/test data.")
+    summary = build_aggregate_summary(df, info, target_column="income", min_cell_count=int(min_cell),
+                                      include_quality_context=include_q)
 
     with st.expander("Exact payload that will be sent to the LLM", expanded=False):
         st.caption("Identical for both providers: system prompt followed by the user message.")

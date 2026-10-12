@@ -121,7 +121,7 @@ The implemented case study is census-style income analysis. A statistical office
 
 With AIM or PrivBayes at ε = 3–5, the evidence suggests three things:
 
-- classifiers trained on the release retain about 80–85% of real-data F1;
+- classifiers trained on the release retain about 79–85% of real-data F1;
 - the subgroup rate rankings agree moderately to well with the real data (Spearman ρ 0.51–0.87, rising with ε);
 - the simple attack finds no membership signal.
 
@@ -208,7 +208,7 @@ Table: {tab:business} Business impact assessment
 | Faster data access | Analysts start on synthetic data without lengthy approvals | Not measured | Plausible |
 | Compute cost | Generation cost per release | 0.5–21 s (PrivBayes) to 626 s (AIM) per fit on a student machine | Supported (hardware not recorded) |
 | Insight democratisation | Non-experts get narratives via the LLM | Implemented; real LLM output not evaluated | Partly supported |
-| Decision risk | Wrong decisions from spurious synthetic "insights" | Spurious association (V 0.45–0.49 vs 0.12 real); MST ρ ≤ 0.30 | Risk evidenced — needs controls |
+| Decision risk | Wrong decisions from spurious synthetic "insights" | Spurious association (V 0.45–0.63 vs 0.12 real); MST ρ ≤ 0.30 | Risk evidenced — needs controls |
 | Compliance readiness | Easier DPIA and anonymisation arguments | Assumptions documented; organisational controls missing | Partial |
 | Trust and reputation | Demonstrable privacy engineering | Audit trail, verified results | Plausible |
 | API cost of LLM layer | — | About 15k characters per request, roughly 4–5k input tokens (estimate) | Estimate only — check current pricing |

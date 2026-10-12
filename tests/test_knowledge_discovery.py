@@ -105,6 +105,20 @@ def test_summary_is_aggregate_only(summary, aim3):
     assert len(text) < 30_000  # bounded, summary-sized payload
 
 
+def test_quality_context_is_disclosed_and_optional(summary, aim3):
+    # default payload carries real-data-derived metrics and says so
+    m = summary["privacy_manifest"]
+    assert "generator_quality_context" in summary
+    assert m["quality_context_included"] is True and m["quality_context_uses_real_data"] is True
+    assert "NOT covered by the DP guarantee" in m["note"]
+    # opt-out payload is computed from the DP synthetic data alone
+    pure = build_aggregate_summary(load_synthetic_dataset(aim3), aim3, include_quality_context=False)
+    assert "generator_quality_context" not in pure
+    assert pure["privacy_manifest"]["quality_context_uses_real_data"] is False
+    r = llm.generate_insights(pure, mode="demo", write_audit=False)
+    assert r.ok and "withheld" in r.text
+
+
 def test_original_rows_never_in_prompt(summary, monkeypatch):
     original = pd.read_csv(ORIGINAL_CSV)
     fake = FakeClient()

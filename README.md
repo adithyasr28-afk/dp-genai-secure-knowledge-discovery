@@ -204,7 +204,7 @@ hypotheses to verify on governed real data.
   provider (Google or Anthropic) under its API terms. On Google's free tier,
   prompts and responses may be used to improve Google's products.
 - Synthetic data can contain **spurious associations**. For example, the AIM and
-  MST ε=3 datasets show education ↔ race Cramér's V ≈ 0.45–0.49, versus 0.12 in the
+  MST ε=3 datasets show education ↔ race Cramér's V ≈ 0.45–0.63, versus 0.12 in the
   real training split. An LLM will describe such artifacts faithfully. Treat its
   output as hypotheses (see `analysis/knowledge_utility.py`).
 

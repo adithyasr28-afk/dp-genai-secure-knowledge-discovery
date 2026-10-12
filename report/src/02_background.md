@@ -18,7 +18,7 @@ Three properties make DP practical:
 - **Composition.** Budgets of successive mechanisms add up.
 - **Group privacy.** The guarantee degrades gracefully, by a factor $k$, for groups of $k$ records [@dwork2014].
 
-The post-processing property is what licenses the knowledge-discovery layer in this work. Computing statistics on DP synthetic data, or giving them to an LLM, costs no further budget — *provided* nothing in that pipeline consults the real data.
+The post-processing property is what licenses the knowledge-discovery layer in this work. Computing statistics on DP synthetic data, or giving them to an LLM, costs no further budget — *provided* nothing in that pipeline consults the real data. Section VII-E lists the two places where this implementation does consult it.
 
 The basic mechanisms add noise scaled to a query's sensitivity $\Delta f$, the maximum change in $f$ caused by one record. The Laplace mechanism with noise scale $\Delta_1 f/\varepsilon$ gives pure DP. The Gaussian mechanism is analysed most tightly with zero-concentrated DP (zCDP) [@bun2016], where adding $\mathcal{N}(0,\sigma^2)$ noise to a query of $\ell_2$ sensitivity $\Delta_2$ costs $\rho = \Delta_2^2/(2\sigma^2)$. zCDP composes additively, and converts to $(\varepsilon,\delta)$-DP as
 

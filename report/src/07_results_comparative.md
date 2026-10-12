@@ -110,13 +110,13 @@ With one classifier per run and 193 women in the test set, these fairness estima
 
 ## Runtime
 
-Fit times (Fig. {fig:runtime}) separate the methods clearly:
+Mean fit times per configuration (Fig. {fig:runtime}; single runs in brackets) separate the methods clearly:
 
-- PrivBayes: 0.5–21 s, growing with ε as larger networks become affordable.
-- MST: 25–58 s.
-- TVAE: 41 s.
-- CTGAN: 238 s.
-- AIM: 52–626 s, even with the 60-round cap.
+- PrivBayes: 0.5–21 s (0.1–21 s), growing with ε as larger networks become affordable.
+- MST: 25–58 s (22–83 s).
+- TVAE: 41 s (31–58 s).
+- CTGAN: 238 s (197–282 s).
+- AIM: 52–626 s (single seed), even with the 60-round cap.
 
 The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more than a factor of two between repeats of the same configuration, so small runtime differences should not be over-interpreted.
 
@@ -128,7 +128,7 @@ The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more tha
 
 **How trustworthy the payload is** (Table {tab:ku}, Fig. {fig:ku}). Knowledge utility rises with ε for AIM (KU 0.88 → 0.95; Spearman ρ 0.32 → 0.88) and PrivBayes (KU 0.86 → 0.92; ρ 0.07 → 0.82). At ε ≥ 5 the payloads rank the subgroup income rates in nearly the same order as the real data. **MST payloads do not**: ρ stays at or below 0.30 at every ε, even though MST's one-way TVD is the best of all methods. A dataset can match its marginals and still give misleading subgroup "insights". This is precisely the case that one-way fidelity metrics miss.
 
-**Spurious associations.** In the AIM and MST ε = 3 datasets, the strongest associations reported to the LLM included education ↔ race with Cramér's V of 0.493 and 0.450, against **0.119 in the real training split**. PrivBayes (0.062) and TVAE (0.068) did not show this artefact. Relationship ↔ sex, a genuine structural association, was preserved by all of them (0.62–0.65 against 0.65 real). An LLM given the AIM ε = 3 payload would — correctly, from its input — describe a strong education–race link that does not exist in the population. This is the over-trust threat A6 made concrete. It is why the payload carries quality metrics and why outputs are framed as hypotheses.
+**Spurious associations.** In the AIM and MST ε = 3 datasets, the strongest associations reported to the LLM included education ↔ race with Cramér's V of 0.493 (AIM) and 0.450–0.625 (MST, three seeds), against **0.119 in the real training split**. PrivBayes (0.067–0.074) and TVAE (0.000–0.068) did not show this artefact. Relationship ↔ sex, a genuine structural association (0.653 real), was preserved by AIM, MST and TVAE (0.62–0.66) but by only one of the three PrivBayes ε = 3 seeds (0.35, 0.37 and 0.66). An LLM given the AIM ε = 3 payload would — correctly, from its input — describe a strong education–race link that does not exist in the population. This is the over-trust threat A6 made concrete. It is why the payload carries quality metrics and why outputs are framed as hypotheses.
 
 {{INCLUDE:generated/table_ku.md}}
 
@@ -161,7 +161,7 @@ This is threat A6 observed with a real model: post-processing kept the explanati
 
 ## Answering the Research Questions
 
-**RQ1** — AIM provides the best DP fidelity at small ε and competitive utility, so the hypothesis that it is the strongest DP method is **partly supported**. At ε ≥ 3 its single-seed results lie within PrivBayes's seed spread. It is the slowest DP method (up to 626 s per fit, against at most 58 s for MST and 21 s for PrivBayes), and it had the worst fairness outlier. PrivBayes is the most cost-effective at ε ≥ 3 but unusable at ε = 0.5. MST is fast and stable but weakest on utility, higher-order fidelity, rare combinations and knowledge utility. Among the non-DP baselines, TVAE has the best utility but memorisation signals and the worst rare-pattern loss.
+**RQ1** — AIM provides the best DP fidelity at small ε and competitive utility, so the hypothesis that it is the strongest DP method is **partly supported**. At ε ≥ 3 its single-seed results lie within PrivBayes's seed spread. It is the slowest DP method (up to 626 s per fit, against mean fit times of at most 58 s for MST and 21 s for PrivBayes), and it had the worst fairness outlier. PrivBayes is the most cost-effective at ε ≥ 3 but unusable at ε = 0.5. MST is fast and stable but weakest on utility, higher-order fidelity, rare combinations and knowledge utility. Among the non-DP baselines, TVAE has the best utility but memorisation signals and the worst rare-pattern loss.
 
 **RQ2** — Utility, higher-order fidelity and knowledge utility improve markedly from ε = 0.5 to ε = 3, then flatten. Fairness and rare-pattern behaviour do not improve monotonically.
 

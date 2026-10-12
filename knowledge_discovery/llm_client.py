@@ -139,17 +139,20 @@ class InsightResult:
 def _demo_report(summary: dict) -> str:
     """Deterministic, template-based explanation. Never presented as LLM output."""
     ds = summary["dataset"]
-    q = summary["generator_quality_context"]
-    fid = q["fidelity_vs_real_training_data"]
-    lines = [DEMO_BANNER, "", "## Overview",
-             f"Synthetic dataset `{ds['run_id']}` from **{ds['generator']}** "
-             f"({ds['formal_guarantee'] or 'privacy statement unavailable'}), "
-             f"{ds['n_synthetic_rows']} rows, {len(ds['numerical_columns'])} numerical and "
-             f"{len(ds['categorical_columns'])} categorical columns. "
-             f"Recorded quality: mean KS = {fid['mean_ks_statistic_numerical']}, mean TVD = "
-             f"{fid['mean_total_variation_distance_categorical']}, 3-way marginal L1 = "
-             f"{fid['three_way_marginal_mean_l1_error']}, best TSTR F1 = {q['best_tstr_f1_on_real_test_set']}, "
-             f"MIA AUC = {q['membership_inference_attack_auc']}.", "", "## Key patterns"]
+    q = summary.get("generator_quality_context")
+    overview = (f"Synthetic dataset `{ds['run_id']}` from **{ds['generator']}** "
+                f"({ds['formal_guarantee'] or 'privacy statement unavailable'}), "
+                f"{ds['n_synthetic_rows']} rows, {len(ds['numerical_columns'])} numerical and "
+                f"{len(ds['categorical_columns'])} categorical columns.")
+    if q:
+        fid = q["fidelity_vs_real_training_data"]
+        overview += (f" Recorded quality: mean KS = {fid['mean_ks_statistic_numerical']}, mean TVD = "
+                     f"{fid['mean_total_variation_distance_categorical']}, 3-way marginal L1 = "
+                     f"{fid['three_way_marginal_mean_l1_error']}, best TSTR F1 = "
+                     f"{q['best_tstr_f1_on_real_test_set']}, MIA AUC = {q['membership_inference_attack_auc']}.")
+    else:
+        overview += " Quality metrics were withheld from this payload."
+    lines = [DEMO_BANNER, "", "## Overview", overview, "", "## Key patterns"]
     ta = summary.get("target_analysis")
     if ta:
         lines.append(f"Overall share of `{ta['target_column']} = {ta['positive_class']}`: "
