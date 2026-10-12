@@ -8,7 +8,7 @@ Status: ✅ done · ◐ partly / needs team action · ❌ not done · ⚠ confli
 |---|---|---|
 | Use the official template; follow fonts, margins, headings | ◐ | The DOCX keeps the template's own cover, index, LoF, LoT and contribution tables, with A4, 1" margins, Times New Roman body and Helvetica Neue IEEE-blue headings. **The body is single-column; the template body is two-column.** |
 | Sections as per the team's section plan | ✅ | Sections I–XXII follow `13.pdf` names and order. |
-| Word counts per section | ◐ | ~19,800 words in total; several sections are below the suggested minimum when tables are excluded (list in report review note 10). |
+| Word counts per section | ◐ | ~20,900 words in total; several sections are below the suggested minimum when tables are excluded (list in report review note 10). |
 | Sources: journals and conferences 2020–2027, IEEE/ACM/Springer/Elsevier | ◐ | 63 references, most from 2020–2025 plus foundational works. Only ~21% are journal articles, against the guideline's 80%. |
 | Diagrams ≥ 600 DPI, redrawn in draw.io | ◐ | All generated diagrams and plots are 600 DPI PNG, with SVG and **editable .drawio** files. They were built programmatically, so the team may restyle them in draw.io. Screenshots are not 600 DPI. |
 | Cite reused diagrams ("Adapted from [n]") | ✅ | Fig. 1 carries "adapted from" attribution; all others are original. |
@@ -41,7 +41,7 @@ Status: ✅ done · ◐ partly / needs team action · ❌ not done · ⚠ confli
 
 | Section | Status | Figures / tables / equations delivered |
 |---|---|---|
-| Executive Summary & Abstract (450–750) | ⚠ ✅ | Executive Summary 627 words + 231-word Abstract. **Conflict with the template's 150–250 to confirm.** |
+| Executive Summary & Abstract (450–750) | ⚠ ✅ | Executive Summary 627 words + 240-word Abstract. **Conflict with the template's 150–250 to confirm.** |
 | Keywords (20–40) | ✅ | 8 terms. |
 | 1 Introduction | ✅ | — |
 | 2 Problem Statement | ✅ | Fig. 1 risk landscape. |
