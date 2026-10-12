@@ -88,3 +88,26 @@
 - Searched for "fully secure", "completely private", "guaranteed anonym…", "perfect privacy", "cannot leak", "no risk": **none found**.
 - "Retention above 100%" for TVAE LR (103%) is reported as measured, with an explanation.
 - No passage presents DP-SGD, RAG, federated learning or DP fine-tuning as implemented. Each mention is labelled "not implemented", "discussed" or "future work".
+
+## 6. Claims added in Phase 5 (report expansion), and how each was verified
+
+| # | Claim | Where | Evidence | Verdict |
+|---|---|---|---|---|
+| P1 | 3.5 / 11.6 / 30.6 / 47.3% of records are sample-unique on growing quasi-identifier sets; 81.9% in classes < 5 | §V, §II | `analysis/quasi_identifier_risk.py` → `results/verified/quasi_identifier_uniqueness.csv` | ✅ computed; caveat "sample ≠ population uniqueness" stated |
+| P2 | e^ε = 1.65, 2.72, 20.1, 148, ≈ 22,000; TPR bound at FPR 1%: 1.7%, 2.7%, 20%, vacuous | §VI | arithmetic | ✅ |
+| P3 | Random-attack AUC SD ≈ 0.017 with 600 + 600 → 95% range 0.47–0.53; all 41 observed AUCs inside | §XIII, §XX | Mann–Whitney null variance; `runs_deduplicated.csv` (0.478–0.525; 0 outside) | ✅ |
+| P4 | 144 positive test cases; 193 women in test; train/test positive rates 23.9% / 24.0% | §VIII, §XIII | `setup_data()` | ✅ |
+| P5 | ε-rankings at ε = 3 (retention, 3-way, KU, rare combos, ΔDP, fit time); PrivBayes first or joint first on 5 of 6 | §XV | `aggregated_by_method_epsilon.csv`, `knowledge_utility_aggregated.csv` | ✅ |
+| P6 | Three AIM ε = 3 responses: suppression misread 2/3; reversed gap reported 2/3; `12th` flagged 2/3; edu–race flagged 0/3 | §XI | `evidence/llm_responses/` (3 AIM files), checked with grep and by reading | ✅ descriptive, n = 3 |
+| P7 | LLM cost: ≈ 6,300 input, 1,700–1,900 output, 1,200–4,000 thinking tokens, 25–50 s (one 215 s) | §XIX | 5 successful audit records | ✅ |
+| P8 | DPDP Rules 2025 notified 14 Nov. 2025; most Data Fiduciary obligations from 14 May 2027 | §XVI | Government memorandum and press reports (web search 2026-10-12) | ✅; the gazette text should be consulted for legal use |
+| P9 | Tao *et al.* benchmark includes PATE-GAN/DP-GAN; marginal-based methods consistently outperform | §III, §VII | Paper text (arXiv:2112.09238, conclusion and findings F1–F7) | ✅ |
+| P10 | UI run fairness by race: four non-White groups with 5–58 test records, F1 0–0.5; White 512, F1 0.54 | §XVII | `evidence/screenshots/2026-10-12/08_fairness_rare_patterns.png` | ✅ (UI demo run, not a reported result) |
+| P11 | PrivBayes ε = 3 s42: relationship–sex 0.365 (real 0.653) | §XVIII | Cramér's V on the saved CSV | ✅ |
+
+## 7. Reference verification (Phase 5)
+
+- 63 → **50 references**. Removed (peripheral or redundant): yue2023, qian2023synthcity, patki2016sdv, kotelnikov2023, carlini2023memorization, yu2022dpft, tramer2024, xie2024pe, mironov2017, lewis2020rag, mitchell2019, hardt2016, jordon2019pategan, borisov2023. Added: murtaza2023 (Comput. Sci. Rev., verified on Crossref).
+- All 5 former `[VERIFY]` entries were confirmed: greshake2023, lukas2023, ponomareva2023 and yue2023 via Crossref (yue2023 later removed), and jagielski2020 via the NeurIPS proceedings BibTeX.
+- 17 DOIs were checked on Crossref in this phase. All matched title, venue, volume and pages.
+- **Composition:** 14 journal (28%), 21 conference/symposium/workshop (42%), 15 standards, legislation, documentation, dataset or preprint (30%). 34 of the 50 are from 2020 or later. The 80% journal target is **not** met; see `final_audit.md`.

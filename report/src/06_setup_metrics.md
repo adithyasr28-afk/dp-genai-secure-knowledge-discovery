@@ -138,7 +138,7 @@ $$\Delta_{\mathrm{DP}}=\max_g P(\hat y=1\mid A=g)-\min_g P(\hat y=1\mid A=g),\qq
 
 ## Statistical Resolution
 
-Some metrics are noisy at this sample size, and their resolution limits what the results can show. With 600 members and 600 non-members, the AUC of an attack that guesses at random has a standard deviation of $\sqrt{(n_1+n_2+1)/(12\,n_1 n_2)}pprox0.017$ (the null distribution of the Mann–Whitney statistic). A random attack would therefore score between about 0.47 and 0.53 in 95% of runs. Every one of the 41 observed AUCs (0.478–0.525) falls in that interval, which is a second reason, besides the attack's weakness, not to read differences between them. Similarly, the fairness metrics rest on 193 women in the test split, and F1 on 144 positive test cases, so differences of a few points between single runs are within sampling noise.
+Some metrics are noisy at this sample size, and their resolution limits what the results can show. With 600 members and 600 non-members, the AUC of an attack that guesses at random has a standard deviation of $\sqrt{(n_1+n_2+1)/(12\,n_1 n_2)}\approx 0.017$ (the null distribution of the Mann–Whitney statistic). A random attack would therefore score between about 0.47 and 0.53 in 95% of runs. Every one of the 41 observed AUCs (0.478–0.525) falls in that interval, which is a second reason, besides the attack's weakness, not to read differences between them. Similarly, the fairness metrics rest on 193 women in the test split, and F1 on 144 positive test cases, so differences of a few points between single runs are within sampling noise.
 
 **Knowledge utility.** KU, Spearman ρ and top-1 agreement, as defined in {eq:ku}.
 

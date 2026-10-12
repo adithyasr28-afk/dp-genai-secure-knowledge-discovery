@@ -5,15 +5,20 @@
 **Commands (from the project root).**
 
 ```
-venv\Scripts\python -m pytest -m "not slow"        # 43 tests: 42 pass, 1 live test skipped (~25 s)
-venv\Scripts\python -m pytest -m slow              # 5 end-to-end generator runs (~3 min)
-venv\Scripts\python -m analysis.verify_results     # de-duplication, checks, re-evaluation, figures
-venv\Scripts\python -m analysis.knowledge_utility  # payload vs real-data agreement
-venv\Scripts\python -m analysis.llm_case_study     # fact-check of the real Gemini responses
-venv\Scripts\python figures\diagram_builder.py     # diagrams: PNG (600 DPI), SVG, .drawio
-venv\Scripts\python report\build_report.py         # this document
-run_dashboard.bat                                  # dashboard at http://localhost:8501
-venv\Scripts\python run_sweep.py                   # re-run all 41 configurations (hours)
+# tests: 44 fast (43 pass, 1 live test skipped, ~30 s); 5 slow (~5 min)
+venv\Scripts\python -m pytest -m "not slow"
+venv\Scripts\python -m pytest -m slow
+# re-evaluation, tables and figures from the saved outputs
+venv\Scripts\python -m analysis.verify_results
+venv\Scripts\python -m analysis.knowledge_utility
+venv\Scripts\python -m analysis.llm_case_study
+venv\Scripts\python -m analysis.quasi_identifier_risk
+# diagrams (PNG 600 DPI, SVG, .drawio) and this document
+venv\Scripts\python figures\diagram_builder.py
+venv\Scripts\python report\finalize.py
+# dashboard (http://localhost:8501) and the full sweep (hours)
+run_dashboard.bat
+venv\Scripts\python run_sweep.py
 ```
 
 **Preprocessing parameters.**
@@ -47,16 +52,19 @@ Table: {tab:tests} Test results (executed October 2026 in the verification envir
 
 | Suite / check | Items | Result | Notes |
 |---|---|---|---|
-| `test_knowledge_discovery.py` | 17 | 17 passed | Fake client; no network |
+| `test_knowledge_discovery.py` | 18 | 18 passed | Fake client; no network; includes the quality-context disclosure test |
 | `test_live_http_mock.py` | 6 | 6 passed | Real `anthropic` 1.13 SDK vs local mock server |
 | `test_gemini_provider.py` | 16 | 15 passed, 1 skipped | Real `google-genai` 2.29 SDK vs local mock server; provider selection; the opt-in live test is skipped by default |
 | `test_pipeline_smoke.py` (fast) | 4 | 4 passed | Shape, 41 configs, train-only fit, inverse binning |
 | `test_pipeline_smoke.py` (slow) | 5 | 5 passed | AIM, MST, PrivBayes, CTGAN, TVAE end-to-end. AIM first **failed** with a 5-round cap (NaN, see {eq:aimbudget}) and passed with 20 rounds |
-| Dashboard, comparative workflow (manual) | 9 pages | Working | PrivBayes run from the UI (4.5 s); log restored afterwards |
+| Dashboard, comparative workflow (manual, 11 Oct.) | 9 pages | Working | PrivBayes run from the UI (4.5 s); log restored afterwards |
+| Dashboard, all 10 feature areas (automated capture, 12 Oct.) | 14 screenshots | Working; no error element | PrivBayes ε = 3, seed 7 run from the UI; log and CSV restored afterwards (Appendix E) |
 | Dashboard, Model Comparison (manual) | — | **Bug found, fixed** | Counted 43 runs; now 41 unique |
 | Dashboard, LLM page (manual) | demo + missing key | Working | Audit flag bug found and fixed |
-| Secret scan of tracked files | — | Clean | Only fake test keys in `tests/` |
-| Live Gemini API calls | 2 | **2 succeeded** | AIM and PrivBayes ε = 3; `gemini-3.8-flash`; ≈ 30 s each; fact-checked (Table {tab:llmcase}) |
+| Full suite, final run (12 Oct.) | 49 | 48 passed, 1 skipped | 298 s; saved results unchanged afterwards |
+| Clean install from a fresh clone (12 Oct.) | — | Passed | `pip check` clean; fast suite 43 passed, 1 skipped |
+| Secret scan of tracked files and full git history | — | Clean | Only fake test keys in `tests/` |
+| Live Gemini API calls | 5 | **5 succeeded** | 11 Oct.: AIM and PrivBayes ε = 3, fact-checked (Table {tab:llmcase}); 12 Oct.: one for Fig. {fig:ss7} and two unintended (Section X); all `gemini-3.8-flash` |
 | Live Claude API call | — | **Not tested** | No Anthropic API key available |
 
 # Appendix C: Prompt Template {-}

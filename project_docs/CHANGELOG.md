@@ -43,3 +43,32 @@ The baseline is `main` @ `ef727a3` (2026-10-12). Earlier history is in `report/C
   - **One deliberate live Gemini call** for screenshot 10d (PrivBayes ε=3 s42, 2026-10-12 20:47:34).
   - **Two unintended live calls** (AIM ε=3 s42, 20:39:01 and 20:42:25), caused by the capture script clicking Generate in the default Live mode. They are disclosed, their texts are kept in `evidence/llm_responses/`, and the script was fixed.
 - **UI demo run** (PrivBayes ε=3 seed 7): the log record and CSV it created were removed; the log is back to 43 records.
+
+## Phase 5 — Report revision (2026-10-12)
+- **Build (`report/build_report.py`):**
+  - official front matter for 3 members (4th SmartArt slot and 4th contribution row removed), faculty and corresponding author from the template;
+  - continuous two-column body with page-wide sections for wide figures and tables;
+  - A4 with 0.5 in top/bottom margins;
+  - output `report/final_report.docx`;
+  - diagram export to `diagrams/` with an index.
+- **Sources:**
+  - drafting notes removed (moved to `project_docs/review_notes_baseline_draft.md`);
+  - figures 25 → 15 and tables 20 → 12 in the body; the rest in the new Appendix D, and screenshots replaced (Appendix E);
+  - appendices moved before the DAS, Acknowledgment and References (template order);
+  - every section expanded or trimmed into the topic plan's word range with verified, project-specific content;
+  - keywords extended to 29 words.
+- **References:** 63 → 50 (14 removed, 1 verified journal survey added); all `[VERIFY]` resolved; DPDP Rules sentence verified.
+- **New analysis:** `analysis/quasi_identifier_risk.py`.
+
+## Phase 6 — Validation (2026-10-12)
+- **Added:**
+  - `report/finalize.py`, which builds, exports a PDF with Word and fills the Index/LoF/LoT page numbers from it (2-pass, stable);
+  - `report/check_report.py`, the automated consistency checks;
+  - `project_docs/final_audit.md`; the final compliance matrix; claim-verification §§6–7.
+- **Fixed during the audit:**
+  - corrupted `\varepsilon`, `\approx` and a code path (escape characters);
+  - Markdown asterisks in list titles;
+  - table column widths and cell indents;
+  - Appendix A command layout;
+  - stale test counts.
+- **Rewritten:** `project_docs/HANDOVER.md` and `DEMO_GUIDE.md`; `GUIDELINE_CHECKLIST.md` now points to the compliance matrix. README updated.

@@ -101,10 +101,10 @@ def resolve(md: str):
     # Pass 1: assign figure/table/equation numbers in order of definition.
     for m in re.finditer(r"!\[\{fig:([\w-]+)\}\s*(.*?)\]\(", md):
         figs[m.group(1)] = len(figs) + 1
-        fig_list.append((len(figs), re.sub(r"\[@[^\]]+\]", "", m.group(2)).strip().rstrip(".")))
+        fig_list.append((len(figs), re.sub(r"\*\*|\*|`", "", re.sub(r"\[@[^\]]+\]", "", m.group(2))).strip().rstrip(".")))
     for m in re.finditer(r"^Table:\s*\{tab:([\w-]+)\}\s*(.*)$", md, re.M):
         tabs[m.group(1)] = len(tabs) + 1
-        tab_list.append((roman(len(tabs)), m.group(2).strip()))
+        tab_list.append((roman(len(tabs)), re.sub(r"\*\*|\*|`", "", m.group(2)).strip()))
     for m in re.finditer(r"\{#eq:([\w-]+)\}", md):
         eqs[m.group(1)] = len(eqs) + 1
 
@@ -563,10 +563,16 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
     t_index, t_lof, t_lot, t_contrib, t_cons = tpl.tables[0], tpl.tables[1], tpl.tables[2], tpl.tables[3], tpl.tables[4]
     toc = [(n, t) for n, t in toc if not t.startswith("Draft Status")]
     word_counts = [(h, w) for h, w in word_counts if not h.startswith("Draft Status")]
-    index_rows = [("", "Abstract", "")] + [(n or "", t, "") for n, t in toc if t.lower() != "abstract"]
+    # page numbers come from report/page_map.json, written by report/finalize.py from the rendered PDF
+    import json
+    pm_path = HERE / "page_map.json"
+    pm = json.loads(pm_path.read_text(encoding="utf-8")) if pm_path.exists() else {}
+    pg = lambda key: str(pm.get(key, ""))
+    index_rows = [("", "Abstract", pg("toc:Abstract"))] + [(n or "", t, pg(f"toc:{t}")) for n, t in toc
+                                                         if t.lower() != "abstract"]
     _fill_table(t_index, index_rows)
-    _fill_table(t_lof, [(str(n), t, "") for n, t in fig_list])
-    _fill_table(t_lot, [(n, t, "") for n, t in tab_list])
+    _fill_table(t_lof, [(str(n), t, pg(f"fig:{n}")) for n, t in fig_list])
+    _fill_table(t_lot, [(n, t, pg(f"tab:{n}")) for n, t in tab_list])
     contrib = [(str(i + 1), h, "[Reg. No.]", str(w)) for i, (h, w) in enumerate(word_counts)]
     _fill_table(t_contrib, contrib)
     total = sum(w for _, w in word_counts)
@@ -709,12 +715,15 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
             if ppr is None:
                 ppr = p.makeelement(qn("w:pPr"), {})
                 p.insert(0, ppr)
-            for jc in ppr.findall(qn("w:jc")):
+            for jc in ppr.findall(qn("w:jc")) + ppr.findall(qn("w:ind")):
                 ppr.remove(jc)
+            # no first-line indent inside table cells (the body style indents paragraphs)
+            ppr.append(ppr.makeelement(qn("w:ind"), {qn("w:left"): "0", qn("w:firstLine"): "0"}))
             ppr.append(ppr.makeelement(qn("w:jc"), {qn("w:val"): "left"}))
 
     # Fixed column widths (twips, text width 9029) where Word's autofit splits numbers.
-    fixed_widths = {"Claim in the Gemini response": [3800, 1150, 950, 1250, 1879]}
+    fixed_widths = {"Claim in the Gemini response": [3800, 1150, 950, 1250, 1879],
+                    "run_id": [3900, 750, 1350, 800, 750, 700, 779]}
     for tbl in body.iter(qn("w:tbl")):
         first_cell = "".join(t.text or "" for t in next(tbl.iter(qn("w:tc"))).iter(qn("w:t"))).strip()
         widths = fixed_widths.get(first_cell)
@@ -828,6 +837,7 @@ def main():
         print(f"  {w:5d}  {h}")
     print("total words:", sum(w for _, w in counts))
     print("wrote", OUT_DOCX)
+    return resolved, fig_list, tab_list, toc
 
 
 if __name__ == "__main__":

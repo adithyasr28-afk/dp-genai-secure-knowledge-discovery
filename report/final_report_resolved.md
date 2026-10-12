@@ -677,9 +677,7 @@ Sampling then follows the network's topological order. Because Laplace noise on 
 
 A DP statement is only as useful as its unit and its scope [6]. For the generators here:
 
-- **Unit of privacy.** The unit is one *row* of the 2,400-row training split. If one person contributes several rows, they are protected only as a group: for $k$ rows the bound degrades to $k
-arepsilon$ (and $k e^{(k-1)
-arepsilon}\delta$ for approximate DP). The sample contains 52 duplicate rows. Some of these may be distinct people with identical attributes, but if any is a repeated person, that person is protected at 2ε, not ε.
+- **Unit of privacy.** The unit is one *row* of the 2,400-row training split. If one person contributes several rows, they are protected only as a group: for $k$ rows the bound degrades to $k\varepsilon$ (and $k e^{(k-1)\varepsilon}\delta$ for approximate DP). The sample contains 52 duplicate rows. Some of these may be distinct people with identical attributes, but if any is a repeated person, that person is protected at 2ε, not ε.
 - **Neighbouring relation.** PrivBayes's sensitivities assume replacement of one row with *n* fixed, while the AIM and MST implementations use addition or removal of one row. A replacement is a removal followed by an addition, so ε-DP under addition/removal implies 2ε-DP under replacement; the converse does not hold, because PrivBayes treats *n* as public. The ε values of the two families are therefore comparable only up to this factor and assumption.
 - **Covered.** The synthetic dataset and anything computed from it alone, including the aggregate payload *without* the quality context.
 - **Not covered.** The preprocessing domain, the evaluation metrics and the log, the choice of which run to release (selection among the 35 DP runs uses real-data metrics), and the LLM provider's handling of prompts.
@@ -1065,7 +1063,7 @@ $$\Delta_{\mathrm{DP}}=\max_g P(\hat y=1\mid A=g)-\min_g P(\hat y=1\mid A=g),\qq
 
 ## C. Statistical Resolution {-}
 
-Some metrics are noisy at this sample size, and their resolution limits what the results can show. With 600 members and 600 non-members, the AUC of an attack that guesses at random has a standard deviation of $\sqrt{(n_1+n_2+1)/(12\,n_1 n_2)}pprox0.017$ (the null distribution of the Mann–Whitney statistic). A random attack would therefore score between about 0.47 and 0.53 in 95% of runs. Every one of the 41 observed AUCs (0.478–0.525) falls in that interval, which is a second reason, besides the attack's weakness, not to read differences between them. Similarly, the fairness metrics rest on 193 women in the test split, and F1 on 144 positive test cases, so differences of a few points between single runs are within sampling noise.
+Some metrics are noisy at this sample size, and their resolution limits what the results can show. With 600 members and 600 non-members, the AUC of an attack that guesses at random has a standard deviation of $\sqrt{(n_1+n_2+1)/(12\,n_1 n_2)}\approx 0.017$ (the null distribution of the Mann–Whitney statistic). A random attack would therefore score between about 0.47 and 0.53 in 95% of runs. Every one of the 41 observed AUCs (0.478–0.525) falls in that interval, which is a second reason, besides the attack's weakness, not to read differences between them. Similarly, the fairness metrics rest on 193 women in the test split, and F1 on 144 positive test cases, so differences of a few points between single runs are within sampling noise.
 
 **Knowledge utility.** KU, Spearman ρ and top-1 agreement, as defined in (9).
 
@@ -1762,15 +1760,20 @@ Future work should remove the public-domain assumption, strengthen the attacks, 
 **Commands (from the project root).**
 
 ```
-venv\Scripts\python -m pytest -m "not slow"        # 43 tests: 42 pass, 1 live test skipped (~25 s)
-venv\Scripts\python -m pytest -m slow              # 5 end-to-end generator runs (~3 min)
-venv\Scripts\python -m analysis.verify_results     # de-duplication, checks, re-evaluation, figures
-venv\Scripts\python -m analysis.knowledge_utility  # payload vs real-data agreement
-venv\Scripts\python -m analysis.llm_case_study     # fact-check of the real Gemini responses
-venv\Scripts\python figures\diagram_builder.py     # diagrams: PNG (600 DPI), SVG, .drawio
-venv\Scripts\python report\build_report.py         # this document
-run_dashboard.bat                                  # dashboard at http://localhost:8501
-venv\Scripts\python run_sweep.py                   # re-run all 41 configurations (hours)
+# tests: 44 fast (43 pass, 1 live test skipped, ~30 s); 5 slow (~5 min)
+venv\Scripts\python -m pytest -m "not slow"
+venv\Scripts\python -m pytest -m slow
+# re-evaluation, tables and figures from the saved outputs
+venv\Scripts\python -m analysis.verify_results
+venv\Scripts\python -m analysis.knowledge_utility
+venv\Scripts\python -m analysis.llm_case_study
+venv\Scripts\python -m analysis.quasi_identifier_risk
+# diagrams (PNG 600 DPI, SVG, .drawio) and this document
+venv\Scripts\python figures\diagram_builder.py
+venv\Scripts\python report\finalize.py
+# dashboard (http://localhost:8501) and the full sweep (hours)
+run_dashboard.bat
+venv\Scripts\python run_sweep.py
 ```
 
 **Preprocessing parameters.**
@@ -1835,16 +1838,19 @@ Table: TABLE XV. Test results (executed October 2026 in the verification environ
 
 | Suite / check | Items | Result | Notes |
 |---|---|---|---|
-| `test_knowledge_discovery.py` | 17 | 17 passed | Fake client; no network |
+| `test_knowledge_discovery.py` | 18 | 18 passed | Fake client; no network; includes the quality-context disclosure test |
 | `test_live_http_mock.py` | 6 | 6 passed | Real `anthropic` 1.13 SDK vs local mock server |
 | `test_gemini_provider.py` | 16 | 15 passed, 1 skipped | Real `google-genai` 2.29 SDK vs local mock server; provider selection; the opt-in live test is skipped by default |
 | `test_pipeline_smoke.py` (fast) | 4 | 4 passed | Shape, 41 configs, train-only fit, inverse binning |
 | `test_pipeline_smoke.py` (slow) | 5 | 5 passed | AIM, MST, PrivBayes, CTGAN, TVAE end-to-end. AIM first **failed** with a 5-round cap (NaN, see (7)) and passed with 20 rounds |
-| Dashboard, comparative workflow (manual) | 9 pages | Working | PrivBayes run from the UI (4.5 s); log restored afterwards |
+| Dashboard, comparative workflow (manual, 11 Oct.) | 9 pages | Working | PrivBayes run from the UI (4.5 s); log restored afterwards |
+| Dashboard, all 10 feature areas (automated capture, 12 Oct.) | 14 screenshots | Working; no error element | PrivBayes ε = 3, seed 7 run from the UI; log and CSV restored afterwards (Appendix E) |
 | Dashboard, Model Comparison (manual) | — | **Bug found, fixed** | Counted 43 runs; now 41 unique |
 | Dashboard, LLM page (manual) | demo + missing key | Working | Audit flag bug found and fixed |
-| Secret scan of tracked files | — | Clean | Only fake test keys in `tests/` |
-| Live Gemini API calls | 2 | **2 succeeded** | AIM and PrivBayes ε = 3; `gemini-3.8-flash`; ≈ 30 s each; fact-checked (Table IX) |
+| Full suite, final run (12 Oct.) | 49 | 48 passed, 1 skipped | 298 s; saved results unchanged afterwards |
+| Clean install from a fresh clone (12 Oct.) | — | Passed | `pip check` clean; fast suite 43 passed, 1 skipped |
+| Secret scan of tracked files and full git history | — | Clean | Only fake test keys in `tests/` |
+| Live Gemini API calls | 5 | **5 succeeded** | 11 Oct.: AIM and PrivBayes ε = 3, fact-checked (Table IX); 12 Oct.: one for Fig. 33 and two unintended (Section X); all `gemini-3.8-flash` |
 | Live Claude API call | — | **Not tested** | No Anthropic API key available |
 
 # Appendix C: Prompt Template {-}

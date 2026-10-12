@@ -118,8 +118,15 @@ Code: `knowledge_discovery/` (`catalog.py`, `summarizer.py`, `prompts.py`,
    - per-column marginals;
    - target rate by group;
    - strongest Cramér's V / Pearson associations;
-   - the run's own fidelity, utility and MIA metrics;
+   - the run's own fidelity, utility and MIA metrics (*quality context*; on by
+     default, switchable off);
    - a privacy manifest.
+
+   The quality context is the one part of the payload computed **against the real
+   data** (it compares the synthetic data with the real train/test splits), so it is
+   not covered by the DP guarantee. The manifest says so
+   (`quality_context_uses_real_data`), and the dashboard checkbox *Include quality
+   metrics* withholds it, leaving a payload computed from the DP synthetic data alone.
 
    Groups with fewer than *k* = 20 synthetic rows are suppressed, and values are
    rounded to 3 decimals.
@@ -161,7 +168,7 @@ the refusal fallback). `gemini-flash-latest` is an alias, so the audit record
 stores the model version that actually answered; pin `KD_GEMINI_MODEL` for strict
 reproducibility. Transient 429/5xx errors are retried (3 attempts).
 
-**Live-mode verification status (2026-10-11).**
+**Live-mode verification status (2026-10-11/12).**
 
 - **Gemini: verified with real calls.** Two live requests succeeded
   (`gemini-flash-latest` → served by `gemini-3.8-flash`), one scripted and one from
@@ -169,6 +176,10 @@ reproducibility. Transient 429/5xx errors are retried (3 attempts).
   each. The unedited responses are in
   [`evidence/llm_responses/`](evidence/llm_responses/) and a screenshot is in
   `evidence/screenshots/2026-10-11_initial/03_llm_page_live_gemini_privbayes.jpg`.
+  On 2026-10-12 three more calls succeeded: one deliberate call for the screenshot
+  `evidence/screenshots/2026-10-12/10d_llm_live_gemini_output.png`, and two
+  *unintended* calls made by the screenshot script (now fixed). All five texts are
+  in `evidence/llm_responses/`.
 - **Claude: not verified live** (no Anthropic API key was available). The request
   path is tested against a local mock server through the real `anthropic` SDK.
 - Both providers are covered by mock-server tests (request body/headers, no key in
@@ -218,8 +229,17 @@ No generator is re-trained by these scripts. They read the saved log and CSVs.
 venv\Scripts\python -m analysis.verify_results      &REM ~2 min: tables + figures
 venv\Scripts\python -m analysis.knowledge_utility   &REM ~1 min: payload vs real-data agreement
 venv\Scripts\python -m analysis.llm_case_study      &REM fact-check of the real Gemini responses
+venv\Scripts\python -m analysis.quasi_identifier_risk &REM uniqueness of quasi-identifiers in the real sample
 venv\Scripts\python figures\diagram_builder.py      &REM report diagrams (PNG 600 DPI, SVG, .drawio)
+venv\Scripts\python reportinalize.py             &REM report DOCX + PDF with page numbers (needs MS Word)
+venv\Scripts\python report\check_report.py         &REM automated consistency checks on the report
 ```
+
+The report is written to `report/final_report.docx` and `report/final_report.pdf`.
+Both are git-ignored, because the course template contains the faculty member's
+photograph and e-mail address; put the template at
+`report/template/3_Consolidated_Template.docx` to build. Diagrams are exported with
+their final numbering to `diagrams/`.
 
 Outputs:
 - `results/verified/`: verification report, de-duplicated runs, aggregated
@@ -245,8 +265,9 @@ not reproduce the saved synthetic data bit-for-bit.
 ## Running the tests
 
 ```bat
-venv\Scripts\python -m pytest -m "not slow"   &REM 43 tests (42 pass, 1 live test skipped), ~25 s
-venv\Scripts\python -m pytest -m slow         &REM 5 end-to-end generator runs, ~3 min
+venv\Scripts\python -m pytest -m "not slow"   &REM 44 tests (43 pass, 1 live test skipped), ~30 s
+venv\Scripts\python -m pytest -m slow         &REM 5 end-to-end generator runs, ~5 min
+venv\Scripts\python -m pytest                 &REM all 49: 48 passed, 1 skipped (2026-10-12, 298 s)
 ```
 
 | Suite | Covers |
@@ -406,7 +427,17 @@ report/                     Report sources (src/*.md), build scripts, references
 
 ## Change log for this iteration
 
-See `report/CHANGES.md` for the full list of modified and added files.
+See `report/CHANGES.md` for the list of modified and added files, and
+`project_docs/CHANGELOG.md` for the report-finalisation phases (audit, claim
+verification, repository, screenshots, report revision, validation).
+
+| Document | Purpose |
+|---|---|
+| `project_docs/reproduction_guide.md` | Tested install, configuration, commands, expected outputs, runtimes |
+| `project_docs/compliance_matrix.md` | Every guideline requirement, its status and evidence |
+| `project_docs/claim_verification.md` | Every checked claim, its evidence and corrections |
+| `project_docs/final_audit.md` | Final audit and the items that still need a person |
+| `evidence/screenshots/README.md` | Index of the genuine dashboard screenshots |
 
 ## Licence and citation
 
