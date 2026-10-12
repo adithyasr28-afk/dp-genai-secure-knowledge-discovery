@@ -32,9 +32,9 @@ Non-functional requirements complement the six families below:
 2. *Reproducibility* (TR1) conflicts with the fact that upstream DP libraries manage their own randomness. The resolution is to make the *evaluation* exactly reproducible from saved data, and to disclose that generation is not.
 3. *Runtime* conflicts with *faithfulness to the AIM paper*. The resolution is a disclosed round cap, logged in every AIM record.
 
-## Requirement Families They are grouped into six families (Fig. {fig:req}). Table {tab:req} traces each requirement to the component that implements it and to the evidence that it holds. A requirement is marked *met* only when that evidence was produced by executing code in this study.
+## Requirement Families
 
-![{fig:req} Requirements framework: six requirement families verified through tests, re-evaluation and payload inspection.](figures/diagrams/fig02b_requirements_framework.png){width=6.0in}
+The requirements are grouped into six families (Fig. {fig:req}, Appendix D). Table {tab:req} (Appendix D) traces each requirement to the component that implements it and to the evidence that it holds. A requirement is marked *met* only when that evidence was produced by executing code in this study.
 
 **Functional requirements.**
 
@@ -78,26 +78,7 @@ Non-functional requirements complement the six families below:
 - **TR2** — duplicates must not be double-counted.
 - **TR3** — limitations must be disclosed.
 
-Table: {tab:req} Requirements traceability matrix
-
-| ID | Requirement | Implemented in | Evidence | Status |
-|---|---|---|---|---|
-| FR1–FR2 | Profiling; train-only preprocessing | `preprocessing/` | `test_preprocessing_fit_uses_train_only`, `test_dataset_shape` | Met |
-| FR3 | Five generators, common interface | `models/`, `experiments/runner.py` | 5 end-to-end smoke tests passed | Met |
-| FR4–FR5 | Six evaluation dimensions; comparison | `evaluation/`, dashboard | 733/738 metrics re-computed exactly | Met |
-| FR6 | LLM explanation of DP synthetic data | `knowledge_discovery/` | Mock-server tests via the real `google-genai` and `anthropic` SDKs; demo mode in UI; two real Gemini calls | Met (live verified for Gemini only) |
-| PR1–PR2 | Exact guarantees; non-DP labelled | `models/*`, `privacy.py` | `config_checks.csv`: 41/41 pass | Met |
-| PR3 | No original data to the LLM | `catalog.py` path guard | `test_original_rows_never_in_prompt`, `test_original_file_not_read…` | Met |
-| PR4 | Small-cell suppression | `summarizer.py` (k = 20) | `test_small_cells_suppressed` | Met |
-| PR5 | No DP claim for aggregates/LLM | UI notes, manifest, README | Manual review | Met |
-| SR1–SR2 | No secrets in repository | `.env.example`, `.gitignore` | Secret scan of tracked files | Met |
-| SR3 | Path guards | `catalog.py` | `test_refuses_original_dataset_and_non_dp` | Met |
-| SR4 | API error handling | `llm_client.py` | HTTP 400/401/403/404/429/500, connection and safety-block tests | Met |
-| XR1–XR2 | Payload shown; demo labelled | `streamlit_page.py` | Dashboard inspection; `test_demo_mode_is_labelled…` | Met |
-| XR3, CR2 | Provenance, audit | Log, audit JSON | Audit records inspected | Met |
-| CR3, TR3 | Assumptions disclosed | README, this report | Sections IX, XX | Met |
-| TR1 | Reproducibility from outputs | `analysis/verify_results.py` | Re-evaluation report | Met (generators unseeded — see XX) |
-| TR2 | No double counting | Dashboard fix, catalogue | 41 unique runs shown | Met (bug found and fixed) |
+**Acceptance criteria.** Each requirement was given a check that can fail. PR3, for example, is accepted only if a test that scans the request body for the first 300 original rows finds none, and if a second test confirms that the original CSV is never opened while a summary is built and sent. TR2 is accepted only if the dashboard reports 41 unique runs from the 43 log records. A requirement without such a check would be a design intention, not a verified property.
 
 # Data Lifecycle and Privacy Classification
 
@@ -110,9 +91,13 @@ The study uses a 3,000-record stratified sample of the UCI Adult (Census Income)
 
 The sample contains 52 duplicate rows and missing values in workclass (151), occupation (153) and native_country (52). Although Adult is public and de-identified, it is a realistic stand-in for sensitive data. It combines quasi-identifiers (age, sex, race, native country, occupation) with sensitive attributes (income, capital gains, marital status). In many jurisdictions, race and sex are special or protected categories.
 
+**How identifying the sample is.** Counting equivalence classes in the real sample (`analysis/quasi_identifier_risk.py`) shows how quickly a few ordinary attributes single people out. On age, sex and race alone, 3.5% of the 3,000 records are unique in the sample. Adding native country raises this to 11.6%, adding occupation to 30.6%, and adding marital status to 47.3%. With those six attributes, 81.9% of records sit in groups of fewer than five, the usual k-anonymity threshold. Uniqueness in a sample does not imply uniqueness in the population. It does show that releasing even modestly detailed records, or exact copies of them, would expose many individuals to linkage with auxiliary data. This is why the real records are classified as Restricted below, and why exact copies from a generator (Section XIV) matter.
+
 ## Privacy Classification
 
 Table {tab:class} assigns each artefact to one of three handling levels, together with its controls. The classification follows the risk-based logic of the NIST Privacy Framework [@nist2020pf] and the minimisation principle of the GDPR and the DPDP Act [@gdpr2016; @dpdp2023]. The key design decision is that **the LLM layer may only touch L2 artefacts.** The real records (L3) never leave the curator's environment.
+
+Two artefacts are easy to misclassify. The first is the set of evaluation metrics. They are computed by comparing synthetic data with the real training and test splits, so they are *derived from* L3 data and are not covered by any generator's guarantee. Seven of them are included in the LLM payload by default as quality context. The payload's manifest says so explicitly, and the dashboard can withhold them. The second is the preprocessing domain: bin edges, spike values and category vocabularies are learned from the real training split and travel with every synthetic dataset. Both are treated as L2 for convenience in this study, but a stricter custodian could treat the metrics as L3 and replace the domain with public or DP-estimated bounds (Section XXI).
 
 Table: {tab:class} Data privacy classification matrix
 
@@ -199,7 +184,7 @@ DP is designed for the first profile and gives a guarantee that holds whatever a
 
 ## How Differential Privacy Addresses Each Threat
 
-**A1 — membership inference.** DP gives a quantitative bound. For any test the adversary runs, the true-positive and false-positive rates satisfy $\mathrm{TPR}\le e^{\varepsilon}\,\mathrm{FPR}+\delta$, a direct consequence of {eq:dp}. At ε = 1, an attacker operating at FPR = 1% can reach at most about 2.7% TPR. At ε = 10 the bound is vacuous, and protection then rests on the mechanism's practical behaviour rather than on the guarantee.
+**A1 — membership inference.** DP gives a quantitative bound. For any test the adversary runs, the true-positive and false-positive rates satisfy $\mathrm{TPR}\le e^{\varepsilon}\,\mathrm{FPR}+\delta$, a direct consequence of {eq:dp}. At ε = 1, an attacker operating at FPR = 1% can reach at most about 2.7% TPR. Across the budgets studied, the multiplier $e^{\varepsilon}$ is 1.65, 2.72, 20.1, 148 and about 22,000 for ε = 0.5, 1, 3, 5 and 10. At FPR = 1% the bound on TPR is therefore 1.7%, 2.7% and 20% for the first three budgets and vacuous (above 100%) for ε = 5 and 10. The budgets at which the generators were most useful here (ε = 3–5) thus give a meaningful worst-case bound only at ε = 3. At ε = 5 and 10, protection rests on the mechanism's practical behaviour rather than on the guarantee — a point that the empirical attack in Section XIV cannot settle, because it is weak.
 
 **A2 — attribute inference.** DP limits how much the release changes the adversary's belief about a target's attribute, *relative to a world in which the target did not participate*. It does not prevent inferences that follow from population-level patterns. If high income is common among a target's occupation and age group, the synthetic data will reveal that pattern regardless — and that is intended utility, not a privacy failure.
 
@@ -208,6 +193,17 @@ DP is designed for the first profile and gives a guarantee that holds whatever a
 **A6 — over-trust.** This is an integrity risk rather than a confidentiality risk. It is addressed by including quality context, by the knowledge-utility check, and by human review.
 
 The privacy-threat categories of linkability, identifiability, disclosure of information, unawareness and non-compliance, as used in privacy threat-modelling practice, map onto A1–A2, A3, A6 and the compliance gaps in Section XVI.
+
+## Attack Surface by Pipeline Stage
+
+Walking through the pipeline stage by stage shows where each threat enters and what this implementation does about it.
+
+1. **Preprocessing.** Bin edges and vocabularies are fitted on the real training split without budget. An adversary who sees an unusual bin edge — for example a top `capital_gain` bin ending at 99,999 — learns something about the real maximum. The risk is small for coarse bins on a public dataset, but it is real, and it is why the guarantee is stated as conditional on a public domain.
+2. **Generator fitting.** This is the only stage that touches the real records *and* produces a release. For the DP methods the guarantee covers it. For CTGAN and TVAE nothing does, and TVAE's exact copies show the consequence.
+3. **Release.** The synthetic CSVs, the log and the metrics are what an external adversary sees. The log also records every evaluation metric of every run, all computed against the real data, so publishing the log is not covered by ε either.
+4. **LLM call.** In live mode the aggregate payload — about 6,300 input tokens in the recorded Gemini calls — leaves the organisation. It contains no rows and no keys, but it does contain the quality context and every group rate above the suppression threshold.
+
+**Provider-side exposure in practice.** The two recorded Gemini calls sent only the payload shown in the dashboard, with the key in an HTTP header. That is the strongest guarantee the artefact can offer on the client side. What happens next depends on the provider's terms: on Google's free tier, prompts and responses may be used to improve Google's products, so a deployment would need a paid tier or an enterprise agreement and a data-processing agreement (Section XVI).
 
 ## Risk Assessment
 

@@ -41,3 +41,4 @@ report/_body.docx
 
 # Archived report versions (contain the template photo/e-mail)
 report/archive/
+report/*.pdf

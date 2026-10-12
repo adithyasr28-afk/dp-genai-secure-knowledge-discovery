@@ -92,6 +92,9 @@ REFERENCES = {
     "qian2023synthcity": _r('Z. Qian, R. Davis, and M. van der Schaar, "Synthcity: A benchmark framework for diverse use cases '
                             'of tabular synthetic data," in *Adv. Neural Inf. Process. Syst. (NeurIPS) Datasets and Benchmarks '
                             'Track*, vol. 36, 2023.', "web"),
+    "murtaza2023": _r('H. Murtaza, M. Ahmed, N. Khan, G. Murtaza, S. Zafar, and A. Bano, "Synthetic data generation: State of '
+                      'the art in health care domain," *Comput. Sci. Rev.*, vol. 48, Art. no. 100546, May 2023, '
+                      'doi: 10.1016/j.cosrev.2023.100546.', "web"),
     "hernandez2022": _r('M. Hernandez, G. Epelde, A. Alberdi, R. Cilla, and D. Rankin, "Synthetic data generation for tabular '
                         'health records: A systematic review," *Neurocomputing*, vol. 493, pp. 28–45, 2022, '
                         'doi: 10.1016/j.neucom.2022.04.053.', "web"),

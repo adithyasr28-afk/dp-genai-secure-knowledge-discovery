@@ -1,0 +1,5 @@
+quasi_identifiers,n_records,equivalence_classes,unique_records,pct_unique,records_in_classes_below_5,pct_in_classes_below_5
+age + sex + race,3000,330,105,3.5,395,13.2
+age + sex + race + native_country,3000,565,347,11.6,613,20.4
+age + sex + race + native_country + occupation,3000,1478,918,30.6,1994,66.5
+age + sex + race + native_country + occupation + marital_status,3000,1917,1419,47.3,2456,81.9

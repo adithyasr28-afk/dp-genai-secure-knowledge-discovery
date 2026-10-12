@@ -20,7 +20,7 @@ This section maps the framework onto the principal regulations and standards. It
 - The Act regulates digital personal data processed by Data Fiduciaries on the basis of consent or legitimate uses.
 - It requires reasonable security safeguards, breach notification, and erasure when the purpose is served.
 - DP synthesis supports minimisation and limits breach impact if synthetic data leak. Training on real data still needs a valid basis.
-- Implementing rules were notified in November 2025 with phased dates, so obligations should be checked against the Rules in force. **[VERIFY with the latest notification before submission]**
+- The Digital Personal Data Protection Rules, 2025 were notified on 14 November 2025 with staggered commencement; most obligations on Data Fiduciaries — notice and consent, security safeguards, breach reporting and retention — apply from 14 May 2027. A deployment planned for 2026–27 should be designed against them now.
 
 **HIPAA** [@hipaa2012]. De-identification uses either *Safe Harbor* (removing 18 identifier types) or *Expert Determination* (a qualified expert finds the risk of re-identification very small). A DP synthetic release would fall under Expert Determination, with ε and the threat model as part of the expert's evidence.
 
@@ -47,6 +47,17 @@ Technical controls need processes around them. A minimal governance process for 
 
 The LLM layer slots in after step 4 as a consumer of approved releases. Its use is logged, and its outputs are reviewed by humans before they inform decisions.
 
+## Evidence the Artefact Produces for Compliance
+
+Compliance claims need evidence. The artefact already produces several pieces that an assessor would ask for:
+
+- **For minimisation (GDPR Art. 5(1)(c); DPDP Act):** the payload manifest of every LLM request — minimum cell count, number of suppressed cells, rounding, whether real-data-derived metrics were included — stored in the audit record with a SHA-256 hash of the payload.
+- **For accountability (GDPR Art. 5(2), Art. 30):** the append-only experiment log, which records configuration, guarantee statement and metrics per run, and the verification report that checks it.
+- **For privacy by design (Art. 25):** the code-level guarantee labels and the test suite that checks the path guard and the absence of original rows in prompts.
+- **For the DPIA (Art. 35):** Sections VI and XIV — threats, controls and measured residual risk.
+
+**International transfers and processors.** In live mode the payload is sent to the chosen provider — in the recorded calls, Google's Gemini API. Even though the payload contains only aggregates of a DP release, an organisation would treat the provider as a processor: a data-processing agreement (GDPR Art. 28), a transfer mechanism if processing happens outside the jurisdiction (GDPR Chapter V), and a check that the destination is not restricted under Section 16 of the DPDP Act. The free tier used for testing does not meet these conditions, because its terms allow prompts to be used for product improvement.
+
 ## Mapping Summary
 
 Table: {tab:compliance} Regulatory compliance matrix (✓ implemented in artefact; ◐ partially; ✗ organisational, not implemented)
@@ -69,7 +80,9 @@ Table: {tab:compliance} Regulatory compliance matrix (✓ implemented in artefac
 
 ## Fairness
 
-Synthetic data do not simply inherit the biases of the real data — they can change them. Here, most DP and non-DP runs *increased* the demographic-parity gap between men and women relative to the real-data model (Section XIV). One run produced a classifier with a complete error-rate disparity, and DP at low ε produced apparent parity only by failing everyone. Ethical use therefore requires subgroup evaluation of any model trained on synthetic data, not only aggregate accuracy [@mehrabi2021; @hardt2016; @ganev2022].
+Synthetic data do not simply inherit the biases of the real data — they can change them. Here, most DP and non-DP runs *increased* the demographic-parity gap between men and women relative to the real-data model (Section XIV). One run produced a classifier with a complete error-rate disparity, and DP at low ε produced apparent parity only by failing everyone. Ethical use therefore requires subgroup evaluation of any model trained on synthetic data, not only aggregate accuracy [@mehrabi2021; @ganev2022].
+
+**Fairness across other attributes.** The study measured fairness by sex only. The UI demonstration run on PrivBayes, ε = 3, scored the same classifier by race (`evidence/screenshots/2026-10-12/08_fairness_rare_patterns.png`). The four non-White groups had 5 to 58 test records each and subgroup F1 between 0 and 0.5, against 0.54 for the White group of 512. Subgroups this small cannot support conclusions, which is itself an ethical point: the groups most exposed to distortion are the ones for which the evidence is thinnest.
 
 ## Transparency and Accountability
 
@@ -94,6 +107,12 @@ Further mitigations are recommended:
 
 - reviewing any claim about protected attributes against governed real-data statistics before acting on it;
 - withholding protected-attribute associations from the LLM payload unless they are needed.
+
+## Human Oversight and Disclosure
+
+Three oversight points are built into the design. A person chooses the dataset and reads the guarantee before generating. A person sees the exact payload before it is sent. And every output is framed as hypotheses that the reviewer's workflow (Section XI) checks against the payload and, for decisions, against governed real data. The case study shows why the last point matters: without it, a confidently written but false statement about women's incomes would have passed into the analysis.
+
+Disclosure applies to the authors too. This report states where real LLM output appears, labels demo output, and acknowledges that an AI assistant was used to help build, verify and draft the work.
 
 ## Autonomy, Dignity and Consent
 
@@ -126,6 +145,17 @@ With AIM or PrivBayes at ε = 3–5, the evidence suggests three things:
 - the simple attack finds no membership signal.
 
 With MST, the same release would look good on marginals but would mislead on subgroup rankings. With TVAE, utility would be similar, but the release would carry no guarantee and would contain exact copies of records. The LLM layer turns the selected release into a structured narrative with explicit limitations.
+
+## Case-Study Evaluation
+
+The case study can be evaluated against the requirements of Section IV and the evidence of Section XIV.
+
+- **Privacy requirements (PR1–PR5)** are met for the release and the payload: the guarantee is stated per dataset, non-DP data are excluded, no row reaches the provider, small cells are suppressed, and the manifest discloses that the quality context is not DP.
+- **Utility for the stated question.** The question "which groups have high-income rates?" is answered correctly by a PrivBayes ε = 3 release — the real gender gap (10.3% vs 30.7%) appears as 11.5% vs 31.6% — and incorrectly by the AIM ε = 3 and MST ε = 3 releases, which reverse or erase it.
+- **Explanation quality.** The live Gemini explanation of the PrivBayes release was faithful and correct on the checked claims and flagged one artefact itself. The explanation of the AIM release repeated the reversed gap.
+- **Residual issues.** The chosen PrivBayes release (seed 42) still weakens one structural association: relationship ↔ sex falls from 0.65 to 0.37, and `12th` grade has an implausible 67.4% high-income rate.
+
+A defensible choice for this case would therefore be PrivBayes at ε = 3 — pure DP, five seconds to fit, 82% utility retention — released with a transparency report that lists these two known artefacts. The evaluation also shows that the choice cannot be made from utility alone. AIM and PrivBayes have almost identical retention at ε = 3, yet only one of them preserves the subgroup pattern the analysts care about.
 
 ## Domain Scenarios (Proposed)
 
@@ -164,7 +194,7 @@ The business case for privacy-preserving generative AI rests on three drivers.
 
 **Risk reduction.** A dataset that can be shared without exposing individuals reduces the expected cost of a breach or misuse. That cost includes regulatory penalties, remediation, notification and reputational damage. DP gives a *quantified* version of this argument: the stated ε bounds how much any one person's data could influence what an attacker sees. A quantified bound is easier to defend to a regulator than an assertion that data were "anonymised".
 
-**Time-to-insight.** Access to sensitive data typically requires approvals, agreements and secure environments that take weeks or months. If synthetic data are good enough for exploration and prototyping — the evidence here says about 80–85% of real-data model performance at ε = 3–5 — analysts can start immediately and reserve governed access for confirmation. The LLM layer extends this to non-specialist users.
+**Time-to-insight.** Access to sensitive data typically requires approvals, agreements and secure environments that take weeks or months. If synthetic data are good enough for exploration and prototyping — the evidence here says about 79–85% of real-data model performance at ε = 3–5 — analysts can start immediately and reserve governed access for confirmation. The LLM layer extends this to non-specialist users.
 
 **Collaboration.** Partners such as universities, vendors and other departments can work on a synthetic release under a lighter agreement, increasing the number of people who can contribute to a problem.
 
@@ -178,6 +208,10 @@ The costs are modest but real:
 - above all, governance effort for assessments and approvals.
 
 The main business *risk* is decision risk. Insights drawn from synthetic data can be wrong, as the spurious association in Section XIV shows. If such insights drive pricing, credit or clinical decisions without confirmation, the organisation trades a privacy risk for a quality and fairness risk.
+
+## Operational Cost of the Implemented Components
+
+Some costs were measured directly. A synthetic release takes seconds (PrivBayes, mean 0.5–21 s), under a minute (MST) or up to ten minutes (AIM, capped) to fit on this 2,400-row table. One LLM explanation used about 6,300 input and 1,700–1,900 output tokens, plus 1,200–4,000 internal "thinking" tokens, and took 25–50 s in the recorded calls (one call took 215 s under load). Prices are not quoted, because provider pricing changes and was not part of the evaluation. The verification tooling also has a measurable operational benefit: it found a duplicate-counting defect in the original dashboard (43 runs shown instead of 41) that would otherwise have reached the report.
 
 ## Adoption Roadmap and KPIs
 

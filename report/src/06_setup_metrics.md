@@ -29,8 +29,17 @@ Table: {tab:config} Experimental configuration
 
 - **Software:** Python 3.11; pandas 2.3.3, NumPy 2.4.6, scikit-learn 1.8.0, XGBoost 3.2.0, PyTorch 2.14.0, Streamlit 1.64.0, OpenDP 0.14.2, anthropic 1.13.0, google-genai 2.29.0. Live LLM model: `gemini-flash-latest` (served by `gemini-3.8-flash`).
 - **Pinning:** the exact versions are pinned in `constraints.txt`, recovered from the original environment.
-- **Original runs:** the 43 logged runs were executed on 18 September 2026 on the original authors' Windows machine. Its hardware specification was not recorded. **[CONFIRM]**
+- **Original runs:** the 43 logged runs were executed on 18 September 2026 on the original authors' Windows machine. Its hardware specification was not recorded, so the runtimes in Section XIV are indicative only.
 - **Verification environment:** a fresh environment with the same package versions on Windows 11, using CPU only, for re-evaluation, testing and the dashboard checks.
+
+**Checks executed for this report (12 October 2026).** In the verification environment:
+
+- the full test suite (48 tests, including five end-to-end generator runs) passed with one opt-in live test skipped, in 337 s;
+- a fresh clone installed into a new Python 3.11 environment from `requirements.txt` and `constraints.txt`, and its fast tests passed;
+- re-running the three analysis scripts on the saved outputs reproduced every table and figure byte for byte, apart from embedded SVG timestamps;
+- the dashboard was driven through all ten feature areas, including one demonstration generator run (PrivBayes, ε = 3, seed 7; 4.1 s fit time), which was removed from the log afterwards.
+
+No reported number depends on these checks; they establish that the numbers can be regenerated.
 
 ## Benchmark Scenarios
 
@@ -115,7 +124,7 @@ $$\mathrm{score}(x)=-\min_{y\in\tilde D}\lVert\phi(x)-\phi(y)\rVert_2 $$ {#eq:mi
 
 The attack AUC and the TPR at FPR = 0.1 are reported. An AUC of 0.5 means the attack does no better than chance. The *distance to closest record* (DCR) and the share of synthetic records at or below the 1st percentile of real-to-real nearest-neighbour distances ("near-duplicates") are also reported.
 
-**Fairness.** A Logistic Regression is trained on synthetic data and scored on the real test set, grouped by sex. The metrics are the demographic-parity difference and the equalised-odds gap [@hardt2016]:
+**Fairness.** A Logistic Regression is trained on synthetic data and scored on the real test set, grouped by sex. The metrics are the demographic-parity difference and the equalised-odds gap [@mehrabi2021]:
 
 $$\Delta_{\mathrm{DP}}=\max_g P(\hat y=1\mid A=g)-\min_g P(\hat y=1\mid A=g),\qquad \Delta_{\mathrm{EO}}=\max\big(\Delta_{\mathrm{TPR}},\Delta_{\mathrm{FPR}}\big) $$ {#eq:fair}
 
@@ -126,6 +135,10 @@ $$\Delta_{\mathrm{DP}}=\max_g P(\hat y=1\mid A=g)-\min_g P(\hat y=1\mid A=g),\qq
 - the largest absolute change in class share.
 
 **Runtime.** Fit and sample wall-clock time, in seconds.
+
+## Statistical Resolution
+
+Some metrics are noisy at this sample size, and their resolution limits what the results can show. With 600 members and 600 non-members, the AUC of an attack that guesses at random has a standard deviation of $\sqrt{(n_1+n_2+1)/(12\,n_1 n_2)}pprox0.017$ (the null distribution of the Mann–Whitney statistic). A random attack would therefore score between about 0.47 and 0.53 in 95% of runs. Every one of the 41 observed AUCs (0.478–0.525) falls in that interval, which is a second reason, besides the attack's weakness, not to read differences between them. Similarly, the fairness metrics rest on 193 women in the test split, and F1 on 144 positive test cases, so differences of a few points between single runs are within sampling noise.
 
 **Knowledge utility.** KU, Spearman ρ and top-1 agreement, as defined in {eq:ku}.
 

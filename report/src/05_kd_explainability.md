@@ -58,31 +58,19 @@ The positive-target rate by group is the core of the knowledge-discovery questio
 
 ## Failure Modes and How They Are Handled
 
-Table {tab:failures} lists how the layer behaves when something goes wrong. Every row is exercised by a test (Appendix B).
-
-Table: {tab:failures} Failure modes of the LLM layer and their handling
-
-| Failure | Handling |
-|---|---|
-| API key missing | Clear message pointing to `.env.example`; no request is attempted, and the audit records `user_message_sent_to_api = false` |
-| Key rejected (400 invalid key, 401) or lacking permission (403) | Typed SDK exceptions mapped to actionable messages |
-| Unknown or retired model (404) | Message naming the `KD_MODEL` / `KD_GEMINI_MODEL` setting and quoting the provider's reason (observed for real when `gemini-2.5-flash` was closed to new users) |
-| Rate limit (429), server error or overload (5xx), network failure | SDK retries (three attempts in total), then shows a retry-later message (a real 503 "high demand" was observed during testing) |
-| Request rejected (400) | Message with the API's own explanation, e.g. if the fallback parameter were unavailable for an account |
-| Safety refusal or Gemini safety / prompt block | `stop_reason = refusal` reported as an error, not as an empty explanation |
-| Truncation at `max_tokens` | Text kept and marked as truncated |
-| Empty response | Reported as an error |
+Table {tab:failures} (Appendix D) lists how the layer behaves when something goes wrong. Every row is exercised by a test (Appendix B).
 
 ## Verification Status of the LLM Component
 
 The verification status is stated per provider.
 
-**Verified with real API calls (Gemini, 11 October 2026):**
+**Verified with real API calls (Gemini, 11–12 October 2026):**
 
-- two live requests succeeded — AIM ε = 3 (scripted) and PrivBayes ε = 3 (from the dashboard UI, Fig. {fig:ss4}). The alias `gemini-flash-latest` was served by `gemini-3.8-flash`;
+- the two calls analysed in this report succeeded on 11 October 2026 — AIM ε = 3 (scripted) and PrivBayes ε = 3 (from the dashboard). The alias `gemini-flash-latest` was served by `gemini-3.8-flash`;
 - each used about 6,300 input, 1,700–1,800 output and 2,600–2,900 internal "thinking" tokens and took about 30 s;
 - both returned the five requested sections, framed insights as hypotheses and stated that the LLM adds no privacy guarantee;
-- the outputs were fact-checked claim by claim against the payload and the real training split (Section XIV, Table {tab:llmcase}); the unedited texts are in `evidence/llm_responses/` and an excerpt is in Appendix D.
+- the outputs were fact-checked claim by claim against the payload and the real training split (Section XIV, Table {tab:llmcase}); the unedited texts are in `evidence/llm_responses/` and an excerpt is in Appendix E;
+- three further calls succeeded on 12 October 2026 while the screenshots were captured: one deliberate call for Fig. {fig:ss7} (PrivBayes ε = 3), and two unintended calls on AIM ε = 3 caused by the capture script pressing *Generate* while the page was still in live mode. Their texts are kept unedited in the repository for transparency. They were not fact-checked claim by claim; they are used only for the repetition check in Section XI.
 
 **Verified by execution against a local mock server (both providers):**
 
@@ -98,7 +86,7 @@ The verification status is stated per provider.
 - a live Claude request (no Anthropic API key was available; a Claude Pro chat subscription does not include API credits);
 - explanation quality beyond the two Gemini responses, and stability across repeated calls — LLM output is not deterministic, so a repeat call may phrase or select claims differently.
 
-Real LLM text appears only in Section XIV and Appendix D, where it is labelled with the provider, model and date. The demo excerpt in Appendix D is template text.
+Real LLM text appears only in Section XIV and Appendix E, where it is labelled with the provider, model and date. The demo output in Appendix E is template text.
 
 ## Knowledge Utility
 
@@ -131,7 +119,7 @@ Explainability here means that a reviewer can trace every claim back to its evid
 4. **Provenance:** run identifier, seed, configuration, disclosed deviations, and the duplicate policy.
 5. **LLM transparency:** the shown payload, prompt version and audit hash.
 
-The system shows these indicators side by side, in line with model-card and datasheet practice [@mitchell2019; @gebru2021].
+The system shows these indicators side by side, in line with datasheet practice [@gebru2021].
 
 ![{fig:trust} Explainability, transparency and trust assessment layer.](figures/diagrams/fig09_explainability_trust_layer.png){width=6.2in}
 
@@ -170,7 +158,7 @@ A release published from this framework should carry a short transparency report
 - known artefacts, such as the spurious associations found by the knowledge-utility check;
 - a contact for questions.
 
-This mirrors the model-card idea [@mitchell2019] applied to a data release, and NIST's call to state the unit of privacy and the assumptions [@near2025].
+This applies the documentation idea of datasheets [@gebru2021] to a data release, and NIST's call to state the unit of privacy and the assumptions [@near2025].
 
 ## Trust Assessment
 
@@ -179,6 +167,23 @@ The section plan calls for a trust-score equation. A single weighted score would
 $$\mathbf{T}=\big(\varepsilon,\ \delta,\ \mathrm{AUC}_{\mathrm{MIA}},\ 1-\mathrm{TVD}_3,\ R_{F1},\ \mathrm{KU},\ \Delta_{\mathrm{DP}}\big),\qquad \mathrm{accept}\iff \bigwedge_j\, T_j \trianglelefteq \tau_j $$ {#eq:trust}
 
 Here $\trianglelefteq$ means "no worse than" in each component's direction. For example, with $\varepsilon\le3$, $|\mathrm{AUC}-0.5|\le0.05$, $R_{F1}\ge 75\%$ and $\mathrm{KU}\ge0.9$, the AIM ε = 3 dataset would pass, while the MST ε = 3 datasets would fail on $R_{F1}$ and KU (Section XIV). Adding a fairness threshold such as $\Delta_{\mathrm{DP}}\le0.2$ would reject the AIM dataset as well, since its value is 0.48 against 0.17 for a model trained on real data. This shows why the components must be inspected together. The thresholds above are illustrative and were not elicited from stakeholders.
+
+## Applying the Assessment to Real LLM Output
+
+The reviewer's workflow can be tested against the real Gemini responses. For the AIM ε = 3 response analysed in Section XIV:
+
+- **Step 3** (find the supporting number in the payload) catches the suppression error at once. The manifest states a threshold of 20 and eight suppressed cells; the response claims a threshold of 8.
+- **Steps 2 and 4** are needed for the reversed gender gap. Nothing in the payload contradicts "women earn >50K more often than men", so a reviewer who stops at the payload would accept it. The quality context gives a warning sign — the dataset's three-way marginal error is 0.189, and its knowledge-utility rank agreement is only 0.68 — and step 4, a request to the custodian, returns the real rates (10.3% and 30.7%), which reverses the claim.
+- The trust vector {eq:trust} leads to the same place: the dataset passes the illustrative thresholds on ε, AUC, utility and KU, but fails a fairness threshold of $\Delta_{\mathrm{DP}}\le0.2$ with 0.48. The fairness outlier and the reversed gap are two views of the same distortion.
+
+**Repetition.** Three responses exist for the same AIM ε = 3 dataset, one from 11 October and two produced unintentionally on 12 October with a payload that differed only in the manifest wording (Section X). This is too small a sample to estimate rates, but it is enough to show that the errors are not one-off:
+
+- the suppression threshold was misread as 8 in two of the three responses;
+- the reversed gender gap was reported, without a warning, in two of the three (the third did not give rates by sex);
+- the implausible 43.3% rate for `12th` grade was flagged as an artefact in two of the three;
+- the spurious education–race association (V = 0.493, against 0.119 in the real data) was listed among the strong relationships in all three and flagged in none.
+
+Two lessons follow. Transparency about inputs does not make an explanation correct, so the review steps are needed every time. And because LLM output varies between calls, a single response should never be archived as *the* explanation of a release. The audit record, the payload hash and the knowledge-utility score are the stable artefacts; the text is not.
 
 ## Auditability
 

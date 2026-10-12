@@ -4,10 +4,10 @@
 
 Most of the data that organisations would like to mine for knowledge are about people. Hospitals hold diagnoses and outcomes, banks hold transactions and credit histories, and statistical agencies hold census responses. Analysing these records improves services, but disclosing them — even in apparently anonymised form — can expose the individuals behind them. Removing names does not stop re-identification when quasi-identifiers such as age, occupation and location are retained [@stadler2022]. Modern privacy law therefore treats data as personal unless identification is no longer reasonably likely [@gdpr2016; @dpdp2023].
 
-Generative artificial intelligence (AI) appears to offer a way around this tension, in two ways. First, a generative model trained on the sensitive table can emit *synthetic* records that preserve its statistical structure and can be shared more widely [@hernandez2022; @qian2023synthcity]. Second, a large language model (LLM) can read a dataset or its statistics and explain patterns in natural language, lowering the skill needed to obtain insight. Both routes, however, create their own leakage channels:
+Generative artificial intelligence (AI) appears to offer a way around this tension, in two ways. First, a generative model trained on the sensitive table can emit *synthetic* records that preserve its statistical structure and can be shared more widely [@hernandez2022; @murtaza2023]. Second, a large language model (LLM) can read a dataset or its statistics and explain patterns in natural language, lowering the skill needed to obtain insight. Both routes, however, create their own leakage channels:
 
 - Generators can memorise training rows, and membership-inference attacks against them are well documented [@hilprecht2019; @vanbreugel2023domias].
-- LLMs reproduce fragments of their training data [@carlini2021extract; @carlini2023memorization], leak personally identifiable information [@lukas2023], and can be steered by injected instructions [@greshake2023].
+- LLMs reproduce fragments of their training data [@carlini2021extract], leak personally identifiable information [@lukas2023], and can be steered by injected instructions [@greshake2023].
 - Retrieval-augmented systems add a further store that can be extracted [@zeng2024rag].
 
 Differential privacy (DP) [@dwork2006; @dwork2014] provides the mathematical tool to bound these risks. A DP mechanism guarantees that its output distribution changes by at most a factor $e^{\varepsilon}$ (plus a small $\delta$) when any one person's record is added or removed. The guarantee survives any later processing of the output — including analysis by an LLM — and it composes across releases. DP is used in production by the U.S. Census Bureau [@abowd2018], and NIST now publishes guidance on evaluating DP claims [@near2025].
@@ -68,6 +68,8 @@ Let $D$ be a sensitive table of $n$ records over $d$ attributes. An organisation
 **Uncontrolled knowledge extraction.** An LLM sitting on top of the data is a new interface. If it is given raw records, it can repeat them. If it is given rich statistics about small groups, it can describe those groups in identifying detail. And any data in the prompt leave the organisation's control [@yao2024survey; @weidinger2022].
 
 **The privacy–utility tension.** DP bounds leakage by adding calibrated noise, which degrades fidelity and utility. It degrades rare subgroups disproportionately [@bagdasaryan2019; @ganev2022]. Choosing a mechanism and a budget is therefore an empirical question that depends on the data.
+
+**The problem as instantiated here.** In this study, $D$ is the 2,400-row training split of a census sample whose records are easy to single out: 30.6% of the full sample is unique on age, sex, race, native country and occupation (Section V). The organisation wants to share synthetic versions with analysts and let them ask an LLM what the data show. The question is not whether this is possible in principle, but at which budget, with which generator, and with what residual risk and error.
 
 ## Research Questions
 

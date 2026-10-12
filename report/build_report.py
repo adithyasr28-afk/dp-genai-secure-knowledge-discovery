@@ -41,8 +41,8 @@ ROOT = HERE.parent
 SRC = HERE / "src"
 TEMPLATE = HERE / "template" / "3_Consolidated_Template.docx"
 REFDOC = HERE / "reference.docx"
-OUT_DOCX = HERE / "Report_Draft_DP_GenAI_Secure_Knowledge_Discovery.docx"
-OUT_MD = HERE / "Report_Draft_full.md"
+OUT_DOCX = HERE / "final_report.docx"
+OUT_MD = HERE / "final_report_resolved.md"
 
 sys.path.insert(0, str(HERE))
 from references import REFERENCES  # noqa: E402
@@ -51,16 +51,35 @@ IEEE_BLUE = RGBColor(0x00, 0x62, 0x9B)
 HEAD_FONT = "Helvetica Neue"  # as in the template; Word substitutes Arial if absent
 BODY_FONT = "Times New Roman"
 
+# Team 26FSDPYCPMID1028 has THREE members. The course roster lists two
+# registration numbers (23BCE2114, 23BCE2133 = PoC); the third member's number
+# and all student names/e-mails must be supplied by the team. Placeholders are
+# bracketed so they are easy to find; nothing here is invented.
+STUDENT_NAME = "[Student name]"
+MEMBERS = [  # (registration number, name)
+    ("23BCE2114", STUDENT_NAME),
+    ("23BCE2133", STUDENT_NAME),
+    ("[Reg. No. of 3rd member]", STUDENT_NAME),
+]
 FRONT = {
     "team_id": "26FSDPYCPMID1028",
     "title": "Differential Privacy-Enhanced Generative AI for Secure Knowledge Discovery",
-    "members": ["23BCE2114 – [Student name — to confirm]", "23BCE2133 – [Student name — to confirm] (PoC)"],
-    "to": "[Faculty name — to confirm]",
-    "authors": "[Author 1]¹, [Author 2]², [Faculty supervisor]³ — names and order to be confirmed by the team",
+    "members": [f"{reg} – {name}" for reg, name in MEMBERS],
+    "authors": "Dr. M Rajasekhara Babu¹, [Student name]² (23BCE2114), [Student name]³ (23BCE2133), "
+               "[Student name]⁴ ([Reg. No. of 3rd member])",
     "affil": "School of Computer Science and Engineering, Vellore Institute of Technology (VIT), Vellore-632014, T.N., India",
-    "emails": "[VIT e-mail addresses to be added]",
-    "corresponding": "Corresponding author: [to be confirmed].",
+    "emails": "¹mrajasekharababu@vit.ac.in, ²[VIT e-mail], ³[VIT e-mail], ⁴[VIT e-mail]",
+    "corresponding": "Corresponding author: M Rajasekhara Babu (e-mail: mrajasekharababu@vit.ac.in).",
 }
+
+# Page geometry of the template body (A4; margins in twips) and its two-column layout.
+PG_W, PG_H = 11906, 16838
+MARGINS = dict(top=720, right=1440, bottom=720, left=1440, header=709, footer=709, gutter=0)
+COL_SPACE = 708
+COLUMN_WIDTH_IN = 2.85     # (8.27 - 2 - 0.49) / 2 = 2.89 in per column
+PAGE_WIDTH_IN = 6.25
+WIDE_FIGURE_MIN_IN = 4.8   # figures specified at least this wide span the page
+WIDE_TABLE_MIN_COLS = 4    # tables with this many columns span the page
 
 
 def roman(n: int) -> str:
@@ -145,6 +164,91 @@ def resolve(md: str):
             out_lines.append(line)
     md = "\n".join(out_lines)
     return md, fig_list, tab_list, toc, cites
+
+
+def _section_break(cols: int) -> str:
+    """Raw OOXML paragraph that ENDS a continuous section with `cols` columns."""
+    num = ' w:num="2"' if cols == 2 else ""
+    mar = " ".join(f'w:{k}="{v}"' for k, v in MARGINS.items())
+    return ("```{=openxml}\n"
+            f'<w:p><w:pPr><w:sectPr><w:type w:val="continuous"/><w:pgSz w:w="{PG_W}" w:h="{PG_H}"/>'
+            f'<w:pgMar {mar}/><w:cols{num} w:space="{COL_SPACE}"/></w:sectPr></w:pPr></w:p>\n```')
+
+
+def apply_two_column_layout(md: str) -> str:
+    """Lay the body out like the template: a continuous two-column section.
+
+    - Figures specified >= WIDE_FIGURE_MIN_IN wide and tables with
+      >= WIDE_TABLE_MIN_COLS columns become page-wide (one-column) sections;
+      other figures are set to the column width.
+    - The appendices (code listings, wide tables) form one single-column region,
+      from 'Appendix A' up to the Data Availability Statement.
+    """
+    lines = md.split("\n")
+    out, i, region = [], 0, "two"
+
+    def width_of(line):
+        m = re.search(r"\{width=([\d.]+)in\}", line)
+        return float(m.group(1)) if m else PAGE_WIDTH_IN
+
+    def take_block(start):
+        """A figure line, or a table caption + blank + pipe rows. Returns (end, is_wide, text)."""
+        line = lines[start]
+        if line.startswith("!["):
+            w = width_of(line)
+            wide = w >= WIDE_FIGURE_MIN_IN
+            new_w = min(w, PAGE_WIDTH_IN) if wide else COLUMN_WIDTH_IN
+            return start + 1, wide, re.sub(r"\{width=[\d.]+in\}", f"{{width={new_w}in}}", line)
+        j = start + 1
+        while j < len(lines) and not lines[j].strip():
+            j += 1
+        k = j
+        while k < len(lines) and lines[k].startswith("|"):
+            k += 1
+        ncols = lines[j].count("|") - 1 if j < len(lines) else 0
+        return k, ncols >= WIDE_TABLE_MIN_COLS, "\n".join(lines[start:k])
+
+    in_code = False
+    while i < len(lines):
+        line = lines[i]
+        if line.startswith("```"):
+            in_code = not in_code
+        if not in_code and re.match(r"^# Appendix A\b", line) and region == "two":
+            out.append(_section_break(2))
+            region = "one"
+        elif not in_code and line.startswith("# Data Availability Statement") and region == "one":
+            out.append(_section_break(1))
+            region = "two"
+        if (not in_code and region == "two"
+                and (line.startswith("![") or line.startswith("Table: TABLE"))):
+            # gather a run of consecutive wide items into one page-wide section
+            end, wide, text = take_block(i)
+            if not wide:
+                out.append(text)
+                i = end
+                continue
+            group = [text]
+            j = end
+            while True:
+                k = j
+                while k < len(lines) and not lines[k].strip():
+                    k += 1
+                if k < len(lines) and (lines[k].startswith("![") or lines[k].startswith("Table: TABLE")):
+                    e2, w2, t2 = take_block(k)
+                    if w2:
+                        group += ["", t2]
+                        j = e2
+                        continue
+                break
+            out += [_section_break(2), ""] + group + ["", _section_break(1)]
+            i = j
+            continue
+        if region == "one" and line.startswith("!["):
+            w = width_of(line)
+            line = re.sub(r"\{width=[\d.]+in\}", f"{{width={min(w, PAGE_WIDTH_IN)}in}}", line)
+        out.append(line)
+        i += 1
+    return "\n".join(out)
 
 
 def section_word_counts(md: str) -> list:
@@ -298,11 +402,60 @@ def _fill_table(tbl, rows, header_rows=1, keep_last_rows=0):
             p.append(r)
 
 
+_DROPPED_SMARTART_IDS: set = set()
+
+
+def _drop_unused_member_slots(xml: str, keep: int) -> str:
+    """The template's 'by' SmartArt has four student slots; the team has three.
+    Remove the unused node(s) from the SmartArt data model (the node, its
+    transitions, its presentation points and their connections) and remember the
+    presentation ids so the cached drawing can drop the matching shapes."""
+    doc = re.search(r'<dgm:pt modelId="([^"]+)" type="doc"', xml).group(1)
+    parents = []  # (srcOrd, node id, parTrans id, sibTrans id)
+    for m in re.finditer(r"<dgm:cxn\b[^>]*>", xml):
+        c = m.group(0)
+        if "type=" in c or f'srcId="{doc}"' not in c:
+            continue
+        g = lambda a: re.search(a + r'="([^"]+)"', c).group(1)
+        parents.append((int(g("srcOrd")), g("destId"), g("parTransId"), g("sibTransId")))
+    parents.sort()
+    drop = set()
+    for _, node, par, sib in parents[keep:]:
+        drop |= {node, par, sib}
+        # presentation points: presOf target (text shape) and its composite/image siblings
+        for m in re.finditer(r'type="presOf" srcId="%s" destId="([^"]+)"' % re.escape(node), xml):
+            txt = m.group(1)
+            comp = re.search(r'type="presParOf" srcId="([^"]+)" destId="%s"' % re.escape(txt), xml).group(1)
+            drop |= {txt, comp}
+            drop |= set(re.findall(r'type="presParOf" srcId="%s" destId="([^"]+)"' % re.escape(comp), xml))
+    # the spacing point that preceded the last dropped composite
+    pres_root = re.search(r'type="presOf" srcId="%s" destId="([^"]+)"' % re.escape(doc), xml).group(1)
+    kids = sorted((int(o), d) for d, o in re.findall(
+        r'type="presParOf" srcId="%s" destId="([^"]+)" srcOrd="(\d+)"' % re.escape(pres_root), xml))
+    kept_ids = [d for _, d in kids if d not in drop]
+    while kept_ids and 'presName="spacing"' in (re.search(
+            r'<dgm:pt modelId="%s"[^>]*>(.*?)</dgm:pt>' % re.escape(kept_ids[-1]), xml, re.S) or ("",))[0]:
+        drop.add(kept_ids.pop())
+    for pid in drop:
+        xml = re.sub(r'<dgm:pt modelId="%s"[^>]*?(?:/>|>.*?</dgm:pt>)' % re.escape(pid), "", xml, flags=re.S)
+        xml = re.sub(r'<dgm:cxn\b[^>]*"%s"[^>]*/>' % re.escape(pid), "", xml)
+    _DROPPED_SMARTART_IDS.update(drop)
+    return xml
+
+
 def _fill_smartart_text(blob: bytes) -> bytes:
-    """Fill the cover-page SmartArt: student 'Reg No'/'Name' slots, in order."""
+    """Fill the cover-page SmartArt: student 'Reg No'/'Name' slots, in order,
+    and remove the slots the team does not need."""
     xml = blob.decode("utf-8")
+    if "<a:t>Reg No </a:t>" not in xml:
+        return blob
     members = FRONT["members"]
-    for i, m in enumerate(members):
+    if "<dgm:dataModel" in xml:
+        xml = _drop_unused_member_slots(xml, len(members))
+    else:  # cached drawing: drop the shapes of the removed presentation points
+        for pid in _DROPPED_SMARTART_IDS:
+            xml = re.sub(r'<dsp:sp modelId="%s".*?</dsp:sp>' % re.escape(pid), "", xml, flags=re.S)
+    for m in members:
         reg, _, name = m.partition(" – ")
         xml = xml.replace("<a:t>Reg No </a:t>", f"<a:t>{reg} </a:t>", 1)
         xml = xml.replace("<a:t>Name</a:t>", f"<a:t>{name or '[Name]'}</a:t>", 1)
@@ -414,14 +567,17 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
     _fill_table(t_index, index_rows)
     _fill_table(t_lof, [(str(n), t, "") for n, t in fig_list])
     _fill_table(t_lot, [(n, t, "") for n, t in tab_list])
-    contrib = [(str(i + 1), h, "[Reg. No. — team to assign]", str(w)) for i, (h, w) in enumerate(word_counts)]
+    contrib = [(str(i + 1), h, "[Reg. No.]", str(w)) for i, (h, w) in enumerate(word_counts)]
     _fill_table(t_contrib, contrib)
     total = sum(w for _, w in word_counts)
     cons_rows = t_cons.rows
-    for r in cons_rows[2:6]:
-        r.cells[1].text = "[Reg. No.]"
-        r.cells[2].text = "[team to fill]"
-    cons_rows[-1].cells[-1].text = str(total)
+    student_rows = cons_rows[2:6]                 # the template has four student rows
+    for r, (reg, _) in zip(student_rows, MEMBERS):
+        r.cells[1].text = reg
+        r.cells[2].text = "[words]"
+    for r in student_rows[len(MEMBERS):]:         # three-member team: remove the unused row(s)
+        r._tr.getparent().remove(r._tr)
+    t_cons.rows[-1].cells[-1].text = str(total)
 
     # --- paper title block -------------------------------------------------------
     block = kids[title_idx:sect_idx + 1]
@@ -459,8 +615,8 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
             r.font.size = Pt(10)
 
     front = kids[:sect_idx + 1]
-    # The template's two-column section starts after sect_idx; this draft keeps the
-    # body single-column for editing (see README / review notes).
+    # The template's two-column body section starts after sect_idx; the body is
+    # laid out the same way (see apply_two_column_layout and the end of this function).
 
     # --- move into the pandoc body document ----------------------------------
     out = docx.Document(str(body_path))
@@ -579,13 +735,21 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
     for el in front:
         first.addprevious(copy.deepcopy(el))
 
-    # page size / margins for the body section, matching the template body
+    # page size / margins for every section, matching the template (A4, 1 in / 0.5 in)
     for s in out.sections:
         s.page_width, s.page_height = Inches(8.27), Inches(11.69)
         s.left_margin = s.right_margin = Inches(1.0)
-        s.top_margin, s.bottom_margin = Inches(0.5), Inches(0.7)
+        s.top_margin, s.bottom_margin = Inches(0.5), Inches(0.5)
+    # the final body section (references) is the template's continuous two-column section
+    final = body.find(qn("w:sectPr"))
+    for el in final.findall(qn("w:cols")) + final.findall(qn("w:type")):
+        final.remove(el)
+    final.insert(0, final.makeelement(qn("w:type"), {qn("w:val"): "continuous"}))
+    pg_mar = final.find(qn("w:pgMar"))
+    cols = final.makeelement(qn("w:cols"), {qn("w:num"): "2", qn("w:space"): str(COL_SPACE)})
+    (pg_mar.addnext if pg_mar is not None else final.append)(cols)
     out.core_properties.title = FRONT["title"]
-    out.core_properties.author = "Team 26FSDPYCPMID1028 (draft)"
+    out.core_properties.author = "Team 26FSDPYCPMID1028"
     out.save(str(OUT_DOCX))
 
 
@@ -595,22 +759,35 @@ def export_figure_folder(md: str):
     SVG/.drawio source when one exists)."""
     import shutil
 
-    out = HERE / "Diagrams"
+    out = ROOT / "diagrams"
     if out.exists():
         shutil.rmtree(out)
     out.mkdir()
     pattern = r"!\[\{fig:[\w-]+\}\s*(.*?)\]\((.*?)\)"
+    index = ["# Report figures (final numbering)", "",
+             "Generated by `report/build_report.py`. Each figure is saved as `Fig NN <Name>` in the format it was "
+             "produced in: PNG at 600 DPI as generated by `figures/diagram_builder.py` or `analysis/verify_results.py`, "
+             "plus the editable SVG and draw.io source where one exists. Images were not upscaled. "
+             "Dashboard screenshots are figures too but live in `evidence/screenshots/`.", "",
+             "| No. | File stem | Source | Editable source |", "|---|---|---|---|"]
     for n, m in enumerate(re.finditer(pattern, md), start=1):
         caption = re.sub(r"\[@[^\]]+\]|\*", "", m.group(1)).strip()
         title = re.split(r"[.:;(]", caption)[0].strip()
         title = re.sub(r'[\\/*?"<>|]', "", title)[:70].strip()
         src = ROOT / m.group(2)
+        if "screens" in src.parts or "evidence" in src.parts:
+            index.append(f"| {n} | — (screenshot) | `{m.group(2)}` | — |")
+            continue
         stem = f"Fig {n:02d} {title}"
         shutil.copy(src, out / f"{stem}{src.suffix}")
+        editable = []
         for ext in (".svg", ".drawio"):
             alt = src.with_suffix(ext)
             if alt.exists():
                 shutil.copy(alt, out / f"{stem}{ext}")
+                editable.append(ext)
+        index.append(f"| {n} | {stem} | `{m.group(2)}` | {', '.join(editable) or '—'} |")
+    (out / "README.md").write_text("\n".join(index) + "\n", encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -640,7 +817,7 @@ def main():
 
     make_reference_docx()
     body_path = HERE / "_body.docx"
-    pypandoc.convert_text(resolved, "docx", format="markdown+tex_math_dollars+pipe_tables+implicit_figures",
+    pypandoc.convert_text(apply_two_column_layout(resolved), "docx", format="markdown+tex_math_dollars+pipe_tables+implicit_figures",
                           outputfile=str(body_path), extra_args=[f"--reference-doc={REFDOC}",
                                                                  f"--resource-path={ROOT}"])
     merge_front_matter(body_path, toc, fig_list, tab_list, counts, abstract, keywords)

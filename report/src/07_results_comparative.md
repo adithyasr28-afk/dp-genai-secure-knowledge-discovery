@@ -20,8 +20,6 @@ All numbers in this section are read from `results/verified/`. They are means ±
 
 **TRTR reference.** The TRTR reference, which was not stored in the log, was recomputed: F1 = 0.583 (LR), 0.620 (RF) and 0.647 (XGBoost); XGBoost AUROC = 0.886.
 
-**What could not be reproduced.** The synthetic data themselves, which would need seeded generators, and the runtimes, which depend on the hardware.
-
 ## Utility (RQ1, RQ2)
 
 Table {tab:utility} and Fig. {fig:f1} show the TSTR results.
@@ -39,7 +37,7 @@ Table {tab:utility} and Fig. {fig:f1} show the TSTR results.
 
 ## Fidelity
 
-Table {tab:fidelity} gives the fidelity metrics.
+Table {tab:fidelity} (Appendix D) gives the fidelity metrics.
 
 **One-way fidelity.**
 
@@ -47,20 +45,16 @@ Table {tab:fidelity} gives the fidelity metrics.
 - Numerical KS {eq:ks} is about 0.08–0.09 for every DP run except PrivBayes at ε = 0.5 (0.145). This floor comes largely from reconstructing values uniformly within bins.
 - The non-private generators have *worse* one-way fidelity: KS 0.326 (CTGAN) and 0.248 (TVAE), TVD 0.095 and 0.117. Mode-specific normalisation struggles with the spike-inflated columns.
 
-**Higher-order fidelity** (Fig. {fig:3way}).
+**Higher-order fidelity** (Fig. {fig:3way}, Appendix D).
 
 - AIM has the lowest 3-way TVD at ε = 0.5 (0.224, against 0.318 for MST and 0.304 for PrivBayes).
 - AIM and PrivBayes improve with ε to about 0.14–0.15 at ε = 10.
 - MST plateaus at about 0.24, because a tree of two-way marginals cannot represent three-way structure. The difference in Cramér's V shows the same pattern.
 - CTGAN (0.269) and TVAE (0.288) are worse than every DP method at ε ≥ 3.
 
-{{INCLUDE:generated/table_fidelity.md}}
-
-![{fig:3way} Privacy budget versus mean 3-way marginal TVD (lower is better).](figures/fig_res_03_epsilon_vs_3way_error.png){width=4.6in}
-
 ## Empirical Privacy
 
-**The attack cannot separate the methods.** The 1-NN membership attack {eq:mia} gave a mean AUC between 0.492 and 0.510 for every configuration, **including the non-private CTGAN and TVAE** (Fig. {fig:mia}, Table {tab:privacy}). TPR at FPR 0.1 was 0.07–0.11, which is what random guessing gives.
+**The attack cannot separate the methods.** The 1-NN membership attack {eq:mia} gave a mean AUC between 0.492 and 0.510 for every configuration, **including the non-private CTGAN and TVAE** (Fig. {fig:mia} (Appendix D), Table {tab:privacy}). TPR at FPR 0.1 was 0.07–0.11, which is what random guessing gives.
 
 **Why this is not evidence of privacy.** The attack is weak, and the measurement is diluted in two ways:
 
@@ -76,15 +70,11 @@ So the attack cannot distinguish these methods; it does *not* establish that the
 - No DP run produced an exact copy.
 - For the DP methods, DCR shrinks as ε grows — for example, AIM from 1.86 to 1.51 — as expected from weaker noise.
 
-![{fig:mia} Privacy budget versus distance-based MIA AUC. Values near 0.5 for all methods, including non-DP baselines, indicate a weak attack rather than safety.](figures/fig_res_05_epsilon_vs_mia_auc.png){width=4.6in}
-
 {{INCLUDE:generated/table_privacy.md}}
-
-{{INCLUDE:generated/table_rarefair.md}}
 
 ## Rare Patterns
 
-Only four categories are rare (below 1%) in the training data, so the category-level results are coarse (Fig. {fig:rare}, Table {tab:rarefair}).
+Only four categories are rare (below 1%) in the training data, so the category-level results are coarse (Fig. {fig:rare} and Table {tab:rarefair}, Appendix D).
 
 - **TVAE** erased all four rare categories and 84% of rare 2-way combinations — a strong mode-collapse signature.
 - **MST** kept every rare category but lost 41–48% of rare combinations at every ε.
@@ -94,11 +84,9 @@ Only four categories are rare (below 1%) in the training data, so the category-l
 
 For applications that depend on small subpopulations, these results argue *against* MST and TVAE.
 
-![{fig:rare} Privacy budget versus percentage of rare 2-way attribute combinations lost.](figures/fig_res_06_epsilon_vs_rare_loss.png){width=4.6in}
-
 ## Fairness
 
-A Logistic Regression trained on the real data has a demographic-parity difference (ΔDP, {eq:fair}) of 0.169 between men and women, and an equalised-odds gap of 0.215. Synthetic-data classifiers vary widely (Fig. {fig:fair}).
+A Logistic Regression trained on the real data has a demographic-parity difference (ΔDP, {eq:fair}) of 0.169 between men and women, and an equalised-odds gap of 0.215. Synthetic-data classifiers vary widely (Fig. {fig:fair}, Appendix D).
 
 - **AIM at ε = 3** reached ΔDP = 0.477 and an equalised-odds gap of 1.0. In other words, its classifier treated the two groups completely differently on one error type. This is a single run.
 - **Very low ΔDP at low ε** — PrivBayes at ε = 0.5 (0.004) and AIM at ε = 0.5 (0.045) — reflects classifiers that rarely predict the positive class for anyone. It is fairness by uselessness, not genuine parity.
@@ -106,11 +94,9 @@ A Logistic Regression trained on the real data has a demographic-parity differen
 
 With one classifier per run and 193 women in the test set, these fairness estimates are noisy. They should be read as a warning sign, not a ranking.
 
-![{fig:fair} Privacy budget versus demographic-parity difference (sex) of a Logistic Regression trained on synthetic data. Real-data reference: 0.169.](figures/fig_res_07_epsilon_vs_dp_difference.png){width=4.6in}
-
 ## Runtime
 
-Mean fit times per configuration (Fig. {fig:runtime}; single runs in brackets) separate the methods clearly:
+Mean fit times per configuration (Fig. {fig:runtime}, Appendix D; single runs in brackets) separate the methods clearly:
 
 - PrivBayes: 0.5–21 s (0.1–21 s), growing with ε as larger networks become affordable.
 - MST: 25–58 s (22–83 s).
@@ -120,19 +106,13 @@ Mean fit times per configuration (Fig. {fig:runtime}; single runs in brackets) s
 
 The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more than a factor of two between repeats of the same configuration, so small runtime differences should not be over-interpreted.
 
-![{fig:runtime} Fit runtime versus privacy budget (log–log). Non-DP baselines shown at 300 epochs.](figures/fig_res_08_runtime.png){width=4.6in}
-
 ## Knowledge-Discovery Findings (RQ3)
 
 **The LLM layer works within its privacy design.** All 35 DP datasets load. The original file is never read, the payload contains no row-level data, and demo output is labelled. Live mode is tested against a mock server for both providers and was exercised for real with Gemini (below).
 
-**How trustworthy the payload is** (Table {tab:ku}, Fig. {fig:ku}). Knowledge utility rises with ε for AIM (KU 0.88 → 0.95; Spearman ρ 0.32 → 0.88) and PrivBayes (KU 0.86 → 0.92; ρ 0.07 → 0.82). At ε ≥ 5 the payloads rank the subgroup income rates in nearly the same order as the real data. **MST payloads do not**: ρ stays at or below 0.30 at every ε, even though MST's one-way TVD is the best of all methods. A dataset can match its marginals and still give misleading subgroup "insights". This is precisely the case that one-way fidelity metrics miss.
+**How trustworthy the payload is** (Table {tab:ku} and Fig. {fig:ku}, Appendix D). Knowledge utility rises with ε for AIM (KU 0.88 → 0.95; Spearman ρ 0.32 → 0.88) and PrivBayes (KU 0.86 → 0.92; ρ 0.07 → 0.82). At ε ≥ 5 the payloads rank the subgroup income rates in nearly the same order as the real data. **MST payloads do not**: ρ stays at or below 0.30 at every ε, even though MST's one-way TVD is the best of all methods. A dataset can match its marginals and still give misleading subgroup "insights". This is precisely the case that one-way fidelity metrics miss.
 
 **Spurious associations.** In the AIM and MST ε = 3 datasets, the strongest associations reported to the LLM included education ↔ race with Cramér's V of 0.493 (AIM) and 0.450–0.625 (MST, three seeds), against **0.119 in the real training split**. PrivBayes (0.067–0.074) and TVAE (0.000–0.068) did not show this artefact. Relationship ↔ sex, a genuine structural association (0.653 real), was preserved by AIM, MST and TVAE (0.62–0.66) but by only one of the three PrivBayes ε = 3 seeds (0.35, 0.37 and 0.66). An LLM given the AIM ε = 3 payload would — correctly, from its input — describe a strong education–race link that does not exist in the population. This is the over-trust threat A6 made concrete. It is why the payload carries quality metrics and why outputs are framed as hypotheses.
-
-{{INCLUDE:generated/table_ku.md}}
-
-![{fig:ku} Knowledge utility (left) and Spearman rank agreement of subgroup target rates (right) between LLM payload statistics and the real training split.](figures/fig_res_12_knowledge_utility.png){width=6.2in}
 
 **Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* (does it match the payload the model was given?) and for *real-data agreement* (does the statistic hold on the real training split, which the model never saw?). Table {tab:llmcase} lists the checked claims.
 
@@ -155,9 +135,9 @@ Three findings follow.
 
 1. **Faithfulness was high but not perfect.** 9 of the 10 checked numbers matched the payload exactly. The one error was a misreading: the AIM response confused the *number* of suppressed cells (8) with the suppression *threshold* (20).
 2. **Faithful is not the same as true.** The AIM ε = 3 dataset reverses the real gender gap in high income, which is the distortion behind its fairness outlier in Table {tab:rarefair}. Gemini reported "females have a slightly higher >50K rate" as a key pattern, without a warning. It also listed the spurious education–race association among the strong relationships. MST ε = 3 erases the gap altogether (24.3% vs 24.1%), so an MST-based explanation would also be wrong. PrivBayes preserved the gap, and the same prompt produced a correct explanation.
-3. **The model can flag some artefacts, but only from internal evidence.** The PrivBayes response noticed that `12th` grade (67.4%) outranked `Bachelors` (37.3%) and called it an implausible DP artefact — correct, since the real rate is 3.6%. It could not detect the reversed gender gap, because nothing inside the AIM payload contradicts it. The AIM payload's own `12th`-grade rate (43.3%, real 3.6%) went unmentioned.
+3. **The model can flag some artefacts, but only from internal evidence.** The PrivBayes response noticed that `12th` grade (67.4%) outranked `Bachelors` (37.3%) and called it an implausible DP artefact — correct, since the real rate is 3.6%. It could not detect the reversed gender gap, because nothing inside the AIM payload contradicts it; repeated responses behaved the same way (Section XI).
 
-This is threat A6 observed with a real model: post-processing kept the explanation private, but its truth depended entirely on the generator. Explanations should therefore travel with the knowledge-utility score of their dataset and be checked against governed real data before use. Two responses are a case study, not a benchmark; a systematic evaluation is listed as future work.
+This is threat A6 observed with a real model: the explanation stayed private, but its truth depended on the generator. Two responses are a case study, not a benchmark.
 
 ## Answering the Research Questions
 
@@ -171,13 +151,11 @@ This is threat A6 observed with a real model: post-processing kept the explanati
 
 ## Privacy–Utility Trade-off
 
-Fig. {fig:pu} plots every run's MIA AUC against its XGBoost F1. Because the AUC does not vary, the empirical axis cannot rank the methods. The meaningful privacy axis is the *formal* ε, which only the DP methods have. On that axis, Fig. {fig:f1} shows that AIM and PrivBayes reach TVAE-level utility at ε = 3–5 *with* a guarantee, while TVAE offers none. Practically, the price of DP at ε = 3–5 on this dataset is 0–4 percentage points of XGBoost retention relative to TVAE (AIM 81–85%, PrivBayes 79–82%, TVAE 85%). On top of that come AIM's runtime cost and PrivBayes's fragility at low ε.
-
-![{fig:pu} Empirical privacy–utility scatter (each point is one run).](figures/fig_res_09_privacy_utility_scatter.png){width=4.6in}
+Fig. {fig:pu} (Appendix D) plots every run's MIA AUC against its XGBoost F1. Because the AUC does not vary, the empirical axis cannot rank the methods. The meaningful privacy axis is the *formal* ε, which only the DP methods have. On that axis, Fig. {fig:f1} shows that AIM and PrivBayes reach TVAE-level utility at ε = 3–5 *with* a guarantee, while TVAE offers none. Practically, the price of DP at ε = 3–5 on this dataset is 0–4 percentage points of XGBoost retention relative to TVAE (AIM 81–85%, PrivBayes 79–82%, TVAE 85%). On top of that come AIM's runtime cost and PrivBayes's fragility at low ε.
 
 ## Multi-Dimensional Comparison
 
-The heatmap (Fig. {fig:heat}) and radar chart (Fig. {fig:radar}) compare the DP methods at ε = 3 with the non-DP baselines across all dimensions. No method dominates:
+The heatmap (Fig. {fig:heat}, Appendix D) and radar chart (Fig. {fig:radar}, Appendix D) compare the DP methods at ε = 3 with the non-DP baselines across all dimensions. No method dominates:
 
 - **AIM and PrivBayes** lead on higher-order fidelity and utility.
 - **CTGAN** leads on rare combinations but is worst on one-way fidelity.
@@ -186,9 +164,16 @@ The heatmap (Fig. {fig:heat}) and radar chart (Fig. {fig:radar}) compare the DP 
 
 This supports the project's design decision not to compute a weighted overall score.
 
-![{fig:heat} Metric heatmap at ε = 3 (DP) and for non-DP baselines; cell text shows raw values, colour is column-normalised. Candidate for the appendix.](figures/fig_res_11_heatmap_eps3.png){width=6.3in}
+**Rankings change with the criterion.** At ε = 3, ranking the three DP methods on each criterion separately gives different winners:
 
-![{fig:radar} Radar comparison at ε = 3 using bounded "higher is better" transforms of the raw metrics (no min–max rescaling).](figures/fig_res_13_radar_eps3.png){width=3.8in}
+- *utility retention:* PrivBayes 81.9% ≈ AIM 81.2% > MST 61.6%;
+- *three-way TVD:* PrivBayes 0.176 < AIM 0.189 < MST 0.253;
+- *knowledge utility:* AIM 0.918 > PrivBayes 0.886 > MST 0.825;
+- *rare combinations lost:* PrivBayes 13.9% < AIM 34.3% < MST 47.3%;
+- *fairness gap ΔDP:* MST 0.148 ≈ PrivBayes 0.157 < AIM 0.477;
+- *mean fit time:* PrivBayes 5 s < MST 39 s < AIM 436 s.
+
+PrivBayes is first or joint first on five of the six at this budget, a result that the earlier hypothesis favouring AIM did not anticipate. Its pure-DP guarantee and its collapse at ε = 0.5 must be weighed alongside.
 
 ## Method Profiles
 
@@ -230,20 +215,20 @@ The evidence in Section XIV yields a short profile per method. These profiles ap
 
 ## Comparison with Other Approaches
 
-**Standard (non-private) generative models.** CTGAN and TVAE represent standard generative AI for tables. TVAE matches the DP methods on utility but offers no guarantee and showed memorisation signals. Stronger non-private models, such as diffusion [@kotelnikov2023] or LLM-based generators [@borisov2023], would probably raise fidelity further, with the same privacy caveat.
+**Standard (non-private) generative models.** CTGAN and TVAE represent standard generative AI for tables. TVAE matches the DP methods on utility but offers no guarantee and showed memorisation signals. Newer non-private generator families [@murtaza2023] may raise fidelity further, but carry the same privacy caveat.
 
-**DP training of deep models.** DP-SGD versions of CTGAN or TVAE, or PATE-GAN [@jordon2019pategan], would add a guarantee to the deep models. Benchmarks report that they usually trail marginal-based methods on tabular utility at equal ε [@tao2021bench; @chen2025bench]. They were not run here.
+**DP training of deep models.** DP-SGD or PATE versions of CTGAN or TVAE would add a guarantee to the deep models. Benchmarks report that they usually trail marginal-based methods on tabular utility at equal ε [@tao2021bench; @chen2025bench]. They were not run here.
 
 **Federated approaches.** Federated learning [@kairouz2021fl] addresses a different setting, in which data cannot be centralised. It still needs DP to bound what the updates reveal. The centralised-curator model used here is simpler when one custodian holds the data.
 
 **Secure retrieval systems.** RAG over the raw records would give an LLM direct access to individual rows and inherits retrieval-store leakage [@zeng2024rag]. The design here deliberately avoids retrieval over sensitive data: the LLM sees only aggregates of a DP release.
 
-**Private Evolution.** API-only DP synthesis [@lin2024pe; @xie2024pe] is a promising alternative where only a foundation-model API is available. Tabular versions remain future work.
+**Private Evolution.** API-only DP synthesis [@lin2024pe] is a promising alternative where only a foundation-model API is available. Tabular versions remain future work.
 
 **Position of this study's LLM layer.** Compared with these alternatives, the layer occupies a deliberately conservative point in the design space.
 
 - It needs no model training and no DP accounting of its own.
-- It cannot leak more than the DP release it summarises.
+- Without the quality context, it cannot leak more than the DP release it summarises; with it, it adds seven rounded real-data-derived scalars (Section VII-E).
 - The price is reduced expressiveness: the LLM can only reason about the statistics it is given, cannot answer arbitrary questions about the data, and inherits every artefact of the synthetic data.
 
 A RAG system over the raw data would be more expressive and far riskier. DP fine-tuning of an LLM on the raw data would be expressive, protected by DP, and expensive. The design chosen here is the cheapest one that keeps a clean privacy argument.

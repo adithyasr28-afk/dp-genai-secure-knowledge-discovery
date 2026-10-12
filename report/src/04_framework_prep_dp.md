@@ -28,7 +28,7 @@ Each wrapper delegates to an unmodified, original-author implementation:
 
 - AIM and MST via OpenDP's smartnoise-synth on the `mbi` (Private-PGM) backend [@smartnoise];
 - PrivBayes via a faithful third-party port;
-- CTGAN and TVAE via the Synthetic Data Vault's `ctgan` package [@patki2016sdv].
+- CTGAN and TVAE via the open-source `ctgan` package [@xu2019ctgan].
 
 None of the five algorithms is re-implemented. This limits the risk that a comparison measures an implementation bug rather than a method.
 
@@ -44,7 +44,17 @@ The log is *resumable*: a sweep restarted after a crash skips every run identifi
 
 **Dashboard.** The Streamlit application has nine pages: dataset, preprocessing, generation, synthetic data, fidelity, utility, privacy, fairness and rare patterns, and model comparison. Each page reads from session state or from the log. The extension is attached by a single sidebar switch and a lazy import, so the original pages are untouched and keep working when the LLM dependencies are absent.
 
-**Knowledge-discovery package.** Four modules with single responsibilities: `catalog` (eligibility and provenance), `summarizer` (aggregate payload), `prompts` (versioned templates) and `llm_client` (provider selection, live and demo generation, error handling, audit). `llm_client` supports two providers behind one interface — Google Gemini through the official `google-genai` SDK and Anthropic Claude through the official `anthropic` SDK — chosen by `KD_PROVIDER` or a drop-down on the page. Both receive the identical system prompt and payload. The package is covered by 39 tests (Appendix B).
+**Knowledge-discovery package.** Four modules with single responsibilities: `catalog` (eligibility and provenance), `summarizer` (aggregate payload), `prompts` (versioned templates) and `llm_client` (provider selection, live and demo generation, error handling, audit). `llm_client` supports two providers behind one interface — Google Gemini through the official `google-genai` SDK and Anthropic Claude through the official `anthropic` SDK — chosen by `KD_PROVIDER` or a drop-down on the page. Both receive the identical system prompt and payload. The package is covered by 40 tests (Appendix B).
+
+## Design Alternatives Considered
+
+Several alternative designs were considered and rejected, and the reasons explain the shape of the framework.
+
+- **Sending synthetic rows to the LLM.** Privacy-neutral, because the rows are already a DP release, but poor in practice: language models compute statistics over thousands of rows unreliably, and a row-level interface would leak individuals directly the day a misconfiguration pointed it at real data (Section X).
+- **Retrieval over the raw records (RAG).** This would give the most specific answers, but it gives the LLM access to individual rows and inherits retrieval-store leakage [@zeng2024rag]. It contradicts PR3 and was not built.
+- **DP-trained deep generators.** DP-SGD versions of CTGAN or TVAE would put all five methods under a guarantee, but benchmarks show they usually trail marginal-based methods on tabular data [@tao2021bench; @chen2025bench], and their training cost exceeds the project's budget (Section XXI).
+- **A single weighted score.** Rejected because it would hide the trade-offs that are the main finding.
+- **A single LLM provider.** The client was written provider-neutral (Gemini and Claude behind one interface, identical prompt and payload), so the explanation layer does not depend on one vendor's availability or terms.
 
 ## End-to-End Sequence of One Run
 
@@ -66,7 +76,7 @@ The only components that read the real training split *and* produce something re
 
 $$E = g\big(\mathcal{G}_{\varepsilon,\delta}(D_{\mathrm{train}})\big)\;\Rightarrow\; E \text{ is } (\varepsilon,\delta)\text{-DP w.r.t. } D_{\mathrm{train}} $$ {#eq:postproc}
 
-The implication in {eq:postproc} holds only if $g$ never consults $D_{\mathrm{train}}$. In this implementation there are two exceptions, discussed in Section IX:
+The implication in {eq:postproc} holds only if $g$ never consults $D_{\mathrm{train}}$. In this implementation there are two exceptions, discussed in Sections VIII and X:
 
 1. The preprocessing domain is fitted on $D_{\mathrm{train}}$ without budget.
 2. The evaluation metrics use the real data.
@@ -85,6 +95,23 @@ Fig. {fig:prep} shows the preparation pipeline (`preprocessing/pipeline.py`). It
 - **Discretisation.** Each numerical column gets 10 quantile bins. Columns with a dominant point mass — at least 30% of rows on one value, as for capital_gain = 0, capital_loss = 0, hours_per_week = 40 and education_num = 9 — get a dedicated spike bin, so that quantile binning does not collapse them into one bin.
 
 ![{fig:prep} Privacy-aware data preparation pipeline as implemented. The red box is a disclosed assumption, not a control.](figures/diagrams/fig06_privacy_aware_preprocessing_pipeline.png){width=6.3in}
+
+## Leakage-Safe Splitting and Its Verification
+
+The split is stratified on the target with seed 42 and gives 2,400 training and 600 test rows, with positive rates of 23.9% and 24.0%. Every learned parameter — medians, quantile edges, spike values, rare-category lists and vocabularies — is fitted on the 2,400 training rows only. The contract is checked by the test `test_preprocessing_fit_uses_train_only`: a second preprocessor fitted on the training rows *plus* deliberately altered test rows produces different age bin edges from the project's preprocessor, which shows that the test split did not influence the fitted parameters; the test split is then only transformed.
+
+The split does not remove duplicate rows first. The sample contains 52 duplicates, and 18 distinct records therefore occur in both splits. This does not leak test labels into preprocessing, but it weakens the membership attack, whose "non-members" include some members (Section XIV). De-duplicating before the split would be cleaner. It was not done here because it would invalidate the saved results; it is listed as future work.
+
+## Payload Sanitisation for the LLM
+
+The same preparation layer also limits what can reach the language model:
+
+- every categorical value comes from the closed, training-fitted vocabulary, so free text cannot be injected through a data value;
+- statistics are rounded to three decimals, and groups with fewer than 20 synthetic rows are suppressed;
+- the optional analyst question is the only free text; it is truncated to 500 characters and placed outside the data tags;
+- prompts and responses are written to local, git-ignored audit records, never to the repository.
+
+These are hygiene and minimisation controls. They are not a privacy mechanism, and they are not counted towards any ε.
 
 ## Effects of Preparation Choices on the Results
 
@@ -107,6 +134,15 @@ The section plan lists anonymisation, sanitisation, token filtering and secure s
 - *Secure storage* is limited to repository hygiene: git-ignored secrets, no keys in code, and a secret scan before publishing.
 
 Classical anonymisation (k-anonymity, suppression of identifiers) is not applied to the real data, because DP replaces it as the protection mechanism for the release [@stadler2022]. Encryption at rest, access control and retention schedules are organisational controls outside the code and are proposed in Section XVIII.
+
+## Storage and Release of Artefacts in This Repository
+
+The public repository applies the classification of Section V as follows:
+
+- **Real data (L3).** The 3,000-row sample is in `data/`. It is published only because the UCI Adult data are already public under CC BY 4.0; for a genuinely sensitive table this folder would stay inside the trusted environment.
+- **Synthetic data (L2 and L2\*).** All 41 synthetic CSVs are published for reproducibility, including the six from CTGAN and TVAE. Those six carry no guarantee, and TVAE's contain three exact copies of training rows. Publishing them is acceptable here only because the source is public; under the framework's own rules they would not leave the custodian.
+- **Credentials and LLM records.** `.env` (API keys) and `results/llm_insights/` (prompts and responses) are git-ignored, and the git history was scanned for keys before publication. The genuine LLM responses used as evidence were exported deliberately, without keys, to `evidence/llm_responses/`.
+- **Template material.** The course template and the built report contain the faculty member's photograph and e-mail address and are kept out of the public repository.
 
 ## A Disclosed Weakness: Non-Private Domain
 
@@ -163,6 +199,17 @@ Sampling then follows the network's topological order. Because Laplace noise on 
 
 **Pure versus approximate DP.** PrivBayes's pure ε-DP and the (ε, 10⁻⁵)-DP of AIM and MST are different guarantees. Pure DP is stronger at the same ε: it allows no failure probability, and it composes more simply under group privacy. Comparing the methods "at the same ε" therefore slightly favours AIM and MST. The reports and the dashboard state the guarantee type every time, and readers should not treat the ε axes of Fig. {fig:f1} as strictly equivalent across mechanism types.
 
+## Scope of the Guarantee
+
+A DP statement is only as useful as its unit and its scope [@near2025]. For the generators here:
+
+- **Unit of privacy.** The unit is one *row* of the 2,400-row training split. If one person contributes several rows, they are protected only as a group: for $k$ rows the bound degrades to $karepsilon$ (and $k e^{(k-1)arepsilon}\delta$ for approximate DP). The sample contains 52 duplicate rows. Some of these may be distinct people with identical attributes, but if any is a repeated person, that person is protected at 2ε, not ε.
+- **Neighbouring relation.** PrivBayes's sensitivities assume replacement of one row with *n* fixed, while the AIM and MST implementations use addition or removal of one row. A replacement is a removal followed by an addition, so ε-DP under addition/removal implies 2ε-DP under replacement; the converse does not hold, because PrivBayes treats *n* as public. The ε values of the two families are therefore comparable only up to this factor and assumption.
+- **Covered.** The synthetic dataset and anything computed from it alone, including the aggregate payload *without* the quality context.
+- **Not covered.** The preprocessing domain, the evaluation metrics and the log, the choice of which run to release (selection among the 35 DP runs uses real-data metrics), and the LLM provider's handling of prompts.
+
+Read this way, the statement "(3, 10⁻⁵)-DP" in the dashboard is accurate for the CSV it labels, and conditional for everything around it.
+
 ## Privacy Budget Management
 
 Each run has one fixed budget. The study sweeps ε ∈ {0.5, 1, 3, 5, 10} with δ = 10⁻⁵ for AIM and MST; δ = 10⁻⁵ is below $1/n = 4.2\times10^{-4}$. Every run is an *independent* release from the same training data, and the runs are not meant to be published together. If all 35 DP datasets in `results/synthetic_data/` were released, sequential composition would apply:
@@ -191,11 +238,11 @@ The LLM layer needs no ledger entry of its own because it only post-processes ap
 
 ## Workflow
 
-Fig. {fig:dpflow} contrasts the implemented select–measure–generate workflow with DP-SGD. In DP-SGD, each per-example gradient $g_i$ is clipped to norm $C$, Gaussian noise is added to the sum of the clipped gradients of a batch $B$, the result is averaged, and an accountant tracks the cumulative loss [@abadi2016; @mironov2017]:
+Fig. {fig:dpflow} contrasts the implemented select–measure–generate workflow with DP-SGD. In DP-SGD, each per-example gradient $g_i$ is clipped to norm $C$, Gaussian noise is added to the sum of the clipped gradients of a batch $B$, the result is averaged, and an accountant tracks the cumulative loss [@abadi2016; @ponomareva2023]:
 
 $$\theta_{t+1}=\theta_t-\frac{\eta}{|B|}\Big(\textstyle\sum_{i\in B}\bar g_i+\mathcal{N}(0,\sigma^2C^2\mathbf{I})\Big),\quad \bar g_i=g_i/\max\!\big(1,\lVert g_i\rVert_2/C\big) $$ {#eq:dpsgd}
 
-The update rule {eq:dpsgd} would be needed to make CTGAN or TVAE private, or to fine-tune an LLM on sensitive text [@li2022llmdp; @yu2022dpft]. It is **not** used in this project. CTGAN and TVAE run without it and are treated strictly as non-private baselines.
+The update rule {eq:dpsgd} would be needed to make CTGAN or TVAE private, or to fine-tune an LLM on sensitive text [@li2022llmdp]. It is **not** used in this project. CTGAN and TVAE run without it and are treated strictly as non-private baselines.
 
 ![{fig:dpflow} Differential privacy integration workflow. Top: implemented (AIM/MST select–measure–generate; PrivBayes). Bottom, dashed: DP-SGD, discussed only.](figures/diagrams/fig07_dp_integration_workflow.png){width=6.3in}
 
