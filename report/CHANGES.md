@@ -30,7 +30,7 @@ Unchanged: `models/`, `preprocessing/`, `evaluation/`, `experiments/`,
 | `knowledge_discovery/streamlit_page.py` | Dashboard page: dataset selection, guarantee panel, payload preview, generation, audit notice. |
 | `analysis/verify_results.py` | Log integrity, de-duplication, configuration checks, re-evaluation of all metrics, TRTR and fairness references, aggregated tables, result figures (600 DPI PNG + SVG). |
 | `analysis/knowledge_utility.py` | Offline agreement of payload statistics with the real training split (KU, Spearman ρ, top-1). |
-| `analysis/llm_case_study.py` | Fact-check of the real Gemini responses against the payload and the real training split; exports the unedited responses to `docs/llm_evidence/`. |
+| `analysis/llm_case_study.py` | Fact-check of the real Gemini responses against the payload and the real training split; exports the unedited responses to `evidence/llm_responses/`. |
 | `tests/` (4 files, 48 tests) and `pytest.ini` | Extension privacy and error handling; real `anthropic` and `google-genai` SDKs against a mock server; opt-in live test; pipeline smoke tests. |
 | `figures/diagram_builder.py`, `figures/diagrams/` | 15 report diagrams as PNG (600 DPI), SVG and editable `.drawio`. |
 | `figures/fig_res_*.png/.svg` | 13 result figures. |
@@ -38,10 +38,10 @@ Unchanged: `models/`, `preprocessing/`, `evaluation/`, `experiments/`,
 | `constraints.txt` | Exact package versions recovered from the original venv, plus the new packages. |
 | `run_dashboard.bat` | Windows launcher. |
 | `.env.example` | Placeholders for `GEMINI_API_KEY` and `ANTHROPIC_API_KEY`, provider and model settings. |
-| `docs/screenshots/` | Dashboard evidence captured during testing, including a live Gemini response. |
-| `docs/llm_evidence/` | The two real Gemini responses, unedited, with model, token and latency metadata. |
+| `evidence/screenshots/2026-10-11_initial/` | Dashboard evidence captured during testing, including a live Gemini response. |
+| `evidence/llm_responses/` | The two real Gemini responses, unedited, with model, token and latency metadata. |
 | `report/` | Report sources (`src/*.md`), build scripts, references, generated tables, `Diagrams/` folder, DOCX draft. |
-| `docs/GUIDELINE_CHECKLIST.md`, `docs/DEMO_GUIDE.md`, `docs/HANDOVER.md` | Delivery documentation. |
+| `project_docs/GUIDELINE_CHECKLIST.md`, `project_docs/DEMO_GUIDE.md`, `project_docs/HANDOVER.md` (moved from `docs/` on 2026-10-12) | Delivery documentation. |
 
 ## Findings surfaced while verifying (documented, not "fixed" in the original code)
 

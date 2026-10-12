@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:8517",
+  "captured_at": "2026-10-12 20:43:42",
+  "shots": [
+    {
+      "file": "09_model_comparison.png",
+      "shows": "Model comparison over all logged runs (latest record per run_id)",
+      "mode": "n/a",
+      "error_visible": false
+    }
+  ]
+}

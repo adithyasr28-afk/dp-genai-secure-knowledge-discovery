@@ -167,8 +167,8 @@ reproducibility. Transient 429/5xx errors are retried (3 attempts).
   (`gemini-flash-latest` → served by `gemini-3.8-flash`), one scripted and one from
   the dashboard UI. About 6.3k input / 1.7k output / 2.7k thinking tokens, ~30 s
   each. The unedited responses are in
-  [`docs/llm_evidence/`](docs/llm_evidence/) and a screenshot is in
-  `docs/screenshots/03_llm_page_live_gemini_privbayes.jpg`.
+  [`evidence/llm_responses/`](evidence/llm_responses/) and a screenshot is in
+  `evidence/screenshots/2026-10-11_initial/03_llm_page_live_gemini_privbayes.jpg`.
 - **Claude: not verified live** (no Anthropic API key was available). The request
   path is tested against a local mock server through the real `anthropic` SDK.
 - Both providers are covered by mock-server tests (request body/headers, no key in
@@ -341,20 +341,29 @@ requirements.txt            Dependencies; use with -c constraints.txt
 constraints.txt             Exact versions from the original environment
 .env.example                Placeholders for GEMINI_API_KEY / ANTHROPIC_API_KEY (copy to .env)
 data/example_dataset.csv    UCI Adult sample (n = 3,000)
+
+# application and implementation code (kept at the top level so imports stay unchanged)
 models/                     AIM, MST, PrivBayes, CTGAN, TVAE wrappers (unchanged)
 preprocessing/              Profiling + leakage-safe preprocessing (unchanged)
 evaluation/                 Fidelity, utility, privacy, fairness, rare patterns (unchanged)
 experiments/                RunConfig/SweepConfig, runner with JSON-lines log (unchanged)
+utils/                      Logging helpers (unchanged)
 knowledge_discovery/        LLM extension (new)
 analysis/                   verify_results.py, knowledge_utility.py, llm_case_study.py (new)
-figures/                    Result figures (PNG 600 DPI + SVG), diagram_builder.py, diagrams/ (new)
+
+tests/                      pytest suite (new)
 results/experiment_results.jsonl   Original 43-record log (unchanged)
 results/synthetic_data/     41 synthetic CSVs (unchanged)
 results/verified/           Verification outputs (new)
-tests/                      pytest suite (new)
-docs/screenshots/           Dashboard evidence (new)
-docs/llm_evidence/          Unedited real Gemini responses (new)
-report/                     Report draft (DOCX + Markdown source)
+figures/                    Result plots (PNG 600 DPI + SVG) and diagram_builder.py
+figures/diagrams/           Diagram sources as generated (PNG 600 DPI, SVG, editable .drawio)
+diagrams/                   Report diagrams with final numbering "Fig NN <Name>" (PNG, SVG, .drawio)
+evidence/screenshots/       Genuine dashboard screenshots + index README
+evidence/llm_responses/     Unedited real Gemini responses
+evidence/videos/            Execution videos (to be recorded by the team)
+project_docs/               Audit, compliance matrix, claim verification, reproduction guide,
+                            changelog, handover, demo guide, guideline checklist
+report/                     Report sources (src/*.md), build scripts, references
 ```
 
 ---

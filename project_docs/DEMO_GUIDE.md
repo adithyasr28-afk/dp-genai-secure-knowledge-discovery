@@ -2,7 +2,7 @@
 
 ## Before the review
 
-1. `run_dashboard.bat` → <http://localhost:8501>. If live mode will be shown, first put `GEMINI_API_KEY` (or `ANTHROPIC_API_KEY`) in `.env`. A live Gemini call takes about 30 s; if the network is unreliable, show the saved outputs in `docs/llm_evidence/` instead.
+1. `run_dashboard.bat` → <http://localhost:8501>. If live mode will be shown, first put `GEMINI_API_KEY` (or `ANTHROPIC_API_KEY`) in `.env`. A live Gemini call takes about 30 s; if the network is unreliable, show the saved outputs in `evidence/llm_responses/` instead.
 2. Optional: `venv\Scripts\python -m pytest -m "not slow"` in a second terminal (≈25 s) to show the tests passing.
 3. Make sure `git status` is clean, so the published results are what is on disk.
 
@@ -26,5 +26,5 @@ run's CSV. Restore the published results with `git checkout -- results/`.
 - **Is the LLM differentially private?** No. Its *input* is post-processing of a DP release, so it leaks no more than the release does, provided the DP guarantee and its assumptions hold. The LLM adds no guarantee of its own.
 - **Why is MIA AUC 0.5 even for CTGAN/TVAE?** The 1-NN attack is weak, and the member and non-member sets share 18 records. It is not evidence that the non-DP models are private. TVAE copied training rows.
 - **Why one AIM seed?** Runtime: AIM is the slowest method even with its rounds capped at 60. This is disclosed and listed as future work.
-- **Has live mode been tested?** Yes for Gemini: two real calls on 2026-10-11, outputs in `docs/llm_evidence/` and fact-checked in `results/verified/llm_case_study.csv`. Claude only against a mock server (no Anthropic key).
+- **Has live mode been tested?** Yes for Gemini: two real calls on 2026-10-11, outputs in `evidence/llm_responses/` and fact-checked in `results/verified/llm_case_study.csv`. Claude only against a mock server (no Anthropic key).
 - **Can the LLM be trusted?** Not on its own. It was faithful to the payload on 9 of 10 checked claims but repeated AIM's reversed gender gap as a finding. Treat its output as hypotheses.

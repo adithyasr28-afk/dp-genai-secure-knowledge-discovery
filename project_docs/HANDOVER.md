@@ -10,7 +10,7 @@
   - **733/738** logged metrics recomputed exactly; the other 5 differ by ≤ 2.8 × 10⁻⁶.
 - **Dashboard tested manually:** all original pages plus the LLM page (demo mode and missing-key path). Two bugs were found and fixed.
 - **LLM extension:** two providers — Gemini (`google-genai`) and Claude (`anthropic`), chosen with `KD_PROVIDER` or the page's drop-down. Both are tested through their real SDKs against a local mock server.
-- **Real LLM calls (Gemini, 2026-10-11):** two successful live calls (AIM ε=3 and PrivBayes ε=3, served by `gemini-3.8-flash`), unedited outputs in `docs/llm_evidence/`, fact-checked by `analysis/llm_case_study.py` and reported in report §X, §XIV and Appendix D.
+- **Real LLM calls (Gemini, 2026-10-11):** two successful live calls (AIM ε=3 and PrivBayes ε=3, served by `gemini-3.8-flash`), unedited outputs in `evidence/llm_responses/`, fact-checked by `analysis/llm_case_study.py` and reported in report §X, §XIV and Appendix D.
 - Report draft built (DOCX opens in Word; PDF export checked visually), with the diagram folder, change log and checklist.
 
 ## What is NOT done or NOT verified
@@ -22,7 +22,7 @@
 | Similarity check (≤ 10%) | Needs the authorised tool | After the team rewrites the text. |
 | Student names, author list, e-mails, contribution allocation, page numbers | Team decisions | Edit the DOCX front matter; Word *References → Update Table* is not used here, so fill page numbers manually. |
 | Two-column body layout | Kept single-column for editing | Layout → Columns → Two after the final edits; add section breaks for wide figures and tables. |
-| Execution videos | Must be recorded by the team | Follow `docs/DEMO_GUIDE.md`. |
+| Execution videos | Must be recorded by the team | Follow `project_docs/DEMO_GUIDE.md`. |
 | Full-resolution screenshots | The in-app browser pane was hidden, so captures are cropped | Retake from a normal browser at `http://localhost:8501`. |
 | 5 references flagged [VERIFY]; journal share ≈ 21% (guideline 80%) | DOI/pages not confirmable; most key works are conference papers | Check in IEEE Xplore / ACM DL; substitute journal versions where they exist. |
 | Re-running the experiments | Not required; DP generators are unseeded, so a re-run would change the data | Only if the instructor asks. Then also forward seeds and remove the AIM cap (see report §XXI). |

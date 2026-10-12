@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:8517",
+  "captured_at": "2026-10-12 20:47:39",
+  "shots": [
+    {
+      "file": "10d_llm_live_gemini_output.png",
+      "shows": "Live mode, provider Gemini, PrivBayes eps=3 seed 42: a real LLM response",
+      "mode": "live",
+      "error_visible": false
+    }
+  ]
+}

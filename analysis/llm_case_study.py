@@ -11,7 +11,7 @@ Each claim quoted from an LLM response is checked twice:
 
 MST eps=3 seed 42 is included as a third synthetic reference (no LLM call).
 
-The LLM response texts themselves are exported to docs/llm_evidence/ when the
+The LLM response texts themselves are exported to evidence/llm_responses/ when the
 git-ignored audit records in results/llm_insights/ are present.
 
 Run from the project root:  python -m analysis.llm_case_study
@@ -33,7 +33,7 @@ from knowledge_discovery.catalog import SyntheticDatasetInfo, list_dp_synthetic_
 from knowledge_discovery.summarizer import _cramers_v, build_aggregate_summary  # noqa: E402
 
 OUT = ROOT / "results" / "verified"
-EVIDENCE = ROOT / "docs" / "llm_evidence"
+EVIDENCE = ROOT / "evidence" / "llm_responses"
 AUDIT = ROOT / "results" / "llm_insights"
 RUNS = ["adult_example_AIM_eps3.0_seed42", "adult_example_PrivBayes_eps3.0_seed42", "adult_example_MST_eps3.0_seed42"]
 LIVE_RECORDS = {

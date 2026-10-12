@@ -82,7 +82,7 @@ The verification status is stated per provider.
 - two live requests succeeded — AIM ε = 3 (scripted) and PrivBayes ε = 3 (from the dashboard UI, Fig. {fig:ss4}). The alias `gemini-flash-latest` was served by `gemini-3.8-flash`;
 - each used about 6,300 input, 1,700–1,800 output and 2,600–2,900 internal "thinking" tokens and took about 30 s;
 - both returned the five requested sections, framed insights as hypotheses and stated that the LLM adds no privacy guarantee;
-- the outputs were fact-checked claim by claim against the payload and the real training split (Section XIV, Table {tab:llmcase}); the unedited texts are in `docs/llm_evidence/` and an excerpt is in Appendix D.
+- the outputs were fact-checked claim by claim against the payload and the real training split (Section XIV, Table {tab:llmcase}); the unedited texts are in `evidence/llm_responses/` and an excerpt is in Appendix D.
 
 **Verified by execution against a local mock server (both providers):**
 

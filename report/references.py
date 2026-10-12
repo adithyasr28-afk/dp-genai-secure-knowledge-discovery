@@ -39,7 +39,7 @@ REFERENCES = {
                     'pp. 308–318, doi: 10.1145/2976749.2978318.'),
     "ponomareva2023": _r('N. Ponomareva, H. Hazimeh, A. Kurakin, Z. Xu, C. Denison, H. B. McMahan, S. Vassilvitskii, S. Chien, '
                          'and A. G. Thakurta, "How to DP-fy ML: A practical guide to machine learning with differential '
-                         'privacy," *J. Artif. Intell. Res.*, vol. 77, pp. 1113–1201, 2023, doi: 10.1613/jair.1.14649.', "verify"),
+                         'privacy," *J. Artif. Intell. Res.*, vol. 77, pp. 1113–1201, 2023, doi: 10.1613/jair.1.14649.', "web"),
     "near2025": _r('J. P. Near, D. Darais, N. Lefkovitz, and G. Howarth, "Guidelines for evaluating differential privacy '
                    'guarantees," Nat. Inst. Standards Technol., Gaithersburg, MD, USA, NIST SP 800-226, Mar. 2025, '
                    'doi: 10.6028/NIST.SP.800-226.', "web"),
@@ -78,7 +78,7 @@ REFERENCES = {
                     'ICML*, PMLR, vol. 235, 2024.', "web"),
     "yue2023": _r('X. Yue, H. A. Inan, X. Li, G. Kumar, J. McAnallen, H. Shajari, H. Sun, D. Levitan, and R. Sim, "Synthetic text '
                   'generation with differential privacy: A simple and practical recipe," in *Proc. 61st Annu. Meeting Assoc. '
-                  'Comput. Linguistics (ACL)*, 2023, pp. 1321–1342.', "verify"),
+                  'Comput. Linguistics (ACL)*, 2023, pp. 1321–1342, doi: 10.18653/v1/2023.acl-long.74.', "web"),
 
     # --- Non-DP tabular generators -------------------------------------------
     "xu2019ctgan": _r('L. Xu, M. Skoularidou, A. Cuesta-Infante, and K. Veeramachaneni, "Modeling tabular data using '
@@ -118,10 +118,10 @@ REFERENCES = {
                                   'memorization across neural language models," in *Proc. ICLR*, 2023.'),
     "lukas2023": _r('N. Lukas, A. Salem, R. Sim, S. Tople, L. Wutschitz, and S. Zanella-Béguelin, "Analyzing leakage of '
                     'personally identifiable information in language models," in *Proc. IEEE S&P*, 2023, pp. 346–363, '
-                    'doi: 10.1109/SP46215.2023.10179300.', "verify"),
+                    'doi: 10.1109/SP46215.2023.10179300.', "web"),
     "greshake2023": _r('K. Greshake, S. Abdelnabi, S. Mishra, C. Endres, T. Holz, and M. Fritz, "Not what you\'ve signed up for: '
                        'Compromising real-world LLM-integrated applications with indirect prompt injection," in *Proc. 16th ACM '
-                       'Workshop Artif. Intell. Security (AISec)*, 2023, pp. 79–90, doi: 10.1145/3605764.3623985.', "verify"),
+                       'Workshop Artif. Intell. Security (AISec)*, 2023, pp. 79–90, doi: 10.1145/3605764.3623985.', "web"),
     "zeng2024rag": _r('S. Zeng *et al.*, "The good and the bad: Exploring privacy issues in retrieval-augmented generation (RAG)," '
                       'in *Findings Assoc. Comput. Linguistics: ACL 2024*, 2024, pp. 4505–4524, '
                       'doi: 10.18653/v1/2024.findings-acl.267.', "web"),
@@ -131,7 +131,7 @@ REFERENCES = {
     "weidinger2022": _r('L. Weidinger *et al.*, "Taxonomy of risks posed by language models," in *Proc. ACM Conf. Fairness, '
                         'Accountability, Transparency (FAccT)*, 2022, pp. 214–229, doi: 10.1145/3531146.3533088.'),
     "jagielski2020": _r('M. Jagielski, J. Ullman, and A. Oprea, "Auditing differentially private machine learning: How private '
-                        'is private SGD?" in *Adv. Neural Inf. Process. Syst. (NeurIPS)*, vol. 33, 2020, pp. 22205–22216.', "verify"),
+                        'is private SGD?" in *Adv. Neural Inf. Process. Syst. (NeurIPS)*, vol. 33, 2020, pp. 22205–22216.', "web"),
 
     # --- DP for LLMs / generative AI -----------------------------------------
     "li2022llmdp": _r('X. Li, F. Tramèr, P. Liang, and T. Hashimoto, "Large language models can be strong differentially '

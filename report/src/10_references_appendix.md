@@ -86,13 +86,13 @@ The system prompt below (version `kd-prompt-v1`, `knowledge_discovery/prompts.py
 
 The screenshots were captured from the running dashboard during testing. Figs. {fig:ss1}–{fig:ss4} show the extension page, a demo-mode output, the corrected Model Comparison page and a real Gemini response. The browser pane was partly hidden, so some are cropped on the right. **[TEAM: replace with full-resolution screenshots and add the execution videos the guidelines request.]**
 
-![{fig:ss1} LLM knowledge-discovery page: DP dataset selection, guarantee from the log, duplicate-record notice, demo-mode warning (no API key configured).](docs/screenshots/01_llm_page_dataset_selection.jpg){width=5.5in}
+![{fig:ss1} LLM knowledge-discovery page: DP dataset selection, guarantee from the log, duplicate-record notice, demo-mode warning (no API key configured).](evidence/screenshots/2026-10-11_initial/01_llm_page_dataset_selection.jpg){width=5.5in}
 
-![{fig:ss2} Demo-mode output for AIM ε = 3. This is rule-based template text, **not** LLM output. Note the spurious education–race association reported from the synthetic data.](docs/screenshots/02_llm_page_demo_output.jpg){width=5.5in}
+![{fig:ss2} Demo-mode output for AIM ε = 3. This is rule-based template text, **not** LLM output. Note the spurious education–race association reported from the synthetic data.](evidence/screenshots/2026-10-11_initial/02_llm_page_demo_output.jpg){width=5.5in}
 
-![{fig:ss3} Model Comparison after the de-duplication fix: 41 unique runs from 43 records.](docs/screenshots/06_model_comparison_deduplicated.jpg){width=5.5in}
+![{fig:ss3} Model Comparison after the de-duplication fix: 41 unique runs from 43 records.](evidence/screenshots/2026-10-11_initial/06_model_comparison_deduplicated.jpg){width=5.5in}
 
-![{fig:ss4} Live mode with provider Gemini on PrivBayes ε = 3: a **real LLM response** (`gemini-3.8-flash`, 11 Oct. 2026), shown with the provider, model and a hypothesis warning.](docs/screenshots/03_llm_page_live_gemini_privbayes.jpg){width=5.5in}
+![{fig:ss4} Live mode with provider Gemini on PrivBayes ε = 3: a **real LLM response** (`gemini-3.8-flash`, 11 Oct. 2026), shown with the provider, model and a hypothesis warning.](evidence/screenshots/2026-10-11_initial/03_llm_page_live_gemini_privbayes.jpg){width=5.5in}
 
 **Excerpt of a real LLM response.** The lines below are quoted unedited from the Gemini response for AIM ε = 3 (seed 42; payload SHA-256 `4e62da3d…`; 6,277 input and 1,678 output tokens; 30.6 s). This **is** LLM output. The first quotation is the reversed gender gap discussed in Section XIV; the second is the suppression misreading.
 
@@ -106,7 +106,7 @@ From the PrivBayes ε = 3 response (6,427 input and 1,815 output tokens; 29.5 s)
 
 > "`12th` grade education has an implausibly high positive rate of **67.4%** (1.9% share), exceeding `Bachelors` (**37.3%**) […] These anomalies likely reflect DP noise in small slices."
 
-Both full responses are in the repository at `docs/llm_evidence/`.
+Both full responses are in the repository at `evidence/llm_responses/`.
 
 # Appendix E: Supplementary Results {-}
 
