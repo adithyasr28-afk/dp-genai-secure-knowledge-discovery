@@ -56,17 +56,16 @@ BODY_FONT = "Times New Roman"
 # and all student names/e-mails must be supplied by the team. Placeholders are
 # bracketed so they are easy to find; nothing here is invented.
 STUDENT_NAME = "[Student name]"
-MEMBERS = [  # (registration number, name)
-    ("23BCE2114", STUDENT_NAME),
-    ("23BCE2133", STUDENT_NAME),
-    ("[Reg. No. of 3rd member]", STUDENT_NAME),
+MEMBERS = [  # (registration number, name) -- supplied by the team on 2026-10-13
+    ("23BCE2179", "Amy Jose"),
+    ("23BCE2180", "Swetha"),
+    ("23BCE2182", "Adithya Shaji"),
 ]
 FRONT = {
     "team_id": "26FSDPYCPMID1028",
     "title": "Differential Privacy-Enhanced Generative AI for Secure Knowledge Discovery",
     "members": [f"{reg} – {name}" for reg, name in MEMBERS],
-    "authors": "Dr. M Rajasekhara Babu¹, [Student name]² (23BCE2114), [Student name]³ (23BCE2133), "
-               "[Student name]⁴ ([Reg. No. of 3rd member])",
+    "authors": "Dr. M Rajasekhara Babu¹, Amy Jose² (23BCE2179), Swetha³ (23BCE2180), Adithya Shaji⁴ (23BCE2182)",
     "affil": "School of Computer Science and Engineering, Vellore Institute of Technology (VIT), Vellore-632014, T.N., India",
     "emails": "¹mrajasekharababu@vit.ac.in, ²[VIT e-mail], ³[VIT e-mail], ⁴[VIT e-mail]",
     "corresponding": "Corresponding author: M Rajasekhara Babu (e-mail: mrajasekharababu@vit.ac.in).",
