@@ -10,4 +10,4 @@ Branch: `report-finalisation`. Baseline: `ef727a3`.
 | 4 Screenshots | done | 14 PNG in evidence/screenshots/2026-10-12 + README; 1 deliberate + 2 unintended live Gemini calls (disclosed) |
 | 5 Report revision | done | layout, front matter, refs 50, figs 15/12 body, word counts met |
 | 6 Final validation | done | check_report.py clean; final_audit.md |
-| 7 GitHub | in progress | push branch report-finalisation |
+| 7 GitHub | done | branch report-finalisation pushed and verified via the GitHub API; submission ZIP in Deliverables/ |

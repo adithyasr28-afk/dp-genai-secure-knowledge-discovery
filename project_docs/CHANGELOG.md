@@ -72,3 +72,13 @@ The baseline is `main` @ `ef727a3` (2026-10-12). Earlier history is in `report/C
   - Appendix A command layout;
   - stale test counts.
 - **Rewritten:** `project_docs/HANDOVER.md` and `DEMO_GUIDE.md`; `GUIDELINE_CHECKLIST.md` now points to the compliance matrix. README updated.
+
+## Phase 7 — GitHub and delivery (2026-10-12/13)
+- **Tests on the final commit:** full suite 48 passed, 1 skipped; fast suite 43 passed, 1 skipped.
+- **Pushed** `report-finalisation` to `origin` (a new branch; `main` untouched at `ef727a3`). The branch head was verified with the GitHub API.
+- **`Deliverables/` refreshed:**
+  - `final_report.docx` and `.pdf`;
+  - `Diagrams/`, `project_docs/`, `screenshots/`;
+  - the updated `Project_Work_Summary.docx`;
+  - `26FSDPYCPMID1028_submission.zip`: `git archive` of the branch plus the final report; no `.env`, venv, caches, audit records or template, scanned for secrets.
+  - The previous draft is kept in `_previous_draft_2026-10-11/`.
