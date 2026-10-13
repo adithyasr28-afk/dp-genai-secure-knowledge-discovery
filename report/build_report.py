@@ -51,10 +51,8 @@ IEEE_BLUE = RGBColor(0x00, 0x62, 0x9B)
 HEAD_FONT = "Helvetica Neue"  # as in the template; Word substitutes Arial if absent
 BODY_FONT = "Times New Roman"
 
-# Team 26FSDPYCPMID1028 has THREE members. The course roster lists two
-# registration numbers (23BCE2114, 23BCE2133 = PoC); the third member's number
-# and all student names/e-mails must be supplied by the team. Placeholders are
-# bracketed so they are easy to find; nothing here is invented.
+# Team 26FSDPYCPMID1031: three members, as supplied by the team (matches the course roster).
+# Student e-mails are still placeholders in FRONT["emails"].
 STUDENT_NAME = "[Student name]"
 MEMBERS = [  # (registration number, name) -- supplied by the team on 2026-10-13
     ("23BCE2179", "Amy Jose"),
@@ -62,7 +60,7 @@ MEMBERS = [  # (registration number, name) -- supplied by the team on 2026-10-13
     ("23BCE2182", "Adithya Shaji"),
 ]
 FRONT = {
-    "team_id": "26FSDPYCPMID1028",
+    "team_id": "26FSDPYCPMID1031",
     "title": "Differential Privacy-Enhanced Generative AI for Secure Knowledge Discovery",
     "members": [f"{reg} – {name}" for reg, name in MEMBERS],
     "authors": "Dr. M Rajasekhara Babu¹, Amy Jose² (23BCE2179), Swetha³ (23BCE2180), Adithya Shaji⁴ (23BCE2182)",
@@ -757,7 +755,7 @@ def merge_front_matter(body_path: Path, toc, fig_list, tab_list, word_counts, ab
     cols = final.makeelement(qn("w:cols"), {qn("w:num"): "2", qn("w:space"): str(COL_SPACE)})
     (pg_mar.addnext if pg_mar is not None else final.append)(cols)
     out.core_properties.title = FRONT["title"]
-    out.core_properties.author = "Team 26FSDPYCPMID1028"
+    out.core_properties.author = "Team 26FSDPYCPMID1031"
     out.save(str(OUT_DOCX))
 
 

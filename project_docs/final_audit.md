@@ -64,7 +64,7 @@
 
 ## 4. Items that need a person
 
-1. **Student names, VIT e-mails, and the third member's registration number.** The course roster (`Team ID_Title_SectionsLink_Consolidated.pdf`) lists only 23BCE2114 and 23BCE2133 (PoC) for team 26FSDPYCPMID1028. Edit `MEMBERS`/`FRONT` in `report/build_report.py`, then run `python report/finalize.py`.
+1. **Student VIT e-mails** (names, reg. nos. and Team ID 26FSDPYCPMID1031 added 2026-10-13). Edit `FRONT["emails"]` in `report/build_report.py`, then run `python report/finalize.py`.
 2. **Contribution allocation:** the reg. no. per section and the words per student (Contributions tables).
 3. **Similarity check (≤ 10%):** not run, and no percentage is claimed. The team should rewrite the text in its own words first. No wording was altered to evade AI detectors.
 4. **Execution videos:** to be recorded (`project_docs/DEMO_GUIDE.md`).

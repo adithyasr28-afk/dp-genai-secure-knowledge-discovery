@@ -11,7 +11,7 @@
 | **T** | `3_Consolidated_Template.docx`: course cover page, Index, List of Figures, List of Tables, Contribution tables, then the IEEE Access body template (body sections set to 2 columns, continuous) |
 | **G** | `1_🧾 Manuscript Guidelines.pdf`: §1 Report Template, §2 Report Contents, §3 References, §4 Plagiarism, §5 Deliverables, Data availability |
 | **P** | `13.pdf`: topic section plan (content focus, visuals, word counts), Recommended Figures, Recommended Tables |
-| **R** | `Team ID_Title_SectionsLink_Consolidated.pdf`: course roster. Team 26FSDPYCPMID1028 lists **23BCE2114** and **23BCE2133 (PoC)**; slots 3 and 4 are empty |
+| **R** | `Team ID_Title_SectionsLink_Consolidated.pdf`: course roster. Team 26FSDPYCPMID1031: 23BCE2179 Amy Jose, 23BCE2180 Swetha, 23BCE2182 Adithya Shaji (supplied by the team 2026-10-13; matches the roster) |
 
 **Status key:** ✅ met · ◐ partly met · ❌ not met · ⚠ conflict between guidelines · 👤 needs a human.
 
@@ -21,8 +21,8 @@ Word counts exclude tables, captions and equations. They are counted by `report/
 
 | # | Requirement | Source | Baseline | Change made | Final |
 |---|---|---|---|---|---|
-| A1 | Cover: "Case-Study Report On <Title>", course, "by" members, "To" faculty, School, month | T | ◐ placeholders | Title, course, Team ID and October 2026 filled. Faculty **Dr M Rajasekhara Babu** (already in the template SmartArt). Members 23BCE2114, 23BCE2133, and a placeholder for the 3rd reg. no.; names are placeholders | ◐ 👤 names and 3rd reg. no. |
-| A2 | Author line (faculty first), affiliation, e-mails, corresponding author | T | ◐ placeholders | "Dr. M Rajasekhara Babu¹, [Student name]² (23BCE2114), [Student name]³ (23BCE2133), [Student name]⁴ ([Reg. No. of 3rd member])"; faculty e-mail and corresponding author from the template | ◐ 👤 names, e-mails |
+| A1 | Cover: title, course, members, faculty, School, month | T | ◐ placeholders | Team ID 26FSDPYCPMID1031, three members with names and reg. nos., faculty Dr M Rajasekhara Babu | ✅ |
+| A2 | Author line, affiliation, e-mails, corresponding author | T | ◐ placeholders | Faculty + Amy Jose, Swetha, Adithya Shaji with reg. nos. | ◐ 👤 student VIT e-mails |
 | A2b | Only as many author slots as team members | brief | ❌ 4 student slots | **4th student slot removed** from the cover SmartArt (data model and cached drawing) and the consolidated contribution table. The author line has faculty + 3 | ✅ |
 | A3 | Index with page numbers | T | ◐ blank | Filled automatically from the PDF (`report/finalize.py`; physical pages, cover = 1) | ✅ |
 | A4 | List of Figures / Tables with page numbers | T | ◐ blank | Same | ✅ |

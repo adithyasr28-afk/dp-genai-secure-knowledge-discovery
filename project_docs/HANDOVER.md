@@ -27,7 +27,7 @@
 
 | Item | Why it is open | How |
 |---|---|---|
-| Student names, VIT e-mails, **third member's registration number** | Not available to the assistant. The course roster lists only 23BCE2114 and 23BCE2133 for this team | Edit `MEMBERS` and `FRONT` at the top of `report/build_report.py`, then run `python report/finalize.py` |
+| Student VIT e-mails | Not supplied yet (names and reg. nos. added 2026-10-13) | Edit `FRONT["emails"]` in `report/build_report.py`, then run `python report/finalize.py` |
 | Contribution allocation (reg. no. per section; words per student) | Team decision | Same file, or edit the DOCX tables |
 | Similarity check (≤ 10%) | Needs the authorised tool | Rewrite in your own words, then run the checker. No percentage has been measured |
 | Execution videos | To be recorded later | `project_docs/DEMO_GUIDE.md`; place them in `evidence/videos/` (or link from there) |

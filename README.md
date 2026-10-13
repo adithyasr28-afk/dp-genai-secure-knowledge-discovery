@@ -1,6 +1,6 @@
 # Differential Privacy-Enhanced Generative AI for Secure Knowledge Discovery
 
-BCSE318L Data Privacy case study (Team 26FSDPYCPMID1028).
+BCSE318L Data Privacy case study (Team 26FSDPYCPMID1031).
 
 This repository contains:
 
