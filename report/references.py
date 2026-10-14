@@ -23,8 +23,7 @@ def _r(text, check="known"):
 REFERENCES = {
     # --- Differential privacy foundations -------------------------------------
     "dwork2006": _r('C. Dwork, F. McSherry, K. Nissim, and A. Smith, "Calibrating noise to sensitivity in private data '
-                    'analysis," in *Proc. Theory of Cryptography Conf. (TCC)*, LNCS, vol. 3876. Berlin, Germany: Springer, '
-                    '2006, pp. 265–284, doi: 10.1007/11681878_14.'),
+                    'analysis," *J. Privacy Confidentiality*, vol. 7, no. 3, pp. 17–51, 2017, doi: 10.29012/jpc.v7i3.405.', "web"),
     "dwork2014": _r('C. Dwork and A. Roth, "The algorithmic foundations of differential privacy," *Found. Trends Theor. '
                     'Comput. Sci.*, vol. 9, no. 3–4, pp. 211–407, 2014, doi: 10.1561/0400000042.'),
     "mcsherry2007": _r('F. McSherry and K. Talwar, "Mechanism design via differential privacy," in *Proc. 48th IEEE Symp. '
@@ -43,8 +42,8 @@ REFERENCES = {
     "near2025": _r('J. P. Near, D. Darais, N. Lefkovitz, and G. Howarth, "Guidelines for evaluating differential privacy '
                    'guarantees," Nat. Inst. Standards Technol., Gaithersburg, MD, USA, NIST SP 800-226, Mar. 2025, '
                    'doi: 10.6028/NIST.SP.800-226.', "web"),
-    "abowd2018": _r('J. M. Abowd, "The U.S. Census Bureau adopts differential privacy," in *Proc. 24th ACM SIGKDD Int. Conf. '
-                    'Knowl. Discovery Data Mining*, 2018, p. 2867, doi: 10.1145/3219819.3226070.'),
+    "abowd2018": _r('J. M. Abowd *et al.*, "The 2020 Census Disclosure Avoidance System TopDown algorithm," '
+                    '*Harvard Data Sci. Rev.*, Special Issue 2, Jun. 2022, doi: 10.1162/99608f92.529e3cb9.', "web"),
 
     # --- DP synthetic data -----------------------------------------------------
     "mckenna2022aim": _r('R. McKenna, B. Mullins, D. Sheldon, and G. Miklau, "AIM: An adaptive and iterative mechanism for '

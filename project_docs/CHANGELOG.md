@@ -82,3 +82,10 @@ The baseline is `main` @ `ef727a3` (2026-10-12). Earlier history is in `report/C
   - the updated `Project_Work_Summary.docx`;
   - `26FSDPYCPMID1031_submission.zip`: `git archive` of the branch plus the final report; no `.env`, venv, caches, audit records or template, scanned for secrets.
   - The previous draft is kept in `_previous_draft_2026-10-11/`.
+
+## Final verification pass (2026-10-14)
+- **Preserved:** archive `report/archive/v2_2026-10-14/` and tag `pre-final-verification-2026-10-14`.
+- **Report:**
+  - §XIV-A discloses the PrivBayes δ metadata inconsistency (made room by shortening two sentences);
+  - references `dwork2006` and `abowd2018` replaced by verified journal versions or sources.
+- **Added:** `project_docs/final_compliance_matrix.md` and `project_docs/student_action_items.md`; final audit §6; claim verification §8.

@@ -1095,13 +1095,14 @@ All numbers in this section are read from `results/verified/`. They are means ±
 
 - The experiment log contains **43 records but 41 unique run identifiers**, all with status `completed`.
 - `AIM_eps3.0_seed42` and `PrivBayes_eps3.0_seed42` each appear twice. The second runs started at 20:42 on 18 September 2026 and overwrote the corresponding CSVs.
-- The two records of each pair differ (Table XIV). For AIM ε = 3, the 3-way TVD was 0.220 versus 0.189 and the fit time 181 s versus 436 s. This is direct evidence of run-to-run variability from the unseeded generators and of runtime sensitivity to machine load.
+- The two records of each pair differ (Table XIV). For AIM ε = 3, the 3-way TVD was 0.220 versus 0.189 and the fit time 181 s versus 436 s. This shows run-to-run variability from the unseeded generators.
 
 **De-duplication and configuration checks.**
 
-- The analysis uses the later record of each pair. That record is the one consistent with the data on disk.
+- The analysis uses the later record of each pair.
 - All 41 configurations pass the checks: ε matches the run identifier; δ = 10⁻⁵ for AIM and MST and δ = 0 for PrivBayes; AIM's round cap is 60; and CTGAN and TVAE carry "no formal guarantee".
 - All 41 CSVs are present and have 2,400 rows each.
+- The 15 PrivBayes sweep records store the sweep's shared δ = 10⁻⁵ in their run configuration, but PrivBayes never uses it; their recorded privacy parameters, and every table, give δ = 0.
 
 **Re-evaluation.** Recomputing the metrics from the CSVs reproduced **733 of 738 logged values exactly** (Appendix B, Table XIII). The five exceptions are MIA AUC values that differ by at most 2.8 × 10⁻⁶. This is consistent with floating-point and nearest-neighbour tie effects.
 
@@ -1244,7 +1245,7 @@ The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more tha
 
 **Spurious associations.** In the AIM and MST ε = 3 datasets, the strongest associations reported to the LLM included education ↔ race with Cramér's V of 0.493 (AIM) and 0.450–0.625 (MST, three seeds), against **0.119 in the real training split**. PrivBayes (0.067–0.074) and TVAE (0.000–0.068) did not show this artefact. Relationship ↔ sex, a genuine structural association (0.653 real), was preserved by AIM, MST and TVAE (0.62–0.66) but by only one of the three PrivBayes ε = 3 seeds (0.35, 0.37 and 0.66). An LLM given the AIM ε = 3 payload would — correctly, from its input — describe a strong education–race link that does not exist in the population. This is the over-trust threat A6 made concrete. It is why the payload carries quality metrics and why outputs are framed as hypotheses.
 
-**Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* (does it match the payload the model was given?) and for *real-data agreement* (does the statistic hold on the real training split, which the model never saw?). Table IX lists the checked claims.
+**Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* to the payload and for agreement with the real training split, which the model never saw. Table IX lists the checked claims.
 
 Table: TABLE IX. Fact-check of claims in two real Gemini responses (ε = 3, seed 42). "Real" is the training split, never sent to the LLM. For the suppression claims, the value is the threshold k.
 
@@ -2107,9 +2108,9 @@ The authors thank Dr M Rajasekhara Babu, School of Computer Science and Engineer
 
 [18] S. Zeng *et al.*, "The good and the bad: Exploring privacy issues in retrieval-augmented generation (RAG)," in *Findings Assoc. Comput. Linguistics: ACL 2024*, 2024, pp. 4505–4524, doi: 10.18653/v1/2024.findings-acl.267.
 
-[19] C. Dwork, F. McSherry, K. Nissim, and A. Smith, "Calibrating noise to sensitivity in private data analysis," in *Proc. Theory of Cryptography Conf. (TCC)*, LNCS, vol. 3876. Berlin, Germany: Springer, 2006, pp. 265–284, doi: 10.1007/11681878_14.
+[19] C. Dwork, F. McSherry, K. Nissim, and A. Smith, "Calibrating noise to sensitivity in private data analysis," *J. Privacy Confidentiality*, vol. 7, no. 3, pp. 17–51, 2017, doi: 10.29012/jpc.v7i3.405.
 
-[20] J. M. Abowd, "The U.S. Census Bureau adopts differential privacy," in *Proc. 24th ACM SIGKDD Int. Conf. Knowl. Discovery Data Mining*, 2018, p. 2867, doi: 10.1145/3219819.3226070.
+[20] J. M. Abowd *et al.*, "The 2020 Census Disclosure Avoidance System TopDown algorithm," *Harvard Data Sci. Rev.*, Special Issue 2, Jun. 2022, doi: 10.1162/99608f92.529e3cb9.
 
 [21] R. Shokri, M. Stronati, C. Song, and V. Shmatikov, "Membership inference attacks against machine learning models," in *Proc. IEEE Symp. Security Privacy (S&P)*, 2017, pp. 3–18, doi: 10.1109/SP.2017.41.
 

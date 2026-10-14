@@ -111,3 +111,13 @@
 - All 5 former `[VERIFY]` entries were confirmed: greshake2023, lukas2023, ponomareva2023 and yue2023 via Crossref (yue2023 later removed), and jagielski2020 via the NeurIPS proceedings BibTeX.
 - 17 DOIs were checked on Crossref in this phase. All matched title, venue, volume and pages.
 - **Composition:** 14 journal (28%), 21 conference/symposium/workshop (42%), 15 standards, legislation, documentation, dataset or preprint (30%). 34 of the 50 are from 2020 or later. The 80% journal target is **not** met; see `final_audit.md`.
+
+## 8. Final verification pass (2026-10-14)
+
+| # | Finding | Evidence | Verdict / action |
+|---|---|---|---|
+| F1 | Log has 43 records, 41 unique run_ids (duplicates AIM ε3 s42, PrivBayes ε3 s42); 41 CSVs | recount from `results/experiment_results.jsonl` | ✅ re-verified |
+| F2 | 15 PrivBayes sweep records have top-level `delta = 1e-05` (RunConfig), while `privacy_params.delta = 0.0` | log lines 21–35; `models/privbayes_model.py` passes only ε | ⚠ metadata inconsistency, **guarantee unaffected** (pure ε-DP). All derived tables, the catalogue and the dashboard use `privacy_params` (δ = 0). The log was not modified (it is an original artefact); a disclosure sentence was added to §XIV-A |
+| F3 | 5 successful live LLM records, all Gemini `gemini-3.8-flash`; no successful Claude call | `results/llm_insights/*_live_*.json` (`ok: true`) | ✅ consistent with the report |
+| F4 | Re-evaluation 733/738 exact | `verification_report.json` | ✅ |
+| F5 | No `.env`, venv, cache or audit file tracked; 0 real-key patterns in the full git history; `.env.example` placeholders only | `git ls-files`, `git log --all -p` | ✅ the Gemini key pasted in chat must still be rotated |

@@ -85,3 +85,17 @@
 - The default LLM payload includes seven real-data-derived quality metrics. They are disclosed and switchable, but not DP.
 - The public repository contains the six non-DP synthetic datasets, including TVAE's three exact copies of public Adult rows.
 - Two unintended live Gemini calls were made during screenshot capture. They are disclosed in §X of the report and in `evidence/screenshots/README.md`, and the capture script now verifies the mode before clicking.
+
+## 6. Final verification pass (2026-10-14)
+
+- **Preserved before changes:** `report/archive/v2_2026-10-14/` (DOCX, PDF, resolved Markdown) and git tag `pre-final-verification-2026-10-14` on `bcddf09`.
+- **Re-verified from raw files:**
+  - 43 log records, 41 unique runs, 41 CSVs;
+  - re-evaluation 733/738;
+  - 5 successful live LLM records, all Gemini `gemini-3.8-flash`, no Claude;
+  - no secrets in tracked files or history.
+- **New finding:** 15 PrivBayes sweep records store δ = 10⁻⁵ in their run configuration, while their privacy parameters, the code and every table use δ = 0. The guarantee is unaffected. The log was kept as-is and the finding disclosed in §XIV-A (`claim_verification.md` §8).
+- **References:** two conference entries replaced by verified journal sources. The journal share rose from 28% to 32% (16/50).
+- **Report:** rebuilt, 67 pages; `check_report.py` reports no problems; §XIV is 1,993 words.
+- **Tests:** full suite 48 passed, 1 skipped, 325 s; `results/` unchanged.
+- **New documents:** `final_compliance_matrix.md` and `student_action_items.md`.

@@ -8,13 +8,14 @@ All numbers in this section are read from `results/verified/`. They are means ±
 
 - The experiment log contains **43 records but 41 unique run identifiers**, all with status `completed`.
 - `AIM_eps3.0_seed42` and `PrivBayes_eps3.0_seed42` each appear twice. The second runs started at 20:42 on 18 September 2026 and overwrote the corresponding CSVs.
-- The two records of each pair differ (Table {tab:dups}). For AIM ε = 3, the 3-way TVD was 0.220 versus 0.189 and the fit time 181 s versus 436 s. This is direct evidence of run-to-run variability from the unseeded generators and of runtime sensitivity to machine load.
+- The two records of each pair differ (Table {tab:dups}). For AIM ε = 3, the 3-way TVD was 0.220 versus 0.189 and the fit time 181 s versus 436 s. This shows run-to-run variability from the unseeded generators.
 
 **De-duplication and configuration checks.**
 
-- The analysis uses the later record of each pair. That record is the one consistent with the data on disk.
+- The analysis uses the later record of each pair.
 - All 41 configurations pass the checks: ε matches the run identifier; δ = 10⁻⁵ for AIM and MST and δ = 0 for PrivBayes; AIM's round cap is 60; and CTGAN and TVAE carry "no formal guarantee".
 - All 41 CSVs are present and have 2,400 rows each.
+- The 15 PrivBayes sweep records store the sweep's shared δ = 10⁻⁵ in their run configuration, but PrivBayes never uses it; their recorded privacy parameters, and every table, give δ = 0.
 
 **Re-evaluation.** Recomputing the metrics from the CSVs reproduced **733 of 738 logged values exactly** (Appendix B, Table {tab:verify}). The five exceptions are MIA AUC values that differ by at most 2.8 × 10⁻⁶. This is consistent with floating-point and nearest-neighbour tie effects.
 
@@ -114,7 +115,7 @@ The two AIM ε = 3 records (181 s and 436 s) show that runtimes vary by more tha
 
 **Spurious associations.** In the AIM and MST ε = 3 datasets, the strongest associations reported to the LLM included education ↔ race with Cramér's V of 0.493 (AIM) and 0.450–0.625 (MST, three seeds), against **0.119 in the real training split**. PrivBayes (0.067–0.074) and TVAE (0.000–0.068) did not show this artefact. Relationship ↔ sex, a genuine structural association (0.653 real), was preserved by AIM, MST and TVAE (0.62–0.66) but by only one of the three PrivBayes ε = 3 seeds (0.35, 0.37 and 0.66). An LLM given the AIM ε = 3 payload would — correctly, from its input — describe a strong education–race link that does not exist in the population. This is the over-trust threat A6 made concrete. It is why the payload carries quality metrics and why outputs are framed as hypotheses.
 
-**Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* (does it match the payload the model was given?) and for *real-data agreement* (does the statistic hold on the real training split, which the model never saw?). Table {tab:llmcase} lists the checked claims.
+**Real LLM case study (Gemini).** Two live Gemini responses (`gemini-3.8-flash`, 11 October 2026) were checked claim by claim (`analysis/llm_case_study.py`). Each claim was scored for *faithfulness* to the payload and for agreement with the real training split, which the model never saw. Table {tab:llmcase} lists the checked claims.
 
 Table: {tab:llmcase} Fact-check of claims in two real Gemini responses (ε = 3, seed 42). "Real" is the training split, never sent to the LLM. For the suppression claims, the value is the threshold k.
 
