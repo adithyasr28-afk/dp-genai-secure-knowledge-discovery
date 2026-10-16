@@ -74,7 +74,7 @@
 | Manuscript (.doc) | G §5 | `Deliverables/final report.docx` | **Verified** |
 | Source code (GitHub link) | G §5 | Public repo; branch `report-finalisation` pushed | **Verified** (see the final response for the commit) |
 | Datasets folder | G §5 | `data/`, `results/synthetic_data/` (41 CSVs) | **Verified** |
-| Execution videos | G §5 | `evidence/videos/README.md` placeholder; no video exists | **Pending student action** |
+| Execution videos | G §5 | `evidence/videos/execution_demo_2026-10-16.mp4` (3 min 37 s, 1918×1078), recorded by the team; README describes it; frames checked for secrets | **Verified** |
 | Similarity ≤ 10% | G §4 | No authorised checker available; no percentage claimed | **Pending student action** |
 | Reproducibility instructions | brief | `project_docs/reproduction_guide.md`; clean install executed 2026-10-12; full suite re-run 2026-10-14 | **Verified** |
 | Secrets excluded | brief | 0 keys in tracked files and full history; `.env` ignored; `.env.example` placeholders | **Verified**; key rotation **pending student action** |

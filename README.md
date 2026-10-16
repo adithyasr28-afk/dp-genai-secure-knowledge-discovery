@@ -24,6 +24,11 @@ This repository contains:
 > system. The LLM receives only aggregate statistics computed from DP synthetic
 > data. The LLM adds **no** privacy guarantee of its own.
 
+**Demonstration video:** [`evidence/videos/execution_demo_2026-10-16.mp4`](evidence/videos/execution_demo_2026-10-16.mp4)
+(3 min 37 s). It walks through the full dashboard: dataset, preprocessing, generation,
+evaluation pages, model comparison and the LLM knowledge-discovery page. See
+[`evidence/videos/README.md`](evidence/videos/README.md).
+
 ---
 
 ## Contents
@@ -381,7 +386,7 @@ figures/diagrams/           Diagram sources as generated (PNG 600 DPI, SVG, edit
 diagrams/                   Report diagrams with final numbering "Fig NN <Name>" (PNG, SVG, .drawio)
 evidence/screenshots/       Genuine dashboard screenshots + index README
 evidence/llm_responses/     Unedited real Gemini responses
-evidence/videos/            Execution videos (to be recorded by the team)
+evidence/videos/            Execution video: execution_demo_2026-10-16.mp4 (3 min 37 s) + README
 project_docs/               Audit, compliance matrix, claim verification, reproduction guide,
                             changelog, handover, demo guide, guideline checklist
 report/                     Report sources (src/*.md), build scripts, references

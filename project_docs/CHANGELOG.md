@@ -89,3 +89,9 @@ The baseline is `main` @ `ef727a3` (2026-10-12). Earlier history is in `report/C
   - §XIV-A discloses the PrivBayes δ metadata inconsistency (made room by shortening two sentences);
   - references `dwork2006` and `abowd2018` replaced by verified journal versions or sources.
 - **Added:** `project_docs/final_compliance_matrix.md` and `project_docs/student_action_items.md`; final audit §6; claim verification §8.
+
+## Execution video (2026-10-16)
+- Added `evidence/videos/execution_demo_2026-10-16.mp4`: the team's 3 min 37 s screen recording of the dashboard, 16.9 MB.
+- 16 frames were checked for keys or `.env` content before publishing; none found.
+- Updated `evidence/videos/README.md`, `README.md`, `student_action_items.md`, `final_compliance_matrix.md` and `HANDOVER.md`.
+- Committed to `main` and `report-finalisation`.

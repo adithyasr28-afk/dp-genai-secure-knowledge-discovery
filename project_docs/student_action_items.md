@@ -43,12 +43,13 @@ The result charts (Figs 11, 17–26) are data plots generated from `results/veri
 
 ## 5. Checks and recordings
 - [ ] **Similarity check** with the authorised tool, after the rewrite. It must be ≤ 10%. No percentage has been measured.
-- [ ] **Execution video**, following `project_docs/DEMO_GUIDE.md` and `evidence/videos/README.md`:
+- [x] **Execution video:** recorded 16 Oct 2026 as `evidence/videos/execution_demo_2026-10-16.mp4` (3 min 37 s), added to GitHub. Original recording instructions kept below for reference.
+- [x] ~~Execution video~~, following `project_docs/DEMO_GUIDE.md` and `evidence/videos/README.md`:
   - select *Demo* on the LLM page unless a live call is intended;
   - use a non-sweep seed (e.g. 7);
   - hide the key and `.env`;
   - run `git checkout -- results/` afterwards.
-- [ ] **Review the video** for exposed keys or personal data before uploading.
+- [x] **Review the video** for exposed keys: 16 sampled frames checked on 16 Oct 2026; no key, `.env` or terminal visible.
 
 ## 6. Questions for Dr M Rajasekhara Babu
 - [ ] Abstract (242 words) versus "Executive Summary and Abstract" (450–750): both are provided. Which is graded?

@@ -13,7 +13,7 @@
 | Reproduction guide | `project_docs/reproduction_guide.md` | ✅ clean install executed |
 | Changelog | `project_docs/CHANGELOG.md` | ✅ |
 | Source code, tests, README | repository | ✅ |
-| Execution videos | `evidence/videos/` | ❌ not recorded (planned for later; nothing fabricated) |
+| Execution video | `evidence/videos/execution_demo_2026-10-16.mp4` | ✅ recorded by the team 2026-10-16 |
 
 ## 2. Consistency audit (executed)
 
@@ -67,7 +67,7 @@
 1. **Student VIT e-mails** (names, reg. nos. and Team ID 26FSDPYCPMID1031 added 2026-10-13). Edit `FRONT["emails"]` in `report/build_report.py`, then run `python report/finalize.py`.
 2. **Contribution allocation:** the reg. no. per section and the words per student (Contributions tables).
 3. **Similarity check (≤ 10%):** not run, and no percentage is claimed. The team should rewrite the text in its own words first. No wording was altered to evade AI detectors.
-4. **Execution videos:** to be recorded (`project_docs/DEMO_GUIDE.md`).
+4. ~~Execution videos~~ **done 2026-10-16:** `evidence/videos/execution_demo_2026-10-16.mp4`.
 5. **Rotate the Gemini API key.** It was pasted into a chat on 2026-10-11. It is not in the repository, its history or the report (checked), but treat it as exposed. Create a new key, delete the old one, and update `.env`.
 6. **Faculty clarifications:**
    - abstract length (template 150–250 vs plan 450–750 "Executive Summary and Abstract"; both provided);

@@ -30,7 +30,7 @@
 | Student VIT e-mails | Not supplied yet (names and reg. nos. added 2026-10-13) | Edit `FRONT["emails"]` in `report/build_report.py`, then run `python report/finalize.py` |
 | Contribution allocation (reg. no. per section; words per student) | Team decision | Same file, or edit the DOCX tables |
 | Similarity check (≤ 10%) | Needs the authorised tool | Rewrite in your own words, then run the checker. No percentage has been measured |
-| Execution videos | To be recorded later | `project_docs/DEMO_GUIDE.md`; place them in `evidence/videos/` (or link from there) |
+| ~~Execution videos~~ | **Done** 2026-10-16: `evidence/videos/execution_demo_2026-10-16.mp4` | — |
 | **Rotate the Gemini API key** | The key was pasted into a chat on 2026-10-11 | Create a new key in Google AI Studio, delete the old one, update `.env`. Never commit it |
 | Faculty confirmation | Guideline conflicts | Abstract (≈ 240 words) vs "Executive Summary and Abstract" (450–750): both are provided. 80% journal references: 28% achieved |
 | Persistent data link (optional) | A GitHub URL is not a DOI | Archive a release on Zenodo and cite its DOI in the Data Availability Statement |
